@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import {prisma} from './client'
 
 const app = express();
 app.use(express.json());
@@ -22,6 +23,7 @@ app.get('/users', async (req: Request, res: Response) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
+  console.log(`You have ${await prisma.user.count()} users.`)
 });
