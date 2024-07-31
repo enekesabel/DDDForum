@@ -1,8 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import {prisma} from './client'
-import { User } from '@prisma/client';
-import { error } from 'console';
+import { prisma, User } from './database'
 
 const app = express();
 app.use(express.json());
