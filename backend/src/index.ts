@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { prisma, User } from './database'
+import { prisma } from './database'
+import { generateRandomPassword, isValidUser, parseUserForResponse } from './utils';
 
 const app = express();
 app.use(express.json());
@@ -13,32 +14,6 @@ const Errors = {
   ServerError: 'ServerError',
   ClientError: 'ClientError',
   UserNotFound: 'UserNotFound'
-}
-
-function generateRandomPassword(length: number): string {
-  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-  const passwordArray = [];
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    passwordArray.push(charset[randomIndex]);
-  }
-
-  return passwordArray.join('');
-}
-
-// We don't want to return the password within the request
-function parseUserForResponse (user: User) {
-  const returnData = JSON.parse(JSON.stringify(user));
-  delete returnData.password;
-  return returnData;
-}
-
-function isValidUser (user:User): boolean {
-  return !!user.email && 
-  !!user.username &&
-  !!user.firstName &&
-  !!user.lastName
 }
 
 // Create new user
