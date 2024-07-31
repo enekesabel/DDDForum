@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import {prisma} from './client'
 import { User } from '@prisma/client';
+import { error } from 'console';
 
 const app = express();
 app.use(express.json());
@@ -35,10 +36,26 @@ function parseUserForResponse (user: User) {
   return returnData;
 }
 
+function isValidUser (user:User): boolean {
+  return !!user.email && 
+  !!user.username &&
+  !!user.firstName &&
+  !!user.lastName
+}
+
 // Create new user
 app.post('/users/new', async (req: Request, res: Response) => {
   try {
     const userData = req.body;
+
+    // Validate input
+    if(!isValidUser(req.body)){
+      return res.status(400).json({
+        error: Errors.ValidationError,
+        data: undefined,
+        success: false
+      })
+    }
     
     // Check if the user exists or not
     const existingUserByEmail = await prisma.user.findFirst({ where: { email: req.body.email }});
