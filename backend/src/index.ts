@@ -7,6 +7,14 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
+const Errors = {
+  UsernameAlreadyTaken: 'UserNameAlreadyTaken',
+  EmailAlreadyInUse: 'EmailAlreadyInUse',
+  ValidationError: 'ValidationError',
+  ServerError: 'ServerError',
+  ClientError: 'ClientError',
+  UserNotFound: 'UserNotFound'
+}
 
 function generateRandomPassword(length: number): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
@@ -46,7 +54,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
     console.log(error)
     // Return a failure error response
     return res.status(500).json({ 
-      error: 'ServerError', 
+      error: Errors.ServerError, 
       data: undefined, 
       success: false 
      });
