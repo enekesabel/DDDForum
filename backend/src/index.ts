@@ -1,44 +1,33 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { prisma } from './database'
-import { generateRandomPassword, isValidUser, parseUserForResponse } from './utils';
+import { errorResponseBuilder, generateRandomPassword, isValidUser, parseUserForResponse } from './utils';
 
 const app = express();
 app.use(express.json());
 app.use(cors())
 
-const Errors = {
-  UsernameAlreadyTaken: 'UserNameAlreadyTaken',
-  EmailAlreadyInUse: 'EmailAlreadyInUse',
-  ValidationError: 'ValidationError',
-  ServerError: 'ServerError',
-  ClientError: 'ClientError',
-  UserNotFound: 'UserNotFound'
-}
-
 // Create new user
 app.post('/users/new', async (req: Request, res: Response) => {
+  const errorBuilder = errorResponseBuilder(res);
+
   try {
     const userData = req.body;
 
     // Validate input
     if(!isValidUser(req.body)){
-      return res.status(400).json({
-        error: Errors.ValidationError,
-        data: undefined,
-        success: false
-      })
+      return errorBuilder.validationError()
     }
     
     // Check if the user exists or not
     const existingUserByEmail = await prisma.user.findFirst({ where: { email: req.body.email }});
     if (existingUserByEmail) {
-      return res.status(409).json({ error: Errors.EmailAlreadyInUse, data: undefined, success: false })
+      return errorBuilder.emailAlreadyInUse()
     }
     
     const existingUserByUsername = await prisma.user.findFirst({ where: { username: req.body.username }});
     if (existingUserByUsername) {
-      return res.status(409).json({ error: Errors.UsernameAlreadyTaken, data: undefined, success: false })
+      return errorBuilder.usernameAlreadyTaken()
     }
 
     // Success case
@@ -54,16 +43,14 @@ app.post('/users/new', async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error)
     // Return a failure error response
-    return res.status(500).json({ 
-      error: Errors.ServerError, 
-      data: undefined, 
-      success: false 
-     });
+    return errorBuilder.serverError()
   }
 });
 
 // Edit a user
 app.post('/users/edit/:userId', async (req: Request, res: Response) => {
+
+  const errorBuilder = errorResponseBuilder(res);
 
   try {
 
@@ -71,11 +58,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
 
     // Validate input
     if(!isValidUser(userData)){
-      return res.status(400).json({
-        error: Errors.ValidationError,
-        data: undefined,
-        success: false
-      })
+      return errorBuilder.validationError()
     }
 
     const foundUserById = await prisma.user.findUnique({
@@ -85,11 +68,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
     })
 
     if(!foundUserById){
-      return res.status(404).json({
-        error: Errors.UserNotFound, 
-        data: undefined, 
-        success: false 
-      })
+      return errorBuilder.userNotFound()
     }
 
     const foundUserByEmail = await prisma.user.findUnique({
@@ -99,11 +78,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
     })
 
     if(foundUserByEmail && foundUserByEmail.id !== foundUserById.id){
-      return res.status(409).json({
-        error: Errors.EmailAlreadyInUse, 
-        data: undefined, 
-        success: false 
-      })
+      return errorBuilder.emailAlreadyInUse()
     }
 
     const foundUserByUsername = await prisma.user.findUnique({
@@ -113,11 +88,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
     })
 
     if(foundUserByUsername && foundUserByUsername.id !== foundUserById.id){
-      return res.status(409).json({
-        error: Errors.UsernameAlreadyTaken, 
-        data: undefined, 
-        success: false 
-      })
+      return errorBuilder.usernameAlreadyTaken()
     }
     
     const updatedUser = await prisma.user.update({
@@ -136,16 +107,14 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error)
     // Return a failure error response
-    return res.status(500).json({ 
-      error: Errors.ServerError, 
-      data: undefined, 
-      success: false 
-     });
+    return errorBuilder.serverError()
   }
 });
 
 // Get a user by email
 app.get('/users', async (req: Request, res: Response) => {
+  const errorBuilder = errorResponseBuilder(res);
+
   try {
     const {email} = req.query
 
@@ -160,11 +129,7 @@ app.get('/users', async (req: Request, res: Response) => {
     })
 
     if(!foundUser){
-      return res.status(404).json({
-        error: Errors.UserNotFound, 
-        data: undefined, 
-        success: false 
-      })
+      return errorBuilder.userNotFound()
     }
 
     return res.status(200).json({       
@@ -175,11 +140,7 @@ app.get('/users', async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error)
     // Return a failure error response
-    return res.status(500).json({ 
-      error: Errors.ServerError, 
-      data: undefined, 
-      success: false 
-     });
+    return errorBuilder.serverError()
   }
 });
 
