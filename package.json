@@ -1,0 +1,6 @@
+{
+  "name": "DDD Forum",
+  "scripts": {
+    "prepare": "husky"
+  }
+}
