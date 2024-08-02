@@ -7,19 +7,16 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
-// Create new user
 app.post('/users/new', async (req: Request, res: Response) => {
   const errorBuilder = errorResponseBuilder(res);
 
   try {
     const userData = req.body;
 
-    // Validate input
     if(!isValidUser(req.body)){
       return errorBuilder.validationError()
     }
     
-    // Check if the user exists or not
     const existingUserByEmail = await prisma.user.findFirst({ where: { email: req.body.email }});
     if (existingUserByEmail) {
       return errorBuilder.emailAlreadyInUse()
@@ -30,7 +27,6 @@ app.post('/users/new', async (req: Request, res: Response) => {
       return errorBuilder.usernameAlreadyTaken()
     }
 
-    // Success case
     const user = await prisma.user.create({ 
       data: { ...userData, password: generateRandomPassword(10) } 
     });
@@ -41,8 +37,6 @@ app.post('/users/new', async (req: Request, res: Response) => {
       succes: true 
     });
   } catch (error) {
-    console.log(error)
-    // Return a failure error response
     return errorBuilder.serverError()
   }
 });
@@ -56,7 +50,6 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
 
     const {id,password, ...userData} = req.body;
 
-    // Validate input
     if(!isValidUser(userData)){
       return errorBuilder.validationError()
     }
@@ -105,8 +98,6 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
     });
 
   } catch (error) {
-    console.log(error)
-    // Return a failure error response
     return errorBuilder.serverError()
   }
 });
@@ -138,8 +129,6 @@ app.get('/users', async (req: Request, res: Response) => {
       succes: true 
     });
   } catch (error) {
-    console.log(error)
-    // Return a failure error response
     return errorBuilder.serverError()
   }
 });
