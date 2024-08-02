@@ -70,6 +70,8 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       }
     })
 
+    // Allow passing the email unchanged
+    // Only throw error if we'd try to assing the same email to a different user
     if(foundUserByEmail && foundUserByEmail.id !== foundUserById.id){
       return errorBuilder.emailAlreadyInUse()
     }
@@ -80,6 +82,8 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       }
     })
 
+    // Allow passing the username unchanged
+    // Only throw error if we'd try to assing the same username to a different user
     if(foundUserByUsername && foundUserByUsername.id !== foundUserById.id){
       return errorBuilder.usernameAlreadyTaken()
     }
