@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { prisma } from './database'
+import { createUser, findUserByEmail, findUserById, findUserByUsername, updateUser } from './database'
 import { errorResponseBuilder, generateRandomPassword, isValidUser, parseUserForResponse } from './utils';
 
 const app = express();
@@ -17,17 +17,17 @@ app.post('/users/new', async (req: Request, res: Response) => {
       return errorBuilder.validationError()
     }
     
-    const existingUserByEmail = await prisma.user.findFirst({ where: { email: req.body.email }});
+    const existingUserByEmail = await findUserByEmail(req.body.email);
     if (existingUserByEmail) {
       return errorBuilder.emailAlreadyInUse()
     }
     
-    const existingUserByUsername = await prisma.user.findFirst({ where: { username: req.body.username }});
+    const existingUserByUsername = await findUserByUsername(req.body.username);
     if (existingUserByUsername) {
       return errorBuilder.usernameAlreadyTaken()
     }
 
-    const user = await prisma.user.create({ 
+    const user = await createUser({ 
       data: { ...userData, password: generateRandomPassword(10) } 
     });
     
@@ -54,21 +54,13 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       return errorBuilder.validationError()
     }
 
-    const foundUserById = await prisma.user.findUnique({
-      where: {
-        id: Number(req.params.userId)
-      }
-    })
+    const foundUserById = await findUserById(Number(req.params.userId))
 
     if(!foundUserById){
       return errorBuilder.userNotFound()
     }
 
-    const foundUserByEmail = await prisma.user.findUnique({
-      where: {
-        email: userData.email
-      }
-    })
+    const foundUserByEmail = await findUserByEmail(userData.email)
 
     // Allow passing the email unchanged
     // Only throw error if we'd try to assing the same email to a different user
@@ -76,11 +68,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       return errorBuilder.emailAlreadyInUse()
     }
 
-    const foundUserByUsername = await prisma.user.findUnique({
-      where: {
-        username: userData.username
-      }
-    })
+    const foundUserByUsername = await findUserByUsername(userData.username)
 
     // Allow passing the username unchanged
     // Only throw error if we'd try to assing the same username to a different user
@@ -88,12 +76,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       return errorBuilder.usernameAlreadyTaken()
     }
     
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: foundUserById.id
-      },
-        data: userData
-    });
+    const updatedUser = await updateUser(id, userData)
 
     return res.status(200).json({       
       error: undefined, 
@@ -117,11 +100,7 @@ app.get('/users', async (req: Request, res: Response) => {
       throw new Error();
     }
 
-    const foundUser = await prisma.user.findUnique({
-      where: {
-        email: String(email)
-      }
-    })
+    const foundUser = await findUserByEmail(String(email))
 
     if(!foundUser){
       return errorBuilder.userNotFound()
