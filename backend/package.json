@@ -19,6 +19,9 @@
     "test": "jest",
     "test:dev": "jest --watchAll"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
