@@ -27,9 +27,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
             return errorBuilder.usernameAlreadyTaken();
         }
 
-        const user = await createUser({
-            data: { ...userData, password: generateRandomPassword(10) },
-        });
+        const user = await createUser({ ...userData, password: generateRandomPassword(10) });
 
         return res.status(201).json({
             error: undefined,
@@ -37,6 +35,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
             succes: true,
         });
     } catch (error) {
+        console.log(error);
         return errorBuilder.serverError();
     }
 });
