@@ -24,3 +24,18 @@ export const updateUser = (id: number, userData: UserData) =>
         },
         data: userData,
     });
+export const getPosts = () =>
+    prisma.post.findMany({
+        include: {
+            votes: true, // Include associated votes for each post
+            memberPostedBy: {
+                include: {
+                    user: true,
+                },
+            },
+            comments: true,
+        },
+        orderBy: {
+            dateCreated: 'desc', // Sorts by dateCreated in descending order
+        },
+    });
