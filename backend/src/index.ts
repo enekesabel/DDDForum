@@ -93,7 +93,7 @@ app.get('/users', async (req: Request, res: Response) => {
         const { email } = req.query;
 
         if (!email) {
-            throw new Error();
+            return errorBuilder.clientError();
         }
 
         const foundUser = await findUserByEmail(String(email));
