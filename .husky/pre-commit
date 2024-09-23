@@ -1,1 +1,1 @@
-cd ./backend npm run test && npm run prettier-format
+cd ./packages/backend npm run test && npm run prettier-format

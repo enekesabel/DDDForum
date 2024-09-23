@@ -1,6 +1,10 @@
 {
-  "name": "DDD Forum",
-  "scripts": {
+ "name": "@dddforum",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+"scripts": {
     "prepare": "husky"
   }
 }
