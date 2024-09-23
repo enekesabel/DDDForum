@@ -1,1 +1,1 @@
-npm run prettier-format
+npx lint-staged
