@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { createUser, findUserByEmail, findUserById, findUserByUsername, updateUser } from './database';
+import { createUser, findUserByEmail, findUserById, findUserByUsername, getPosts, updateUser } from './database';
 import { errorResponseBuilder, generateRandomPassword, isValidUser, parseUserForResponse } from './utils';
 
 const app = express();
@@ -27,9 +27,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
             return errorBuilder.usernameAlreadyTaken();
         }
 
-        const user = await createUser({
-            data: { ...userData, password: generateRandomPassword(10) },
-        });
+        const user = await createUser({ ...userData, password: generateRandomPassword(10) });
 
         return res.status(201).json({
             error: undefined,
@@ -37,6 +35,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
             succes: true,
         });
     } catch (error) {
+        console.log(error);
         return errorBuilder.serverError();
     }
 });
@@ -94,7 +93,7 @@ app.get('/users', async (req: Request, res: Response) => {
         const { email } = req.query;
 
         if (!email) {
-            throw new Error();
+            return errorBuilder.clientError();
         }
 
         const foundUser = await findUserByEmail(String(email));
@@ -108,6 +107,25 @@ app.get('/users', async (req: Request, res: Response) => {
             data: parseUserForResponse(foundUser),
             succes: true,
         });
+    } catch (error) {
+        return errorBuilder.serverError();
+    }
+});
+
+// Get posts "/posts?sort=recent"
+app.get('/posts', async (req: Request, res: Response) => {
+    const errorBuilder = errorResponseBuilder(res);
+    try {
+        const { sort } = req.query;
+
+        if (sort !== 'recent') {
+            return errorBuilder.clientError();
+        }
+
+        const posts = await getPosts();
+
+        // Get the posts
+        return res.json({ error: undefined, data: { posts }, success: true });
     } catch (error) {
         return errorBuilder.serverError();
     }

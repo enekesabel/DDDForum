@@ -65,5 +65,11 @@ export const errorResponseBuilder = (res: Response) => {
                 data: undefined,
                 success: false,
             }),
+        clientError: () =>
+            res.status(400).json({
+                error: Errors.ClientError,
+                data: undefined,
+                success: false,
+            }),
     };
 };
