@@ -5,7 +5,9 @@
     "packages/*"
   ],
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "clean": "npm run clean --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",
