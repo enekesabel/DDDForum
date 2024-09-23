@@ -7,7 +7,8 @@
   "scripts": {
     "prepare": "husky",
     "clean": "npm run clean --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present"
+    "build": "npm run build --workspaces --if-present",
+    "prettier-format": "prettier --config ./.prettierrc --write ."
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",

@@ -1,6 +1,6 @@
-import logo from "../assets/dddforumlogo.png";
-import { Link, useLocation } from "react-router-dom";
-import { UserData, useUser } from "../contexts/userContext";
+import logo from '../assets/dddforumlogo.png';
+import { Link, useLocation } from 'react-router-dom';
+import { UserData, useUser } from '../contexts/userContext';
 
 const Logo = () => (
   <div id="app-logo">
@@ -11,7 +11,7 @@ const TitleAndSubmission = () => (
   <div id="title-container">
     <h1>Domain-Driven Designers</h1>
     <h3>Where awesome domain driven designers are made</h3>
-    <Link to={"/submit"}>submit</Link>
+    <Link to={'/submit'}>submit</Link>
   </div>
 );
 
@@ -31,7 +31,7 @@ const HeaderActionButton = ({ user }: { user: UserData | null }) => (
 );
 
 const shouldShowActionButton = (pathName: string) => {
-  return pathName !== "/join";
+  return pathName !== '/join';
 };
 
 export const Header = ({}) => {
@@ -40,14 +40,13 @@ export const Header = ({}) => {
   console.log(user);
 
   return (
-    <header id="header" className="flex align-center">
+    <header
+      id="header"
+      className="flex align-center"
+    >
       <Logo />
       <TitleAndSubmission />
-      {shouldShowActionButton(location.pathname) ? (
-        <HeaderActionButton user={user} />
-      ) : (
-        ""
-      )}
+      {shouldShowActionButton(location.pathname) ? <HeaderActionButton user={user} /> : ''}
     </header>
   );
 };

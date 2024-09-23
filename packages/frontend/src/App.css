@@ -1,4 +1,3 @@
-
 html {
   color-scheme: none !important;
   color: unset !important;
@@ -6,7 +5,7 @@ html {
 
 body {
   margin: 0;
-  display: flex; 
+  display: flex;
   place-items: center;
   min-width: 100vw;
   min-height: 100vh;
@@ -35,7 +34,8 @@ body {
   transform: rotate(180deg);
 }
 
-.post-item-details > div, .post-item-details > a {
+.post-item-details > div,
+.post-item-details > a {
   margin-right: 0.5rem;
   border-right: solid 1px black;
   padding-right: 0.5rem;
@@ -85,13 +85,14 @@ body {
   flex-direction: column;
 }
 
-#title-container h1, h3 {
+#title-container h1,
+h3 {
   margin: 0;
 }
 
 .posts-list {
   display: flex;
-    flex-direction: column;
+  flex-direction: column;
 }
 
 .post-item {
@@ -108,7 +109,7 @@ body {
 
 .post-item-title {
   font-weight: bold;
-    font-size: 1.2rem;
+  font-size: 1.2rem;
 }
 
 .post-item-details {
@@ -153,7 +154,6 @@ body {
   color: #888;
 }
 
-
 .overlay-spinner {
   background: #e8e8e8;
   position: fixed;
@@ -178,12 +178,12 @@ body {
   display: block;
   padding: 0.6rem 1rem;
   border-radius: 3px;
-  border: 3px solid rgba(0,0,0,.79);
+  border: 3px solid rgba(0, 0, 0, 0.79);
   width: 100%;
   margin-bottom: 0.5rem;
-  color: rgba(0,0,0,.84);
-  -webkit-transition: all .2s;
-  transition: all .2s;
+  color: rgba(0, 0, 0, 0.84);
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
   font-size: 1rem;
   box-sizing: border-box;
 }

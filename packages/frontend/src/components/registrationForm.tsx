@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export type RegistrationInput = {
   email: string;
   username: string;
   firstName: string;
   lastName: string;
-}
+};
 
 interface RegistrationFormProps {
   onSubmit: (formDetails: RegistrationInput) => void;
@@ -20,9 +20,12 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
 
   const handleSubmit = () => {
     props.onSubmit({
-      email, username, firstName, lastName
-    })
-  }
+      email,
+      username,
+      firstName,
+      lastName,
+    });
+  };
 
   return (
     <div className="registration-form">
@@ -56,10 +59,14 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
           <div>Already have an account?</div>
           <Link to="/login">Login</Link>
         </div>
-        <button onClick={() => handleSubmit()} className="submit-button" type="submit">
+        <button
+          onClick={() => handleSubmit()}
+          className="submit-button"
+          type="submit"
+        >
           Submit
         </button>
       </div>
     </div>
   );
-}
+};

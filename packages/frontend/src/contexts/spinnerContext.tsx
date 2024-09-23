@@ -23,19 +23,15 @@ export const useSpinner = () => {
 };
 
 // Context provider component
-export const SpinnerProvider: React.FC<{children: ReactNode }> = ({ children }) => {
+export const SpinnerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [spinner, setSpinner] = useState<SpinnerData>({ isActive: false });
   const activate = () => {
     setSpinner({ isActive: true });
-  }
-  
+  };
+
   const deactivate = () => {
     setSpinner({ isActive: false });
-  }
+  };
 
-  return (
-    <SpinnerContext.Provider value={{ spinner, activate, deactivate }}>
-      {children}
-    </SpinnerContext.Provider>
-  );
+  return <SpinnerContext.Provider value={{ spinner, activate, deactivate }}>{children}</SpinnerContext.Provider>;
 };

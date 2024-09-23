@@ -1,9 +1,8 @@
-
-import { useEffect, useState } from "react";
-import { Layout } from "../components/layout";
-import { PostsList } from "../components/postsList";
-import { PostsViewSwitcher } from "../components/postsViewSwitcher";
-import { api } from "../api";
+import { useEffect, useState } from 'react';
+import { Layout } from '../components/layout';
+import { PostsList } from '../components/postsList';
+import { PostsViewSwitcher } from '../components/postsViewSwitcher';
+import { api } from '../api';
 
 export const MainPage = () => {
   const [posts, setPosts] = useState([]);
@@ -11,7 +10,7 @@ export const MainPage = () => {
     try {
       let response = await api.posts.getPosts();
 
-      setPosts(response.data.data.posts)
+      setPosts(response.data.data.posts);
     } catch (err) {
       console.log(err);
     }
@@ -19,18 +18,12 @@ export const MainPage = () => {
 
   useEffect(() => {
     loadPosts();
-  }, [])
-
+  }, []);
 
   return (
     <Layout>
       <PostsViewSwitcher />
-      <PostsList
-        posts={posts}
-      />
+      <PostsList posts={posts} />
     </Layout>
   );
 };
-
-
-
