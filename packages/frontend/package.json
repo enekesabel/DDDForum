@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@dddforum/shared": "file:../shared",
     "axios": "^1.6.2",
     "dayjs": "^1.11.10",
     "moment": "^2.29.4",
