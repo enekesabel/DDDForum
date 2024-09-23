@@ -44,13 +44,14 @@ export const RegisterPage = () => {
       console.log('setting data', response.data.data);
       // Stop the loading spinner
       spinner.deactivate();
+
       // Show the toast
       toast('Success! Redirecting home.');
       // In 3 seconds, redirect to the main page
       setTimeout(() => {
         navigate('/');
       }, 3000);
-    } catch (err) {
+    } catch (_err) {
       // If the call failed
       // Stop the spinner
       spinner.deactivate();

@@ -1,3 +1,4 @@
 {
-  "{*,!(.husky/**|package-lock.json)}": "prettier --write"
+  "{*,!(.husky/**|package-lock.json|**/*.?({m,c}){t,j}s?(x))}": ["prettier --write"],
+  "**/*.?({m,c}){t,j}s?(x)": ["eslint --fix", "prettier --write"]
 }

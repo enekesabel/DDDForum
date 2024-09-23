@@ -8,7 +8,7 @@ export const MainPage = () => {
   const [posts, setPosts] = useState([]);
   const loadPosts = async () => {
     try {
-      let response = await api.posts.getPosts();
+      const response = await api.posts.getPosts();
 
       setPosts(response.data.data.posts);
     } catch (err) {

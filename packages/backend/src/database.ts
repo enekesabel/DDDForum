@@ -10,7 +10,7 @@ export const findUserById = (id: number) => prisma.user.findUnique({ where: { id
 export const findUserByEmail = (email: string) => prisma.user.findUnique({ where: { email } });
 export const findUserByUsername = (username: string) => prisma.user.findUnique({ where: { username } });
 export const createUser = async (userData: UserData) => {
-  const cratedUser = await prisma.$transaction(async (tx) => {
+  const cratedUser = await prisma.$transaction(async () => {
     const user = await prisma.user.create({ data: userData });
     await prisma.member.create({ data: { userId: user.id } });
     return user;

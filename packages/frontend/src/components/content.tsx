@@ -1,1 +1,3 @@
-export const Content = ({ children }: any) => <div className="content-container">{children}</div>;
+import { ReactNode } from 'react';
+
+export const Content = ({ children }: { children: ReactNode }) => <div className="content-container">{children}</div>;

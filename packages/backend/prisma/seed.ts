@@ -102,7 +102,7 @@ const initialPostComments: Prisma.CommentCreateInput[] = [
 
 async function seed() {
   for (const user of initialUsers) {
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: user,
     });
   }

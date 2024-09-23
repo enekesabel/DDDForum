@@ -8,7 +8,7 @@
     "clean": "rimraf ./build",
     "start:dev": "npx nodemon",
     "start": "npm run build && node build/index.js",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "test": "jest",
     "test:dev": "jest --watchAll"
   },

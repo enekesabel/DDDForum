@@ -45,6 +45,8 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
   const errorBuilder = errorResponseBuilder(res);
 
   try {
+    // excluding id and password from user data
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, password, ...userData } = req.body;
 
     if (!isValidUser(userData)) {
@@ -80,7 +82,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       data: parseUserForResponse(updatedUser),
       succes: true,
     });
-  } catch (error) {
+  } catch (_error) {
     return errorBuilder.serverError();
   }
 });
@@ -107,7 +109,7 @@ app.get('/users', async (req: Request, res: Response) => {
       data: parseUserForResponse(foundUser),
       succes: true,
     });
-  } catch (error) {
+  } catch (_error) {
     return errorBuilder.serverError();
   }
 });
@@ -126,7 +128,7 @@ app.get('/posts', async (req: Request, res: Response) => {
 
     // Get the posts
     return res.json({ error: undefined, data: { posts }, success: true });
-  } catch (error) {
+  } catch (_error) {
     return errorBuilder.serverError();
   }
 });

@@ -3,12 +3,16 @@ import arrow from '../assets/arrow.svg';
 import moment from 'moment';
 
 type Vote = { id: number; postId: number; voteType: 'Upvote' | 'Downvote' };
-type Comment = {};
+type Comment = object;
 
 type Post = {
   title: string;
   dateCreated: string;
-  memberPostedBy: any;
+  memberPostedBy: {
+    user: {
+      username: string;
+    };
+  };
   comments: Comment[];
   votes: Vote[];
 };

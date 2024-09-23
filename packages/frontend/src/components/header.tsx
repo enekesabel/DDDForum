@@ -34,7 +34,7 @@ const shouldShowActionButton = (pathName: string) => {
   return pathName !== '/join';
 };
 
-export const Header = ({}) => {
+export const Header = () => {
   const { user } = useUser();
   const location = useLocation();
   console.log(user);
