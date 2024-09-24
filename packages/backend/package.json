@@ -4,7 +4,7 @@
   "description": "Backend for DDDForum",
   "main": "index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
+    "build": "ts-node prepareEnv.ts npm run clean && tsc",
     "clean": "rimraf ./build",
     "start:dev": "npx nodemon",
     "start": "npm run build && node build/index.js",
