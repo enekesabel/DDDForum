@@ -6,8 +6,11 @@ import { CreateUserInput } from '@dddforum/shared/src/api/users';
 import { CreateUserInputBuilder } from '@dddforum/shared/tests/support/builders/CreateUserInputBuilder';
 import { app } from '../../src';
 import { Errors } from '../../src/utils';
+import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
+
+beforeEach(DatabaseFixtures.ClearDatabase);
 
 afterAll(() => {
   app.close();
@@ -92,6 +95,49 @@ defineFeature(feature, (test) => {
 
     and('I should not have been sent access to account details', () => {
       expect(createUserResponse.body.data).toBeUndefined();
+      expect(createUserResponse.body.success).toBeFalsy();
+    });
+  });
+
+  test('Account already created with email', ({ given, when, then, and }) => {
+    let userInputs: CreateUserInput[] = [];
+    let createUserResponses: supertest.Response[] = [];
+
+    given(
+      'a set of users already created accounts',
+      async (table: { firstName: string; lastName: string; email: string }[]) => {
+        userInputs = table.map((row) => {
+          return new CreateUserInputBuilder()
+            .withAllRandomDetails()
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .build();
+        });
+        await DatabaseFixtures.SetupWithExistingUsers(userInputs);
+      }
+    );
+
+    when('new users attempt to register with those emails', async () => {
+      createUserResponses = await Promise.all(
+        userInputs.map((userInput) => {
+          return supertest(app).post('/users/new').send(userInput);
+        })
+      );
+    });
+
+    then('they should see an error notifying them that the account already exists', () => {
+      for (const response of createUserResponses) {
+        expect(response.status).toBe(409);
+        expect(response.body.error).toBe(Errors.EmailAlreadyInUse);
+      }
+    });
+
+    and('they should not have been sent access to account details', () => {
+      createUserResponses.forEach((response) => {
+        expect(response.body.success).toBeFalsy();
+        expect(response.body.data).toBeUndefined();
+      });
     });
   });
 });

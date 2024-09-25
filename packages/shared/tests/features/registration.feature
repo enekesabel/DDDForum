@@ -20,3 +20,13 @@ Feature: Registration
     When I register with invalid account details
     Then I should see an error notifying me that my input is invalid
     And I should not have been sent access to account details
+
+  Scenario: Account already created with email
+    Given a set of users already created accounts
+      | firstName | lastName | email             |
+      | John      | Doe      | john@example.com  |
+      | Alice     | Smith    | alice@example.com |
+      | David     | Brown    | david@example.com |
+    When new users attempt to register with those emails
+    Then they should see an error notifying them that the account already exists
+    And they should not have been sent access to account details
