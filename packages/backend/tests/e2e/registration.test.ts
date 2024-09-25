@@ -2,8 +2,8 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import path from 'path';
 import supertest from 'supertest';
-import { CreateUserInput } from '@dddforum/shared/src/api/users';
-import { CreateUserInputBuilder } from '@dddforum/shared/tests/support/builders/CreateUserInputBuilder';
+import { UserInput } from '@dddforum/shared/src/api/users';
+import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { app } from '../../src';
 import { Errors } from '../../src/utils';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
@@ -20,10 +20,10 @@ defineFeature(feature, (test) => {
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
     let createUserResponse: supertest.Response;
     let addEmailToListResponse: supertest.Response;
-    let createUserInput: CreateUserInput;
+    let createUserInput: UserInput;
 
     given('I am a new user', async () => {
-      createUserInput = new CreateUserInputBuilder().withAllRandomDetails().build();
+      createUserInput = new UserInputBuilder().withAllRandomDetails().build();
     });
 
     when('I register with valid account details accepting marketing emails', async () => {
@@ -51,10 +51,10 @@ defineFeature(feature, (test) => {
 
   test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
     let createUserResponse: supertest.Response;
-    let createUserInput: CreateUserInput;
+    let createUserInput: UserInput;
 
     given('I am a new user', async () => {
-      createUserInput = new CreateUserInputBuilder().withAllRandomDetails().build();
+      createUserInput = new UserInputBuilder().withAllRandomDetails().build();
     });
 
     when('I register with valid account details declining marketing emails', async () => {
@@ -78,10 +78,10 @@ defineFeature(feature, (test) => {
 
   test('Invalid or missing registration details', ({ given, when, then, and }) => {
     let createUserResponse: supertest.Response;
-    let createUserInput: CreateUserInput;
+    let createUserInput: UserInput;
 
     given('I am a new user', async () => {
-      createUserInput = new CreateUserInputBuilder().build();
+      createUserInput = new UserInputBuilder().build();
     });
 
     when('I register with invalid account details', async () => {
@@ -100,21 +100,21 @@ defineFeature(feature, (test) => {
   });
 
   test('Account already created with email', ({ given, when, then, and }) => {
-    let userInputs: CreateUserInput[] = [];
+    let userInputs: UserInput[] = [];
     let createUserResponses: supertest.Response[] = [];
 
     given(
       'a set of users already created accounts',
       async (table: { firstName: string; lastName: string; email: string }[]) => {
         userInputs = table.map((row) => {
-          return new CreateUserInputBuilder()
+          return new UserInputBuilder()
             .withAllRandomDetails()
             .withFirstName(row.firstName)
             .withLastName(row.lastName)
             .withEmail(row.email)
             .build();
         });
-        await DatabaseFixtures.SetupWithExistingUsers(userInputs);
+        await DatabaseFixtures.SetupWithExistingUsers(...userInputs);
       }
     );
 
@@ -148,14 +148,14 @@ defineFeature(feature, (test) => {
       'a set of users have already created their accounts with valid details',
       async (table: { firstName: string; lastName: string; email: string; username: string }[]) => {
         const existingUserInputs = table.map((row) => {
-          return new CreateUserInputBuilder()
+          return new UserInputBuilder()
             .withUsername(row.username)
             .withFirstName(row.firstName)
             .withLastName(row.lastName)
             .withEmail(row.email)
             .build();
         });
-        await DatabaseFixtures.SetupWithExistingUsers(existingUserInputs);
+        await DatabaseFixtures.SetupWithExistingUsers(...existingUserInputs);
       }
     );
 
@@ -167,7 +167,7 @@ defineFeature(feature, (test) => {
             return supertest(app)
               .post('/users/new')
               .send(
-                new CreateUserInputBuilder()
+                new UserInputBuilder()
                   .withEmail(row.email)
                   .withUsername(row.username)
                   .withFirstName(row.firstName)

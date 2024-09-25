@@ -1,4 +1,4 @@
-import { CreateUserInput } from '@dddforum/shared/src/api/users';
+import { UserInput } from '@dddforum/shared/src/api/users';
 import { prisma } from '../../../src/database';
 import { faker } from '@faker-js/faker/.';
 
@@ -25,8 +25,8 @@ export class DatabaseFixtures {
     }
   }
 
-  static async SetupWithExistingUsers(userInputs: CreateUserInput[]) {
-    await prisma.$transaction(
+  static async SetupWithExistingUsers(...userInputs: UserInput[]) {
+    return await prisma.$transaction(
       userInputs.map((userInput) => {
         return prisma.user.create({
           data: {
