@@ -9,7 +9,7 @@
     "generate": "ts-node prepareEnv.ts prisma generate",
     "migrate": "ts-node prepareEnv.ts prisma migrate dev",
     "db:seed": "ts-node prepareEnv.ts prisma db seed",
-    "db:reset": "ts-node prepareEnv.ts prisma migrate reset && npm run migrate && npm run generate",
+    "db:reset": "ts-node prepareEnv.ts prisma migrate reset",
     "start:dev": "npm run migrate && npm run generate && npx nodemon",
     "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
     "start": "npm run build && node build/index.js",
