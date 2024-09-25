@@ -133,8 +133,15 @@ app.get('/posts', async (req: Request, res: Response) => {
   }
 });
 
+// Subscribe to marketing emails
+app.post('/marketing/new', async (req: Request, res: Response) => {
+  return res.json({ error: undefined, success: true });
+});
+
 const port = process.env.PORT || 3000;
 
-app.listen(port, async () => {
+const server = app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
 });
+
+export { server as app };
