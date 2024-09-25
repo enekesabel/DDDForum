@@ -24,7 +24,7 @@ export function isValidUser(user: User): boolean {
   return !!user.email && !!user.username && !!user.firstName && !!user.lastName;
 }
 
-const Errors = {
+export const Errors = {
   UsernameAlreadyTaken: 'UserNameAlreadyTaken',
   EmailAlreadyInUse: 'EmailAlreadyInUse',
   ValidationError: 'ValidationError',
