@@ -1,7 +1,13 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { createUser, findUserByEmail, findUserById, findUserByUsername, getPosts, updateUser } from './database';
-import { errorResponseBuilder, generateRandomPassword, isValidUser, parseUserForResponse } from './utils';
+import {
+  errorResponseBuilder,
+  generateRandomPassword,
+  isValidCreateUserInput,
+  isValidUpdateUserInput,
+  parseUserForResponse,
+} from './utils';
 
 const app = express();
 app.use(express.json());
@@ -13,7 +19,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
   try {
     const userData = req.body;
 
-    if (!isValidUser(req.body)) {
+    if (!isValidCreateUserInput(req.body)) {
       return errorBuilder.validationError();
     }
 
@@ -49,7 +55,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, password, ...userData } = req.body;
 
-    if (!isValidUser(userData)) {
+    if (!isValidUpdateUserInput(userData)) {
       return errorBuilder.validationError();
     }
 
@@ -59,23 +65,25 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       return errorBuilder.userNotFound();
     }
 
-    const foundUserByEmail = await findUserByEmail(userData.email);
-
-    // Allow passing the email unchanged
-    // Only throw error if we'd try to assing the same email to a different user
-    if (foundUserByEmail && foundUserByEmail.id !== foundUserById.id) {
-      return errorBuilder.emailAlreadyInUse();
+    if (userData.email) {
+      const foundUserByEmail = await findUserByEmail(userData.email);
+      // Allow passing the email unchanged
+      // Only throw error if we'd try to assing the same email to a different user
+      if (foundUserByEmail && foundUserByEmail.id !== foundUserById.id) {
+        return errorBuilder.emailAlreadyInUse();
+      }
     }
 
-    const foundUserByUsername = await findUserByUsername(userData.username);
-
-    // Allow passing the username unchanged
-    // Only throw error if we'd try to assing the same username to a different user
-    if (foundUserByUsername && foundUserByUsername.id !== foundUserById.id) {
-      return errorBuilder.usernameAlreadyTaken();
+    if (userData.username) {
+      const foundUserByUsername = await findUserByUsername(userData.username);
+      // Allow passing the username unchanged
+      // Only throw error if we'd try to assing the same username to a different user
+      if (foundUserByUsername && foundUserByUsername.id !== foundUserById.id) {
+        return errorBuilder.usernameAlreadyTaken();
+      }
     }
 
-    const updatedUser = await updateUser(id, userData);
+    const updatedUser = await updateUser(Number(req.params.userId), userData);
 
     return res.status(200).json({
       error: undefined,
@@ -83,6 +91,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       succes: true,
     });
   } catch (_error) {
+    console.log(_error);
     return errorBuilder.serverError();
   }
 });
