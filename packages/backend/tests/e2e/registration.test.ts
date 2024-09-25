@@ -140,4 +140,57 @@ defineFeature(feature, (test) => {
       });
     });
   });
+
+  test('Username already taken', ({ given, when, then, and }) => {
+    let createUserResponses: supertest.Response[] = [];
+
+    given(
+      'a set of users have already created their accounts with valid details',
+      async (table: { firstName: string; lastName: string; email: string; username: string }[]) => {
+        const existingUserInputs = table.map((row) => {
+          return new CreateUserInputBuilder()
+            .withUsername(row.username)
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .build();
+        });
+        await DatabaseFixtures.SetupWithExistingUsers(existingUserInputs);
+      }
+    );
+
+    when(
+      'new users attempt to register with already taken usernames',
+      async (table: { firstName: string; lastName: string; email: string; username: string }[]) => {
+        createUserResponses = await Promise.all(
+          table.map((row) => {
+            return supertest(app)
+              .post('/users/new')
+              .send(
+                new CreateUserInputBuilder()
+                  .withEmail(row.email)
+                  .withUsername(row.username)
+                  .withFirstName(row.firstName)
+                  .withLastName(row.lastName)
+                  .build()
+              );
+          })
+        );
+      }
+    );
+
+    then('they see an error notifying them that the username has already been taken', () => {
+      for (const response of createUserResponses) {
+        expect(response.status).toBe(409);
+        expect(response.body.error).toBe(Errors.UsernameAlreadyTaken);
+      }
+    });
+
+    and('they should not have been sent access to account details', () => {
+      createUserResponses.forEach((response) => {
+        expect(response.body.success).toBeFalsy();
+        expect(response.body.data).toBeUndefined();
+      });
+    });
+  });
 });
