@@ -8,7 +8,8 @@
     "clean": "rimraf ./dist",
     "dev": "vite",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "jest -c jest.config.js --verbose tests/e2e/ --runInBand --detectOpenHandles"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
