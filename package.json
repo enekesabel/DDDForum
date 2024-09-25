@@ -9,7 +9,8 @@
     "clean": "npm run clean --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "prettier-format": "prettier --config ./.prettierrc --write .",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
