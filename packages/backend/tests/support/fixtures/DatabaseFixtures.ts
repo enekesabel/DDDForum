@@ -1,6 +1,6 @@
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { prisma } from '../../../src/database';
-import { faker } from '@faker-js/faker/.';
+import { faker } from '@faker-js/faker';
 
 export class DatabaseFixtures {
   static async ClearDatabase() {
