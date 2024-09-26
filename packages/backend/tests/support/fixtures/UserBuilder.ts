@@ -27,6 +27,9 @@ export class UserBuilder {
         },
         password: faker.internet.password(),
       },
+      include: {
+        member: true,
+      },
     });
   }
 }

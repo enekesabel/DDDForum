@@ -1,6 +1,8 @@
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { prisma } from '../../../src/database';
 import { UserBuilder } from './UserBuilder';
+import { PostBuilder } from './PostBuilder';
+import { Post } from '@prisma/client';
 
 export class DatabaseFixtures {
   static async ClearDatabase() {
@@ -27,5 +29,31 @@ export class DatabaseFixtures {
 
   static async SetupWithExistingUsers(...userInputs: UserInput[]) {
     return await prisma.$transaction(userInputs.map((userInput) => UserBuilder.FromUserInput(userInput).build()));
+  }
+
+  static async SetUpWithRandomPostsByUser(userInput: UserInput, postCount: number) {
+    const postBuilders = new Array(postCount).fill(0).map(() => new PostBuilder().withRandomData());
+    return this.SetUpWithPostsByUser(userInput).withPosts(...postBuilders);
+  }
+
+  static SetUpWithPostsByUser(userInput: UserInput) {
+    return {
+      withPosts: async (...posts: PostBuilder[]) => {
+        const user = await UserBuilder.FromUserInput(userInput).build();
+        posts.forEach((post) => {
+          if (!user.member) {
+            throw new Error('User does not have a member');
+          }
+
+          post.fromMember(user.member.id);
+        });
+
+        return this.SetUpWithPosts(...posts);
+      },
+    };
+  }
+
+  static SetUpWithPosts(...posts: PostBuilder[]) {
+    return prisma.$transaction(posts.map((post) => post.build()));
   }
 }
