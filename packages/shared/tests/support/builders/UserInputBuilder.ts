@@ -2,6 +2,12 @@ import { faker } from '@faker-js/faker';
 import { UserInput } from '../../../src/api/users';
 
 export class UserInputBuilder {
+  static FromUserInput(userInput: UserInput) {
+    const builder = new UserInputBuilder();
+    builder.props = userInput;
+    return builder;
+  }
+
   private props: UserInput;
 
   constructor() {

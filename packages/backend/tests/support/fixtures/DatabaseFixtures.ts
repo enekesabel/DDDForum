@@ -1,6 +1,6 @@
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { prisma } from '../../../src/database';
-import { faker } from '@faker-js/faker';
+import { UserBuilder } from './UserBuilder';
 
 export class DatabaseFixtures {
   static async ClearDatabase() {
@@ -26,15 +26,6 @@ export class DatabaseFixtures {
   }
 
   static async SetupWithExistingUsers(...userInputs: UserInput[]) {
-    return await prisma.$transaction(
-      userInputs.map((userInput) => {
-        return prisma.user.create({
-          data: {
-            ...userInput,
-            password: faker.internet.password(),
-          },
-        });
-      })
-    );
+    return await prisma.$transaction(userInputs.map((userInput) => UserBuilder.FromUserInput(userInput).build()));
   }
 }
