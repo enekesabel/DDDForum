@@ -5,11 +5,10 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 export const prisma = globalForPrisma.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
-type UserData = Prisma.UserCreateInput;
 export const findUserById = (id: number) => prisma.user.findUnique({ where: { id } });
 export const findUserByEmail = (email: string) => prisma.user.findUnique({ where: { email } });
 export const findUserByUsername = (username: string) => prisma.user.findUnique({ where: { username } });
-export const createUser = async (userData: UserData) => {
+export const createUser = async (userData: Prisma.UserCreateInput) => {
   const cratedUser = await prisma.$transaction(async () => {
     const user = await prisma.user.create({ data: userData });
     await prisma.member.create({ data: { userId: user.id } });
@@ -17,7 +16,7 @@ export const createUser = async (userData: UserData) => {
   });
   return cratedUser;
 };
-export const updateUser = (id: number, userData: UserData) =>
+export const updateUser = (id: number, userData: Prisma.UserUpdateInput) =>
   prisma.user.update({
     where: {
       id,

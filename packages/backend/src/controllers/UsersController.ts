@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { generateRandomPassword, isValidUpdateUserInput, parseUserForResponse, ResponseBuilder } from '../utils';
+import { generateRandomPassword, parseUserForResponse, ResponseBuilder } from '../utils';
 import { createUser, findUserByEmail, findUserById, findUserByUsername, updateUser } from '../database';
 import { Controller } from './Controller';
 import {
@@ -7,8 +7,9 @@ import {
   UserNotFoundException,
   UsernameAlreadyTakenException,
 } from '@dddforum/shared/src/errors/exceptions';
-import { ClientError, ValidationError } from '@dddforum/shared/src/errors/errors';
+import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { CreateUserDTO } from '../dtos/CreateUserDTO';
+import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
 
 export class UsersController extends Controller {
   protected setupRoutes(): void {
@@ -41,22 +42,17 @@ export class UsersController extends Controller {
 
   private async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
-      // excluding id and password from user data
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id, password, ...userData } = req.body;
+      const updateUserDTO = UpdateUserDTO.Create(req.body);
+      const userId = Number(req.params.userId);
 
-      if (!isValidUpdateUserInput(userData)) {
-        return next(new ValidationError());
-      }
-
-      const foundUserById = await findUserById(Number(req.params.userId));
+      const foundUserById = await findUserById(userId);
 
       if (!foundUserById) {
         return next(new UserNotFoundException());
       }
 
-      if (userData.email) {
-        const foundUserByEmail = await findUserByEmail(userData.email);
+      if (updateUserDTO.email) {
+        const foundUserByEmail = await findUserByEmail(updateUserDTO.email);
         // Allow passing the email unchanged
         // Only throw error if we'd try to assing the same email to a different user
         if (foundUserByEmail && foundUserByEmail.id !== foundUserById.id) {
@@ -64,8 +60,8 @@ export class UsersController extends Controller {
         }
       }
 
-      if (userData.username) {
-        const foundUserByUsername = await findUserByUsername(userData.username);
+      if (updateUserDTO.username) {
+        const foundUserByUsername = await findUserByUsername(updateUserDTO.username);
         // Allow passing the username unchanged
         // Only throw error if we'd try to assing the same username to a different user
         if (foundUserByUsername && foundUserByUsername.id !== foundUserById.id) {
@@ -73,7 +69,7 @@ export class UsersController extends Controller {
         }
       }
 
-      const updatedUser = await updateUser(Number(req.params.userId), userData);
+      const updatedUser = await updateUser(userId, updateUserDTO);
 
       return new ResponseBuilder(res).data(parseUserForResponse(updatedUser)).status(200).build();
     } catch (error) {

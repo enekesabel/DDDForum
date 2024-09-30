@@ -20,18 +20,6 @@ export function generateRandomPassword(length: number): string {
   return passwordArray.join('');
 }
 
-export function isValidUpdateUserInput(user: User): boolean {
-  return user.email === undefined
-    ? true
-    : !!user.email.trim() && user.username === undefined
-      ? true
-      : !!user.username.trim() && user.firstName === undefined
-        ? true
-        : !!user.firstName.trim() && user.lastName === undefined
-          ? true
-          : !!user.lastName.trim();
-}
-
 export class ResponseBuilder<T> {
   private errorMessage: string | undefined;
   private dataToSend: T | undefined;
