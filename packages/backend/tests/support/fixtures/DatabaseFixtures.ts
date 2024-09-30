@@ -1,8 +1,7 @@
 import { UserInput } from '@dddforum/shared/src/api/users';
-import { prisma } from '../../../src/database';
+import { prisma } from '../../../src/prisma';
 import { UserBuilder } from './UserBuilder';
 import { PostBuilder } from './PostBuilder';
-import { Post } from '@prisma/client';
 
 export class DatabaseFixtures {
   static async ClearDatabase() {

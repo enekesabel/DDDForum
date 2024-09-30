@@ -3,27 +3,33 @@ import {
   UsernameAlreadyTakenException,
   UserNotFoundException,
 } from '@dddforum/shared/src/errors/exceptions';
-import { findUserByEmail, findUserByUsername, createUser, findUserById, updateUser } from '../database';
 import { CreateUserDTO } from '../dtos/CreateUserDTO';
 import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
+import { UsersRepository } from '../persistence/UsersRepository';
 
 export class UsersService {
+  private usersRepository: UsersRepository;
+
+  constructor(usersRepository: UsersRepository) {
+    this.usersRepository = usersRepository;
+  }
+
   async createUser(createUserDTO: CreateUserDTO) {
-    const existingUserByEmail = await findUserByEmail(createUserDTO.email);
+    const existingUserByEmail = await this.usersRepository.findUserByEmail(createUserDTO.email);
     if (existingUserByEmail) {
       throw new EmailAlreadyInUseException();
     }
 
-    const existingUserByUsername = await findUserByUsername(createUserDTO.username);
+    const existingUserByUsername = await this.usersRepository.findUserByUsername(createUserDTO.username);
     if (existingUserByUsername) {
       throw new UsernameAlreadyTakenException();
     }
 
-    return await createUser(createUserDTO);
+    return await this.usersRepository.createUser(createUserDTO);
   }
 
   async getUserByEmail(email: string) {
-    const foundUser = await findUserByEmail(email);
+    const foundUser = await this.usersRepository.findUserByEmail(email);
 
     if (!foundUser) {
       throw new UserNotFoundException();
@@ -33,7 +39,7 @@ export class UsersService {
   }
 
   async getUserById(userId: number) {
-    const foundUserById = await findUserById(userId);
+    const foundUserById = await this.usersRepository.findUserById(userId);
 
     if (!foundUserById) {
       throw new UserNotFoundException();
@@ -43,14 +49,14 @@ export class UsersService {
   }
 
   async updateUser(userId: number, updateUserDTO: UpdateUserDTO) {
-    const foundUserById = await findUserById(userId);
+    const foundUserById = await this.usersRepository.findUserById(userId);
 
     if (!foundUserById) {
       throw new UserNotFoundException();
     }
 
     if (updateUserDTO.email) {
-      const foundUserByEmail = await findUserByEmail(updateUserDTO.email);
+      const foundUserByEmail = await this.usersRepository.findUserByEmail(updateUserDTO.email);
       // Allow passing the email unchanged
       // Only throw error if we'd try to assing the same email to a different user
       if (foundUserByEmail && foundUserByEmail.id !== foundUserById.id) {
@@ -59,7 +65,7 @@ export class UsersService {
     }
 
     if (updateUserDTO.username) {
-      const foundUserByUsername = await findUserByUsername(updateUserDTO.username);
+      const foundUserByUsername = await this.usersRepository.findUserByUsername(updateUserDTO.username);
       // Allow passing the username unchanged
       // Only throw error if we'd try to assing the same username to a different user
       if (foundUserByUsername && foundUserByUsername.id !== foundUserById.id) {
@@ -67,6 +73,6 @@ export class UsersService {
       }
     }
 
-    return await updateUser(userId, updateUserDTO);
+    return await this.usersRepository.updateUser(userId, updateUserDTO);
   }
 }

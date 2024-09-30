@@ -1,4 +1,4 @@
-import { User } from './database';
+import { User } from '@prisma/client';
 import { Response } from 'express';
 
 // We don't want to return the password within the request

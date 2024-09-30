@@ -1,7 +1,13 @@
-import { getPosts } from '../database';
+import { PostsRepository } from '../persistence/PostsRepository';
 
 export class PostsService {
+  private postsRepository: PostsRepository;
+
+  constructor(postsRepository: PostsRepository) {
+    this.postsRepository = postsRepository;
+  }
+
   async getPosts() {
-    return await getPosts();
+    return await this.postsRepository.getPosts();
   }
 }

@@ -1,5 +1,5 @@
 import { Post } from '@prisma/client';
-import { prisma } from '../../../src/database';
+import { prisma } from '../../../src/prisma';
 import { faker } from '@faker-js/faker';
 
 export class PostBuilder {
