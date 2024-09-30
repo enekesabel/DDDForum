@@ -7,13 +7,14 @@ import { errorHandler } from './middleware/errorHandler';
 import { PostsController } from './controllers/PostsController';
 import { UsersController } from './controllers/UsersController';
 import { PostsService } from './services/PostsService';
+import { UsersService } from './services/UsersService';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // Handle users
-const usersController = new UsersController();
+const usersController = new UsersController(new UsersService());
 app.use('/users', usersController.getRouter());
 
 // Handle posts
