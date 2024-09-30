@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { ResponseBuilder } from '../utils';
-import { getPosts } from '../database';
 import { Controller } from './Controller';
+import { PostsService } from '../services/PostsService';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
 
 export class PostsController extends Controller {
-  constructor() {
+  constructor(private postsService: PostsService) {
     super();
   }
 
@@ -20,7 +20,7 @@ export class PostsController extends Controller {
       if (sort !== 'recent') {
         return next(new ClientError());
       }
-      const posts = await getPosts();
+      const posts = await this.postsService.getPosts();
       return new ResponseBuilder(res).data({ posts }).status(200).build();
     } catch (error) {
       return next(error);

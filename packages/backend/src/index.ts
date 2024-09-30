@@ -19,6 +19,7 @@ import {
   UserNotFoundException,
 } from '@dddforum/shared/src/errors/exceptions';
 import { ClientError, ValidationError } from '@dddforum/shared/src/errors/errors';
+import { PostsService } from './services/PostsService';
 
 const app = express();
 app.use(express.json());
@@ -118,7 +119,7 @@ app.get('/users', async (req: Request, res: Response, next: NextFunction) => {
 });
 
 // Handle posts
-const postsController = new PostsController();
+const postsController = new PostsController(new PostsService());
 app.use('/posts', postsController.getRouter());
 
 // Subscribe to marketing emails
