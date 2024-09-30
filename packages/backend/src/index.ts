@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { createUser, findUserByEmail, findUserById, findUserByUsername, getPosts, updateUser } from './database';
+import { createUser, findUserByEmail, findUserById, findUserByUsername, updateUser } from './database';
 import {
   generateRandomPassword,
   isValidCreateUserInput,
@@ -12,6 +12,7 @@ import { ContactListAPI } from './services/ContactListAPI';
 import { MarketingController } from './controllers/MarketingController';
 import { MarketingService } from './services/MarketingService';
 import { errorHandler } from './middleware/errorHandler';
+import { PostsController } from './controllers/PostsController';
 import {
   EmailAlreadyInUseException,
   UsernameAlreadyTakenException,
@@ -116,29 +117,18 @@ app.get('/users', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-// Get posts "/posts?sort=recent"
-app.get('/posts', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { sort } = req.query;
+// Handle posts
+const postsController = new PostsController();
+app.use('/posts', postsController.getRouter());
 
-    if (sort !== 'recent') {
-      return next(new ClientError());
-    }
-
-    const posts = await getPosts();
-
-    return new ResponseBuilder(res).data({ posts }).status(200).build();
-  } catch (error) {
-    return next(error);
-  }
-});
+// Subscribe to marketing emails
 
 const contactListAPI = new ContactListAPI();
 const marketingService = new MarketingService(contactListAPI);
 const marketingController = new MarketingController(marketingService);
-
-// Subscribe to marketing emails
 app.use('/marketing', marketingController.getRouter());
+
+// Handle errors
 app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
