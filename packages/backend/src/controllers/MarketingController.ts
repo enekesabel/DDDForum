@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { errorResponseBuilder } from '../utils';
+import { errorResponseBuilder, ResponseBuilder } from '../utils';
 import { MarketingService } from '../services/MarketingService';
 
 export class MarketingController {
@@ -22,12 +22,8 @@ export class MarketingController {
     try {
       const email = req.body.email;
       const result = await this.marketingService.addEmailToList(email);
-      const response = {
-        success: true,
-        data: result,
-        error: {},
-      };
-      return res.status(201).json(response);
+
+      return new ResponseBuilder(res).data(result).status(201).build();
     } catch (_error) {
       const errorBuilder = errorResponseBuilder(res);
       return errorBuilder.serverError();

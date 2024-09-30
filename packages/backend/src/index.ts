@@ -7,6 +7,7 @@ import {
   isValidCreateUserInput,
   isValidUpdateUserInput,
   parseUserForResponse,
+  ResponseBuilder,
 } from './utils';
 import { ContactListAPI } from './services/ContactListAPI';
 import { MarketingController } from './controllers/MarketingController';
@@ -38,11 +39,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
 
     const user = await createUser({ ...userData, password: generateRandomPassword(10) });
 
-    return res.status(201).json({
-      error: undefined,
-      data: parseUserForResponse(user),
-      succes: true,
-    });
+    return new ResponseBuilder(res).data(parseUserForResponse(user)).status(201).build();
   } catch (error) {
     console.log(error);
     return errorBuilder.serverError();
@@ -88,11 +85,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
 
     const updatedUser = await updateUser(Number(req.params.userId), userData);
 
-    return res.status(200).json({
-      error: undefined,
-      data: parseUserForResponse(updatedUser),
-      succes: true,
-    });
+    return new ResponseBuilder(res).data(parseUserForResponse(updatedUser)).status(200).build();
   } catch (_error) {
     console.log(_error);
     return errorBuilder.serverError();
@@ -116,11 +109,7 @@ app.get('/users', async (req: Request, res: Response) => {
       return errorBuilder.userNotFound();
     }
 
-    return res.status(200).json({
-      error: undefined,
-      data: parseUserForResponse(foundUser),
-      succes: true,
-    });
+    return new ResponseBuilder(res).data(parseUserForResponse(foundUser)).status(200).build();
   } catch (_error) {
     return errorBuilder.serverError();
   }
@@ -138,8 +127,7 @@ app.get('/posts', async (req: Request, res: Response) => {
 
     const posts = await getPosts();
 
-    // Get the posts
-    return res.json({ error: undefined, data: { posts }, success: true });
+    return new ResponseBuilder(res).data({ posts }).status(200).build();
   } catch (_error) {
     return errorBuilder.serverError();
   }
