@@ -8,6 +8,9 @@ import {
   isValidUpdateUserInput,
   parseUserForResponse,
 } from './utils';
+import { ContactListAPI } from './services/ContactListAPI';
+import { MarketingController } from './controllers/MarketingController';
+import { MarketingService } from './services/MarketingService';
 
 const app = express();
 app.use(express.json());
@@ -142,10 +145,12 @@ app.get('/posts', async (req: Request, res: Response) => {
   }
 });
 
+const contactListAPI = new ContactListAPI();
+const marketingService = new MarketingService(contactListAPI);
+const marketingController = new MarketingController(marketingService);
+
 // Subscribe to marketing emails
-app.post('/marketing/new', async (req: Request, res: Response) => {
-  return res.json({ error: undefined, success: true });
-});
+app.use('/marketing', marketingController.getRouter());
 
 const port = process.env.PORT || 3000;
 
