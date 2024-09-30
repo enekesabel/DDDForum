@@ -1,5 +1,5 @@
 import { Layout } from '../components/layout';
-import { RegistrationForm, RegistrationInput } from '../components/registrationForm';
+import { MarketingEmailSignupInput, RegistrationForm, RegistrationInput } from '../components/registrationForm';
 import { ToastContainer, toast } from 'react-toastify';
 import { api } from '../api';
 import { useUser } from '../contexts/userContext';
@@ -23,9 +23,11 @@ export const RegisterPage = () => {
   const navigate = useNavigate();
   const spinner = useSpinner();
 
-  const handleSubmitRegistrationForm = async (input: RegistrationInput) => {
+  const handleSubmitRegistrationForm = async (input: RegistrationInput & MarketingEmailSignupInput) => {
+    const { consent, ...registrationInput } = input;
+
     // Validate the form
-    const validationResult = validateForm(input);
+    const validationResult = validateForm(registrationInput);
 
     // If the form is invalid
     if (!validationResult.success) {
@@ -38,10 +40,16 @@ export const RegisterPage = () => {
     spinner.activate();
     try {
       // Make API call
-      const response = await api.register(input);
+      const response = await api.register(registrationInput);
       // Save the user details to the cache
       setUser(response.data.data);
       console.log('setting data', response.data.data);
+
+      // Handle signing up for marketing emails if necessary
+      if (consent) {
+        await api.signUpForMarketingEmails(registrationInput.email);
+      }
+
       // Stop the loading spinner
       spinner.deactivate();
 
@@ -63,7 +71,9 @@ export const RegisterPage = () => {
   return (
     <Layout>
       <ToastContainer />
-      <RegistrationForm onSubmit={(input: RegistrationInput) => handleSubmitRegistrationForm(input)} />
+      <RegistrationForm
+        onSubmit={(input: RegistrationInput & MarketingEmailSignupInput) => handleSubmitRegistrationForm(input)}
+      />
       <OverlaySpinner isActive={spinner.spinner?.isActive} />
     </Layout>
   );

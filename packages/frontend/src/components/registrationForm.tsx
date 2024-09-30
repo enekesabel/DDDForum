@@ -8,8 +8,13 @@ export type RegistrationInput = {
   lastName: string;
 };
 
+export type MarketingEmailSignupInput = {
+  consent: boolean;
+  email: string;
+};
+
 interface RegistrationFormProps {
-  onSubmit: (formDetails: RegistrationInput) => void;
+  onSubmit: (formDetails: RegistrationInput & MarketingEmailSignupInput) => void;
 }
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
@@ -17,6 +22,7 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
   const [username, setUsername] = useState('username');
   const [firstName, setFirstName] = useState('firstName');
   const [lastName, setLastName] = useState('lastName');
+  const [consent, setConsent] = useState(false);
 
   const handleSubmit = () => {
     props.onSubmit({
@@ -24,6 +30,7 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
       username,
       firstName,
       lastName,
+      consent,
     });
   };
 
@@ -54,6 +61,13 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
         placeholder="last name"
         onChange={(e) => setLastName(e.target.value)}
       ></input>
+      <label className="flex">
+        Sign up for marketing emails
+        <input
+          type="checkbox"
+          onChange={(e) => setConsent(e.target.checked)}
+        />
+      </label>
       <div>
         <div className="to-login">
           <div>Already have an account?</div>

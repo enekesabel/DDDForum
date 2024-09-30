@@ -13,4 +13,7 @@ export const api = {
       ...input,
     });
   },
+  signUpForMarketingEmails: (email: string) => {
+    return axios.post('http://localhost:3000/marketing/new');
+  },
 };
