@@ -1,11 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import {
-  generateRandomPassword,
-  isValidCreateUserInput,
-  isValidUpdateUserInput,
-  parseUserForResponse,
-  ResponseBuilder,
-} from '../utils';
+import { generateRandomPassword, isValidUpdateUserInput, parseUserForResponse, ResponseBuilder } from '../utils';
 import { createUser, findUserByEmail, findUserById, findUserByUsername, updateUser } from '../database';
 import { Controller } from './Controller';
 import {
@@ -14,6 +8,7 @@ import {
   UsernameAlreadyTakenException,
 } from '@dddforum/shared/src/errors/exceptions';
 import { ClientError, ValidationError } from '@dddforum/shared/src/errors/errors';
+import { CreateUserDTO } from '../dtos/CreateUserDTO';
 
 export class UsersController extends Controller {
   protected setupRoutes(): void {
@@ -23,28 +18,25 @@ export class UsersController extends Controller {
   }
 
   private async createUser(req: Request, res: Response, next: NextFunction) {
-    const userData = req.body;
+    try {
+      const createUserDTO = CreateUserDTO.Create({ ...req.body, password: generateRandomPassword(10) });
 
-    if (!isValidCreateUserInput(req.body)) {
-      return next(new ValidationError());
+      const existingUserByEmail = await findUserByEmail(createUserDTO.email);
+      if (existingUserByEmail) {
+        return next(new EmailAlreadyInUseException());
+      }
+
+      const existingUserByUsername = await findUserByUsername(createUserDTO.username);
+      if (existingUserByUsername) {
+        return next(new UsernameAlreadyTakenException());
+      }
+
+      const user = await createUser(createUserDTO);
+
+      return new ResponseBuilder(res).data(parseUserForResponse(user)).status(201).build();
+    } catch (error) {
+      return next(error);
     }
-
-    const existingUserByEmail = await findUserByEmail(req.body.email);
-    if (existingUserByEmail) {
-      return next(new EmailAlreadyInUseException());
-    }
-
-    const existingUserByUsername = await findUserByUsername(req.body.username);
-    if (existingUserByUsername) {
-      return next(new UsernameAlreadyTakenException());
-    }
-
-    const user = await createUser({
-      ...userData,
-      password: generateRandomPassword(10),
-    });
-
-    return new ResponseBuilder(res).data(parseUserForResponse(user)).status(201).build();
   }
 
   private async updateUser(req: Request, res: Response, next: NextFunction) {

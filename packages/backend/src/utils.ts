@@ -20,10 +20,6 @@ export function generateRandomPassword(length: number): string {
   return passwordArray.join('');
 }
 
-export function isValidCreateUserInput(user: User): boolean {
-  return !!user.email && !!user.username && !!user.firstName && !!user.lastName;
-}
-
 export function isValidUpdateUserInput(user: User): boolean {
   return user.email === undefined
     ? true
