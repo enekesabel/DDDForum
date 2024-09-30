@@ -5,8 +5,13 @@ import supertest from 'supertest';
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { app } from '../../src';
-import { Errors } from '../../src/utils';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
+import { ValidationError } from '@dddforum/shared/src/errors/errors';
+import {
+  EmailAlreadyInUseException,
+  UsernameAlreadyTakenException,
+  UserNotFoundException,
+} from '@dddforum/shared/src/errors/exceptions';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'));
 
@@ -61,7 +66,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating the request was invalid', () => {
       expect(updateUserResponse.status).toBe(400);
-      expect(updateUserResponse.body.error).toBe(Errors.ValidationError);
+      expect(updateUserResponse.body.error).toBe(new ValidationError().message);
     });
 
     and(`My user details shouldn't be updated`, async () => {
@@ -85,7 +90,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating the user was not found', () => {
       expect(updateUserResponse.status).toBe(404);
-      expect(updateUserResponse.body.error).toBe(Errors.UserNotFound);
+      expect(updateUserResponse.body.error).toBe(new UserNotFoundException().message);
     });
   });
 
@@ -110,7 +115,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating the email is already in use', () => {
       expect(updateUserResponse.status).toBe(409);
-      expect(updateUserResponse.body.error).toBe(Errors.EmailAlreadyInUse);
+      expect(updateUserResponse.body.error).toBe(new EmailAlreadyInUseException().message);
     });
   });
 
@@ -135,7 +140,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating the username is already taken', () => {
       expect(updateUserResponse.status).toBe(409);
-      expect(updateUserResponse.body.error).toBe(Errors.UsernameAlreadyTaken);
+      expect(updateUserResponse.body.error).toBe(new UsernameAlreadyTakenException().message);
     });
   });
 });

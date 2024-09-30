@@ -3,9 +3,10 @@ import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import path from 'path';
 import supertest from 'supertest';
 import { app } from '../../src';
-import { Errors } from '../../src/utils';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserNotFoundException } from '@dddforum/shared/src/errors/exceptions';
+import { ClientError } from '@dddforum/shared/src/errors/errors';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 
@@ -50,7 +51,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating that the user was not found', () => {
       expect(getUserResponse.status).toBe(404);
-      expect(getUserResponse.body.error).toBe(Errors.UserNotFound);
+      expect(getUserResponse.body.error).toBe(new UserNotFoundException().message);
     });
   });
 
@@ -63,7 +64,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating that was a client error', () => {
       expect(getUserResponse.status).toBe(400);
-      expect(getUserResponse.body.error).toBe(Errors.ClientError);
+      expect(getUserResponse.body.error).toBe(new ClientError().message);
     });
   });
 });

@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express';
-import { errorResponseBuilder, ResponseBuilder } from '../utils';
+import { Router, Request, Response, NextFunction } from 'express';
+import { ResponseBuilder } from '../utils';
 import { MarketingService } from '../services/MarketingService';
 
 export class MarketingController {
@@ -18,15 +18,14 @@ export class MarketingController {
     this.router.post('/new', this.addEmailToList.bind(this));
   }
 
-  private async addEmailToList(req: Request, res: Response) {
+  private async addEmailToList(req: Request, res: Response, next: NextFunction) {
     try {
       const email = req.body.email;
       const result = await this.marketingService.addEmailToList(email);
 
       return new ResponseBuilder(res).data(result).status(201).build();
-    } catch (_error) {
-      const errorBuilder = errorResponseBuilder(res);
-      return errorBuilder.serverError();
+    } catch (error) {
+      return next(error);
     }
   }
 }

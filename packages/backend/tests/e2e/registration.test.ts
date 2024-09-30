@@ -5,8 +5,9 @@ import supertest from 'supertest';
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { app } from '../../src';
-import { Errors } from '../../src/utils';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
+import { EmailAlreadyInUseException, UsernameAlreadyTakenException } from '@dddforum/shared/src/errors/exceptions';
+import { ValidationError } from '@dddforum/shared/src/errors/errors';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
@@ -90,7 +91,7 @@ defineFeature(feature, (test) => {
 
     then('I should see an error notifying me that my input is invalid', () => {
       expect(createUserResponse.status).toBe(400);
-      expect(createUserResponse.body.error).toBe(Errors.ValidationError);
+      expect(createUserResponse.body.error).toBe(new ValidationError().message);
     });
 
     and('I should not have been sent access to account details', () => {
@@ -129,7 +130,7 @@ defineFeature(feature, (test) => {
     then('they should see an error notifying them that the account already exists', () => {
       for (const response of createUserResponses) {
         expect(response.status).toBe(409);
-        expect(response.body.error).toBe(Errors.EmailAlreadyInUse);
+        expect(response.body.error).toBe(new EmailAlreadyInUseException().message);
       }
     });
 
@@ -182,7 +183,7 @@ defineFeature(feature, (test) => {
     then('they see an error notifying them that the username has already been taken', () => {
       for (const response of createUserResponses) {
         expect(response.status).toBe(409);
-        expect(response.body.error).toBe(Errors.UsernameAlreadyTaken);
+        expect(response.body.error).toBe(new UsernameAlreadyTakenException().message);
       }
     });
 

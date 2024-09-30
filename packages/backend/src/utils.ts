@@ -36,15 +36,6 @@ export function isValidUpdateUserInput(user: User): boolean {
           : !!user.lastName.trim();
 }
 
-export const Errors = {
-  UsernameAlreadyTaken: 'UserNameAlreadyTaken',
-  EmailAlreadyInUse: 'EmailAlreadyInUse',
-  ValidationError: 'ValidationError',
-  ServerError: 'ServerError',
-  ClientError: 'ClientError',
-  UserNotFound: 'UserNotFound',
-};
-
 export class ResponseBuilder<T> {
   private errorMessage: string | undefined;
   private dataToSend: T | undefined;
@@ -80,44 +71,3 @@ export class ResponseBuilder<T> {
     });
   }
 }
-
-export const errorResponseBuilder = (res: Response) => {
-  return {
-    usernameAlreadyTaken: () =>
-      res.status(409).json({
-        error: Errors.UsernameAlreadyTaken,
-        data: undefined,
-        success: false,
-      }),
-    emailAlreadyInUse: () =>
-      res.status(409).json({
-        error: Errors.EmailAlreadyInUse,
-        data: undefined,
-        success: false,
-      }),
-    validationError: () =>
-      res.status(400).json({
-        error: Errors.ValidationError,
-        data: undefined,
-        success: false,
-      }),
-    serverError: () =>
-      res.status(500).json({
-        error: Errors.ServerError,
-        data: undefined,
-        success: false,
-      }),
-    userNotFound: () =>
-      res.status(404).json({
-        error: Errors.UserNotFound,
-        data: undefined,
-        success: false,
-      }),
-    clientError: () =>
-      res.status(400).json({
-        error: Errors.ClientError,
-        data: undefined,
-        success: false,
-      }),
-  };
-};

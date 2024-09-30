@@ -3,10 +3,10 @@ import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import path from 'path';
 import supertest from 'supertest';
 import { app } from '../../src';
-import { Errors } from '../../src/utils';
 import { Post } from '@prisma/client';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { ClientError } from '@dddforum/shared/src/errors/errors';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'));
 
@@ -51,7 +51,7 @@ defineFeature(feature, (test) => {
 
     then(/^I should receive a client error$/, () => {
       expect(getPostsResponse.status).toBe(400);
-      expect(getPostsResponse.body.error).toBe(Errors.ClientError);
+      expect(getPostsResponse.body.error).toBe(new ClientError().message);
     });
   });
 });

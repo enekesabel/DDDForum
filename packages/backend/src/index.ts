@@ -1,8 +1,7 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { createUser, findUserByEmail, findUserById, findUserByUsername, getPosts, updateUser } from './database';
 import {
-  errorResponseBuilder,
   generateRandomPassword,
   isValidCreateUserInput,
   isValidUpdateUserInput,
@@ -12,57 +11,62 @@ import {
 import { ContactListAPI } from './services/ContactListAPI';
 import { MarketingController } from './controllers/MarketingController';
 import { MarketingService } from './services/MarketingService';
+import { errorHandler } from './middleware/errorHandler';
+import {
+  EmailAlreadyInUseException,
+  UsernameAlreadyTakenException,
+  UserNotFoundException,
+} from '@dddforum/shared/src/errors/exceptions';
+import { ClientError, ValidationError } from '@dddforum/shared/src/errors/errors';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.post('/users/new', async (req: Request, res: Response) => {
-  const errorBuilder = errorResponseBuilder(res);
-
+app.post('/users/new', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userData = req.body;
 
     if (!isValidCreateUserInput(req.body)) {
-      return errorBuilder.validationError();
+      return next(new ValidationError());
     }
 
     const existingUserByEmail = await findUserByEmail(req.body.email);
     if (existingUserByEmail) {
-      return errorBuilder.emailAlreadyInUse();
+      return next(new EmailAlreadyInUseException());
     }
 
     const existingUserByUsername = await findUserByUsername(req.body.username);
     if (existingUserByUsername) {
-      return errorBuilder.usernameAlreadyTaken();
+      return next(new UsernameAlreadyTakenException());
     }
 
-    const user = await createUser({ ...userData, password: generateRandomPassword(10) });
+    const user = await createUser({
+      ...userData,
+      password: generateRandomPassword(10),
+    });
 
     return new ResponseBuilder(res).data(parseUserForResponse(user)).status(201).build();
   } catch (error) {
-    console.log(error);
-    return errorBuilder.serverError();
+    return next(error);
   }
 });
 
 // Edit a user
-app.post('/users/edit/:userId', async (req: Request, res: Response) => {
-  const errorBuilder = errorResponseBuilder(res);
-
+app.post('/users/edit/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     // excluding id and password from user data
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, password, ...userData } = req.body;
 
     if (!isValidUpdateUserInput(userData)) {
-      return errorBuilder.validationError();
+      return next(new ValidationError());
     }
 
     const foundUserById = await findUserById(Number(req.params.userId));
 
     if (!foundUserById) {
-      return errorBuilder.userNotFound();
+      return next(new UserNotFoundException());
     }
 
     if (userData.email) {
@@ -70,7 +74,7 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       // Allow passing the email unchanged
       // Only throw error if we'd try to assing the same email to a different user
       if (foundUserByEmail && foundUserByEmail.id !== foundUserById.id) {
-        return errorBuilder.emailAlreadyInUse();
+        return next(new EmailAlreadyInUseException());
       }
     }
 
@@ -79,57 +83,53 @@ app.post('/users/edit/:userId', async (req: Request, res: Response) => {
       // Allow passing the username unchanged
       // Only throw error if we'd try to assing the same username to a different user
       if (foundUserByUsername && foundUserByUsername.id !== foundUserById.id) {
-        return errorBuilder.usernameAlreadyTaken();
+        return next(new UsernameAlreadyTakenException());
       }
     }
 
     const updatedUser = await updateUser(Number(req.params.userId), userData);
 
     return new ResponseBuilder(res).data(parseUserForResponse(updatedUser)).status(200).build();
-  } catch (_error) {
-    console.log(_error);
-    return errorBuilder.serverError();
+  } catch (error) {
+    return next(error);
   }
 });
 
 // Get a user by email
-app.get('/users', async (req: Request, res: Response) => {
-  const errorBuilder = errorResponseBuilder(res);
-
+app.get('/users', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.query;
 
     if (!email) {
-      return errorBuilder.clientError();
+      return next(new ClientError());
     }
 
     const foundUser = await findUserByEmail(String(email));
 
     if (!foundUser) {
-      return errorBuilder.userNotFound();
+      return next(new UserNotFoundException());
     }
 
     return new ResponseBuilder(res).data(parseUserForResponse(foundUser)).status(200).build();
-  } catch (_error) {
-    return errorBuilder.serverError();
+  } catch (error) {
+    return next(error);
   }
 });
 
 // Get posts "/posts?sort=recent"
-app.get('/posts', async (req: Request, res: Response) => {
-  const errorBuilder = errorResponseBuilder(res);
+app.get('/posts', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { sort } = req.query;
 
     if (sort !== 'recent') {
-      return errorBuilder.clientError();
+      return next(new ClientError());
     }
 
     const posts = await getPosts();
 
     return new ResponseBuilder(res).data({ posts }).status(200).build();
-  } catch (_error) {
-    return errorBuilder.serverError();
+  } catch (error) {
+    return next(error);
   }
 });
 
@@ -139,6 +139,7 @@ const marketingController = new MarketingController(marketingService);
 
 // Subscribe to marketing emails
 app.use('/marketing', marketingController.getRouter());
+app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 
