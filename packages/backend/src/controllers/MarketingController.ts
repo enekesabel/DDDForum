@@ -1,20 +1,14 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ResponseBuilder } from '../utils';
 import { MarketingService } from '../services/MarketingService';
+import { Controller } from './Controller';
 
-export class MarketingController {
-  private router: Router;
-
+export class MarketingController extends Controller {
   constructor(private marketingService: MarketingService) {
-    this.router = Router();
-    this.setupRoutes();
+    super();
   }
 
-  getRouter() {
-    return this.router;
-  }
-
-  private setupRoutes() {
+  protected setupRoutes(): void {
     this.router.post('/new', this.addEmailToList.bind(this));
   }
 

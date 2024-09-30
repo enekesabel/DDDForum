@@ -1,21 +1,15 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ResponseBuilder } from '../utils';
 import { getPosts } from '../database';
+import { Controller } from './Controller';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
 
-export class PostsController {
-  private router: Router;
-
+export class PostsController extends Controller {
   constructor() {
-    this.router = Router();
-    this.setupRoutes();
+    super();
   }
 
-  getRouter() {
-    return this.router;
-  }
-
-  private setupRoutes() {
+  protected setupRoutes(): void {
     this.router.get('/', this.getPosts.bind(this));
   }
 
