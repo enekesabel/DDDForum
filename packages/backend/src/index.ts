@@ -11,13 +11,14 @@ import { UsersService } from './services/UsersService';
 import { UsersRepository } from './persistence/UsersRepository';
 import { PostsRepository } from './persistence/PostsRepository';
 import { prisma } from './prisma';
+import { TransactionalEmailAPI } from './external/TransactionalEmailAPI';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // Handle users
-const usersController = new UsersController(new UsersService(new UsersRepository(prisma)));
+const usersController = new UsersController(new UsersService(new UsersRepository(prisma), new TransactionalEmailAPI()));
 app.use('/users', usersController.getRouter());
 
 // Handle posts

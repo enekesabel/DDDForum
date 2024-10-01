@@ -6,6 +6,7 @@ import {
 import { CreateUserDTO } from '../dtos/CreateUserDTO';
 import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
 import { UsersRepository } from '../persistence/UsersRepository';
+import { TransactionalEmailAPI } from '../external/TransactionalEmailAPI';
 
 function generateRandomPassword(length: number): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
@@ -20,11 +21,10 @@ function generateRandomPassword(length: number): string {
 }
 
 export class UsersService {
-  private usersRepository: UsersRepository;
-
-  constructor(usersRepository: UsersRepository) {
-    this.usersRepository = usersRepository;
-  }
+  constructor(
+    private usersRepository: UsersRepository,
+    private transactionalEmailAPI: TransactionalEmailAPI
+  ) {}
 
   async createUser(createUserDTO: CreateUserDTO) {
     const existingUserByEmail = await this.usersRepository.findUserByEmail(createUserDTO.email);
@@ -37,7 +37,20 @@ export class UsersService {
       throw new UsernameAlreadyTakenException();
     }
 
-    return await this.usersRepository.createUser({ ...createUserDTO, password: generateRandomPassword(10) });
+    const createdUser = await this.usersRepository.createUser({
+      ...createUserDTO,
+      password: generateRandomPassword(10),
+    });
+
+    await this.transactionalEmailAPI.sendMail({
+      to: createdUser.email,
+      subject: 'Welcome to DDD Forum',
+      text: `Welcome to DDDForum. You can login with the following details </br>
+      email: ${createdUser.email}
+      password: ${createdUser.password}`,
+    });
+
+    return createdUser;
   }
 
   async getUserByEmail(email: string) {
