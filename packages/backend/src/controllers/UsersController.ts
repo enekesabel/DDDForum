@@ -1,10 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
-import { parseUserForResponse, ResponseBuilder } from '../utils';
+import { ResponseBuilder } from '../utils';
 import { Controller } from './Controller';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { CreateUserDTO } from '../dtos/CreateUserDTO';
 import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
 import { UsersService } from '../services/UsersService';
+import { User } from '@prisma/client';
+
+// We don't want to return the password within the request
+function parseUserForResponse(user: User) {
+  const returnData = JSON.parse(JSON.stringify(user));
+  delete returnData.password;
+  return returnData;
+}
 
 export class UsersController extends Controller {
   constructor(private usersService: UsersService) {

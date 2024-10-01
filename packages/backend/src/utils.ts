@@ -1,12 +1,4 @@
-import { User } from '@prisma/client';
 import { Response } from 'express';
-
-// We don't want to return the password within the request
-export function parseUserForResponse(user: User) {
-  const returnData = JSON.parse(JSON.stringify(user));
-  delete returnData.password;
-  return returnData;
-}
 
 export class ResponseBuilder<T> {
   private errorMessage: string | undefined;
