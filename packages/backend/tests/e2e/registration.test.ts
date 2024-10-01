@@ -4,17 +4,26 @@ import path from 'path';
 import supertest from 'supertest';
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
-import { app } from '../../src';
+import { CompositionRoot } from '../../src/CompositionRoot';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException } from '@dddforum/shared/src/errors/exceptions';
 import { ValidationError } from '@dddforum/shared/src/errors/errors';
+import { Server } from 'http';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
+const compositionRoot = CompositionRoot.Create();
+
+let app: Server;
 
 beforeEach(DatabaseFixtures.ClearDatabase);
 
-afterAll(() => {
-  app.close();
+beforeAll(async () => {
+  compositionRoot.getWebServer().start();
+  app = compositionRoot.getWebServer().getServer();
+});
+
+afterAll(async () => {
+  await compositionRoot.getWebServer().stop();
 });
 
 defineFeature(feature, (test) => {

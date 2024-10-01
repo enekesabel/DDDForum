@@ -2,18 +2,28 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import path from 'path';
 import supertest from 'supertest';
-import { app } from '../../src';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { UserNotFoundException } from '@dddforum/shared/src/errors/exceptions';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
+import { Server } from 'http';
+import { CompositionRoot } from '../../src/CompositionRoot';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 
+const compositionRoot = CompositionRoot.Create();
+
+let app: Server;
+
 beforeEach(DatabaseFixtures.ClearDatabase);
 
-afterAll(() => {
-  app.close();
+beforeAll(async () => {
+  compositionRoot.getWebServer().start();
+  app = compositionRoot.getWebServer().getServer();
+});
+
+afterAll(async () => {
+  await compositionRoot.getWebServer().stop();
 });
 
 defineFeature(feature, (test) => {

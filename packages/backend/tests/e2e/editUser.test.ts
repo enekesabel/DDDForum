@@ -4,7 +4,6 @@ import path from 'path';
 import supertest from 'supertest';
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
-import { app } from '../../src';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { ValidationError } from '@dddforum/shared/src/errors/errors';
 import {
@@ -12,13 +11,24 @@ import {
   UsernameAlreadyTakenException,
   UserNotFoundException,
 } from '@dddforum/shared/src/errors/exceptions';
+import { Server } from 'http';
+import { CompositionRoot } from '../../src/CompositionRoot';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'));
 
+const compositionRoot = CompositionRoot.Create();
+
+let app: Server;
+
 beforeEach(DatabaseFixtures.ClearDatabase);
 
-afterAll(() => {
-  app.close();
+beforeAll(async () => {
+  compositionRoot.getWebServer().start();
+  app = compositionRoot.getWebServer().getServer();
+});
+
+afterAll(async () => {
+  await compositionRoot.getWebServer().stop();
 });
 
 defineFeature(feature, (test) => {
