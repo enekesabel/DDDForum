@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { generateRandomPassword, parseUserForResponse, ResponseBuilder } from '../utils';
+import { parseUserForResponse, ResponseBuilder } from '../utils';
 import { Controller } from './Controller';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { CreateUserDTO } from '../dtos/CreateUserDTO';
@@ -19,7 +19,7 @@ export class UsersController extends Controller {
 
   private async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const createUserDTO = CreateUserDTO.Create({ ...req.body, password: generateRandomPassword(10) });
+      const createUserDTO = CreateUserDTO.Create(req.body);
 
       const user = await this.usersService.createUser(createUserDTO);
 

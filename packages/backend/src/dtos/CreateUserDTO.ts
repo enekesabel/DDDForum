@@ -5,7 +5,6 @@ type Props = {
   username: string;
   firstName: string;
   lastName: string;
-  password: string;
 };
 
 export class CreateUserDTO {
@@ -13,20 +12,18 @@ export class CreateUserDTO {
   username: string;
   firstName: string;
   lastName: string;
-  password: string;
 
-  static Create({ email, username, firstName, lastName, password }: Props) {
-    if (!email || !username || !firstName || !lastName || !password) {
+  static Create({ email, username, firstName, lastName }: Props) {
+    if (!email || !username || !firstName || !lastName) {
       throw new ValidationError();
     }
-    return new CreateUserDTO({ email, username, firstName, lastName, password });
+    return new CreateUserDTO({ email, username, firstName, lastName });
   }
 
-  private constructor({ email, username, firstName, lastName, password }: Props) {
+  private constructor({ email, username, firstName, lastName }: Props) {
     this.email = email;
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.password = password;
   }
 }

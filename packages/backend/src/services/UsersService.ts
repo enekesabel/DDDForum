@@ -7,6 +7,18 @@ import { CreateUserDTO } from '../dtos/CreateUserDTO';
 import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
 import { UsersRepository } from '../persistence/UsersRepository';
 
+function generateRandomPassword(length: number): string {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+  const passwordArray = [];
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    passwordArray.push(charset[randomIndex]);
+  }
+
+  return passwordArray.join('');
+}
+
 export class UsersService {
   private usersRepository: UsersRepository;
 
@@ -25,7 +37,7 @@ export class UsersService {
       throw new UsernameAlreadyTakenException();
     }
 
-    return await this.usersRepository.createUser(createUserDTO);
+    return await this.usersRepository.createUser({ ...createUserDTO, password: generateRandomPassword(10) });
   }
 
   async getUserByEmail(email: string) {
