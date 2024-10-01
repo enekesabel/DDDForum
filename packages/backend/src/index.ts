@@ -12,17 +12,22 @@ import { UsersRepository } from './persistence/UsersRepository';
 import { PostsRepository } from './persistence/PostsRepository';
 import { prisma } from './prisma';
 import { TransactionalEmailAPI } from './external/TransactionalEmailAPI';
+import { Database } from './Database';
+
+const database = new Database(prisma);
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // Handle users
-const usersController = new UsersController(new UsersService(new UsersRepository(prisma), new TransactionalEmailAPI()));
+const usersController = new UsersController(
+  new UsersService(new UsersRepository(database), new TransactionalEmailAPI())
+);
 app.use('/users', usersController.getRouter());
 
 // Handle posts
-const postsController = new PostsController(new PostsService(new PostsRepository(prisma)));
+const postsController = new PostsController(new PostsService(new PostsRepository(database)));
 app.use('/posts', postsController.getRouter());
 
 // Subscribe to marketing emails

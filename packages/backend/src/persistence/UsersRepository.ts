@@ -1,12 +1,7 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { Repository } from './Repository';
 
-export class UsersRepository {
-  private prisma: PrismaClient;
-
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
-
+export class UsersRepository extends Repository {
   findUserById = (id: number) => this.prisma.user.findUnique({ where: { id } });
   findUserByEmail = (email: string) => this.prisma.user.findUnique({ where: { email } });
   findUserByUsername = (username: string) => this.prisma.user.findUnique({ where: { username } });

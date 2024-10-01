@@ -1,12 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { Repository } from './Repository';
 
-export class PostsRepository {
-  private prisma: PrismaClient;
-
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
-
+export class PostsRepository extends Repository {
   getPosts = () =>
     this.prisma.post.findMany({
       include: {
