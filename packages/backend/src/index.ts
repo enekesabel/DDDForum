@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { ContactListAPI } from './services/ContactListAPI';
+import { ContactListAPI } from './external/ContactListAPI';
 import { MarketingController } from './controllers/MarketingController';
 import { MarketingService } from './services/MarketingService';
 import { errorHandler } from './middleware/errorHandler';
