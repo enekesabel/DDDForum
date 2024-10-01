@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import { ResponseBuilder } from '../utils';
-import { Controller } from './Controller';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
-import { CreateUserDTO } from '../dtos/CreateUserDTO';
-import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
-import { UsersService } from '../services/UsersService';
 import { User } from '@prisma/client';
+import { Controller } from '../../shared/Controller';
+import { ResponseBuilder } from '../../shared/utils';
+import { CreateUserDTO } from './CreateUserDTO';
+import { UpdateUserDTO } from './UpdateUserDTO';
+import { UsersService } from './UsersService';
 
 // We don't want to return the password within the request
 function parseUserForResponse(user: User) {

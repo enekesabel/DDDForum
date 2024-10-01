@@ -6,7 +6,7 @@ import {
   UsernameAlreadyTakenException,
   UserNotFoundException,
 } from '@dddforum/shared/src/errors/exceptions';
-import { ResponseBuilder } from '../utils';
+import { ResponseBuilder } from './utils';
 
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err) {

@@ -1,17 +1,17 @@
-import { MarketingController } from './controllers/MarketingController';
-import { PostsController } from './controllers/PostsController';
-import { UsersController } from './controllers/UsersController';
-import { Database } from './Database';
-import { ContactListAPI } from './external/ContactListAPI';
-import { TransactionalEmailAPI } from './external/TransactionalEmailAPI';
-import { errorHandler } from './middleware/errorHandler';
-import { PostsRepository } from './persistence/PostsRepository';
-import { UsersRepository } from './persistence/UsersRepository';
-import { prisma } from './prisma';
+import { Database } from './database/Database';
+import { ContactListAPI } from '../modules/marketing/ContactListAPI';
+import { TransactionalEmailAPI } from '../modules/notifications/TransactionalEmailAPI';
+import { errorHandler } from './errorHandler';
+import { prisma } from './database/prisma/prisma';
 import { WebServer } from './WebServer';
-import { MarketingService } from './services/MarketingService';
-import { PostsService } from './services/PostsService';
-import { UsersService } from './services/UsersService';
+import { PostsService } from '../modules/posts/PostsService';
+import { UsersService } from '../modules/users/UsersService';
+import { UsersRepository } from '../modules/users/UsersRepository';
+import { MarketingController } from '../modules/marketing/MarketingController';
+import { MarketingService } from '../modules/marketing/MarketingService';
+import { PostsController } from '../modules/posts/PostsController';
+import { PostsRepository } from '../modules/posts/PostsRepository';
+import { UsersController } from '../modules/users/UsersController';
 
 export class CompositionRoot {
   private static Instance: CompositionRoot;

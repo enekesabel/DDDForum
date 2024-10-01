@@ -1,5 +1,5 @@
 import { UserInput } from '@dddforum/shared/src/api/users';
-import { prisma } from '../../../src/prisma';
+import { prisma } from '../../../src/shared/database/prisma/prisma';
 import { UserBuilder } from './UserBuilder';
 import { PostBuilder } from './PostBuilder';
 

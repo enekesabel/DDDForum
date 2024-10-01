@@ -1,6 +1,6 @@
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
-import { prisma } from '../../../src/prisma';
+import { prisma } from '../../../src/shared/database/prisma/prisma';
 import { faker } from '@faker-js/faker';
 
 export class UserBuilder {

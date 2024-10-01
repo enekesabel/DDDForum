@@ -7,7 +7,7 @@ import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { Server } from 'http';
-import { CompositionRoot } from '../../src/CompositionRoot';
+import { CompositionRoot } from '../../src/shared/CompositionRoot';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'));
 

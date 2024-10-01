@@ -3,10 +3,10 @@ import {
   UsernameAlreadyTakenException,
   UserNotFoundException,
 } from '@dddforum/shared/src/errors/exceptions';
-import { CreateUserDTO } from '../dtos/CreateUserDTO';
-import { UpdateUserDTO } from '../dtos/UpdateUserDTO';
-import { UsersRepository } from '../persistence/UsersRepository';
-import { TransactionalEmailAPI } from '../external/TransactionalEmailAPI';
+import { CreateUserDTO } from './CreateUserDTO';
+import { UpdateUserDTO } from './UpdateUserDTO';
+import { UsersRepository } from './UsersRepository';
+import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
 
 function generateRandomPassword(length: number): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';

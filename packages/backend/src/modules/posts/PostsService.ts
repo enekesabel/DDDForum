@@ -1,4 +1,4 @@
-import { PostsRepository } from '../persistence/PostsRepository';
+import { PostsRepository } from './PostsRepository';
 
 export class PostsService {
   private postsRepository: PostsRepository;

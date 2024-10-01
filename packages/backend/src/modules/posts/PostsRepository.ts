@@ -1,4 +1,4 @@
-import { Repository } from './Repository';
+import { Repository } from '../../shared/Repository';
 
 export class PostsRepository extends Repository {
   getPosts = () =>

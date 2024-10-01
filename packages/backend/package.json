@@ -19,7 +19,8 @@
     "test:e2e": "jest -c jest.config.e2e.ts --detectOpenHandles"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "schema": "src/shared/database/prisma/schema.prisma",
+    "seed": "ts-node src/shared/database/prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

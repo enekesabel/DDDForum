@@ -1,4 +1,4 @@
-import { ContactListAPI } from '../external/ContactListAPI';
+import { ContactListAPI } from './ContactListAPI';
 
 export class MarketingService {
   constructor(private contactListAPI: ContactListAPI) {}
