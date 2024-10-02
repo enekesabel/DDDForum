@@ -1,12 +1,8 @@
-import {
-  EmailAlreadyInUseException,
-  UsernameAlreadyTakenException,
-  UserNotFoundException,
-} from '@dddforum/shared/src/errors/exceptions';
 import { CreateUserDTO } from './CreateUserDTO';
 import { UpdateUserDTO } from './UpdateUserDTO';
 import { UsersRepository } from './UsersRepository';
 import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
+import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from './usersExceptions';
 
 function generateRandomPassword(length: number): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';

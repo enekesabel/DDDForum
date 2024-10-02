@@ -1,4 +1,4 @@
-export { errorHandler } from './errorHandler';
+export * from './errors';
 export { SharedModule } from './SharedModule';
 export { Controller } from './Controller';
 export { Database } from './database/Database';

@@ -6,9 +6,9 @@ import { UserInput } from '@dddforum/shared/src/api/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { CompositionRoot } from '../../src/core';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
-import { EmailAlreadyInUseException, UsernameAlreadyTakenException } from '@dddforum/shared/src/errors/exceptions';
-import { ValidationError } from '@dddforum/shared/src/errors/errors';
 import { Server } from 'http';
+import { ValidationError } from '../../src/shared';
+import { EmailAlreadyInUseException, UsernameAlreadyTakenException } from '../../src/modules/users';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 const compositionRoot = CompositionRoot.Create();

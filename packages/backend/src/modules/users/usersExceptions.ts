@@ -1,6 +1,4 @@
-import { CustomError } from './CustomError';
-
-export abstract class BaseException extends CustomError {}
+import { BaseException } from '../../shared';
 
 export class UsernameAlreadyTakenException extends BaseException {
   constructor() {

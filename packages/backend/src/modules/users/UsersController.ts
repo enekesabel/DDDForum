@@ -1,7 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { ClientError } from '@dddforum/shared/src/errors/errors';
+import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { User } from '@prisma/client';
-import { Controller, ResponseBuilder } from '../../shared';
+import { ClientError, Controller, ResponseBuilder } from '../../shared';
 import { CreateUserDTO } from './CreateUserDTO';
 import { UpdateUserDTO } from './UpdateUserDTO';
 import { UsersService } from './UsersService';
@@ -14,8 +13,12 @@ function parseUserForResponse(user: User) {
 }
 
 export class UsersController extends Controller {
-  constructor(private usersService: UsersService) {
+  constructor(
+    private usersService: UsersService,
+    private errorHandler: ErrorRequestHandler
+  ) {
     super();
+    this.router.use(this.errorHandler);
   }
 
   protected setupRoutes(): void {

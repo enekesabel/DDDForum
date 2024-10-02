@@ -4,10 +4,10 @@ import path from 'path';
 import supertest from 'supertest';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
-import { UserNotFoundException } from '@dddforum/shared/src/errors/exceptions';
-import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { Server } from 'http';
 import { CompositionRoot } from '../../src/core';
+import { ClientError } from '../../src/shared';
+import { UserNotFoundException } from '../../src/modules/users';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 

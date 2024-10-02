@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { PostsService } from './PostsService';
-import { Controller, ResponseBuilder } from '../../shared';
+import { ClientError, Controller, ResponseBuilder } from '../../shared';
 
 export class PostsController extends Controller {
   constructor(private postsService: PostsService) {

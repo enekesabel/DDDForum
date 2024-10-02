@@ -1,6 +1,7 @@
 import { Database, WebServer } from '../../shared';
 import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
 import { UsersController } from './UsersController';
+import { usersErrorHandler } from './usersErrorHandler';
 import { UsersRepository } from './UsersRepository';
 import { UsersService } from './UsersService';
 
@@ -16,7 +17,7 @@ export class UsersModule {
     this.transactionalEmailAPI = transactionalEmailAPI;
     this.usersRepository = new UsersRepository(this.database);
     this.usersService = new UsersService(this.usersRepository, this.transactionalEmailAPI);
-    this.usersController = new UsersController(this.usersService);
+    this.usersController = new UsersController(this.usersService, usersErrorHandler);
 
     webServer.registerController('/users', this.usersController);
   }

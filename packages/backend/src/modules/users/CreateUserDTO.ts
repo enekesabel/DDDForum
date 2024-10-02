@@ -1,4 +1,4 @@
-import { ValidationError } from '@dddforum/shared/src/errors/errors';
+import { ValidationError } from '../../shared';
 
 type Props = {
   email: string;

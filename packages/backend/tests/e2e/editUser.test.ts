@@ -5,14 +5,14 @@ import supertest from 'supertest';
 import { UserInput } from '@dddforum/shared/src/api/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
-import { ValidationError } from '@dddforum/shared/src/errors/errors';
-import {
-  EmailAlreadyInUseException,
-  UsernameAlreadyTakenException,
-  UserNotFoundException,
-} from '@dddforum/shared/src/errors/exceptions';
 import { Server } from 'http';
 import { CompositionRoot } from '../../src/core';
+import { ValidationError } from '../../src/shared';
+import {
+  UserNotFoundException,
+  EmailAlreadyInUseException,
+  UsernameAlreadyTakenException,
+} from '../../src/modules/users';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'));
 
