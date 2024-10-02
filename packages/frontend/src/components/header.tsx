@@ -25,7 +25,9 @@ const HeaderActionButton = ({ user }: { user: UserData | null }) => (
         </u>
       </div>
     ) : (
-      <Link to="/join">Join</Link>
+      <Link to="/join">
+        <button>Join</button>
+      </Link>
     )}
   </div>
 );
