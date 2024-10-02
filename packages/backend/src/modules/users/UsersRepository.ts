@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { Repository } from '../../shared/Repository';
+import { Repository } from '../../shared';
 
 export class UsersRepository extends Repository {
   findUserById = (id: number) => this.prisma.user.findUnique({ where: { id } });

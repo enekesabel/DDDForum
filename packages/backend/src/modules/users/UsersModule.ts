@@ -1,9 +1,8 @@
-import { Database } from '../../shared/database/Database';
+import { Database, WebServer } from '../../shared';
 import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
 import { UsersController } from './UsersController';
 import { UsersRepository } from './UsersRepository';
 import { UsersService } from './UsersService';
-import { WebServer } from '../../shared/WebServer';
 
 export class UsersModule {
   private database: Database;

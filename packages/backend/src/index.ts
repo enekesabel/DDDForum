@@ -1,3 +1,3 @@
-import { CompositionRoot } from './shared/CompositionRoot';
+import { CompositionRoot } from './core';
 
 CompositionRoot.Create().getWebServer().start();

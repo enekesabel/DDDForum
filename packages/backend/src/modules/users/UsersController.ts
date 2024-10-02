@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { User } from '@prisma/client';
-import { Controller } from '../../shared/Controller';
-import { ResponseBuilder } from '../../shared/utils';
+import { Controller, ResponseBuilder } from '../../shared';
 import { CreateUserDTO } from './CreateUserDTO';
 import { UpdateUserDTO } from './UpdateUserDTO';
 import { UsersService } from './UsersService';

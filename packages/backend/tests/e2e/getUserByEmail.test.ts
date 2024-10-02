@@ -7,7 +7,7 @@ import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserIn
 import { UserNotFoundException } from '@dddforum/shared/src/errors/exceptions';
 import { ClientError } from '@dddforum/shared/src/errors/errors';
 import { Server } from 'http';
-import { CompositionRoot } from '../../src/shared/CompositionRoot';
+import { CompositionRoot } from '../../src/core';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 

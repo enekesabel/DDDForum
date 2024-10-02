@@ -12,7 +12,7 @@ import {
   UserNotFoundException,
 } from '@dddforum/shared/src/errors/exceptions';
 import { Server } from 'http';
-import { CompositionRoot } from '../../src/shared/CompositionRoot';
+import { CompositionRoot } from '../../src/core';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'));
 

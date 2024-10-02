@@ -1,0 +1,1 @@
+export { CompositionRoot } from './CompositionRoot';

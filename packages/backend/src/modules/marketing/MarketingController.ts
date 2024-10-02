@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Controller } from '../../shared/Controller';
-import { ResponseBuilder } from '../../shared/utils';
+import { Controller, ResponseBuilder } from '../../shared';
 import { MarketingService } from './MarketingService';
 
 export class MarketingController extends Controller {

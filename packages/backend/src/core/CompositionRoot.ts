@@ -1,9 +1,8 @@
-import { SharedModule } from './SharedModule';
-import { UsersModule } from '../modules/users/UsersModule';
-import { NotificationsModule } from '../modules/notifications/NotificationsModule';
-import { PostsModule } from '../modules/posts/PostsModule';
-import { MarketingModule } from '../modules/marketing/MarketingModule';
-import { errorHandler } from './errorHandler';
+import { SharedModule, errorHandler } from '../shared';
+import { UsersModule } from '../modules/users';
+import { NotificationsModule } from '../modules/notifications';
+import { PostsModule } from '../modules/posts';
+import { MarketingModule } from '../modules/marketing';
 
 export class CompositionRoot {
   private static Instance: CompositionRoot;

@@ -1,8 +1,7 @@
-import { Database } from '../../shared/database/Database';
+import { Database, WebServer } from '../../shared';
 import { PostsController } from './PostsController';
 import { PostsRepository } from './PostsRepository';
 import { PostsService } from './PostsService';
-import { WebServer } from '../../shared/WebServer';
 
 export class PostsModule {
   private database: Database;
