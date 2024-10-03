@@ -1,4 +1,4 @@
-import { UserInput } from '@dddforum/shared/src/api/users';
+import { UserInput } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { prisma } from '../../../src/shared';
 import { faker } from '@faker-js/faker';

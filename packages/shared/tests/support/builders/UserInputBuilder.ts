@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { UserInput } from '../../../src/api/users';
+import { UserInput } from '../../../src/modules/users/usersTypes';
 
 export class UserInputBuilder {
   static FromUserInput(userInput: UserInput) {
