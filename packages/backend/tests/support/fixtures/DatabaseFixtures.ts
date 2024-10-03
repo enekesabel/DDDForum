@@ -1,4 +1,4 @@
-import { UserInput } from '@dddforum/shared/src/api/users';
+import { UserInput } from '@dddforum/shared/src/modules/users';
 import { prisma } from '../../../src/shared';
 import { UserBuilder } from './UserBuilder';
 import { PostBuilder } from './PostBuilder';

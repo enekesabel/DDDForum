@@ -1,30 +1,26 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import path from 'path';
-import supertest from 'supertest';
-import { UserInput } from '@dddforum/shared/src/api/users';
+import { UpdateUserResponse, UserInput } from '@dddforum/shared/src/modules/users';
+import { APIClient } from '@dddforum/shared/src/core';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
-import { Server } from 'http';
 import { CompositionRoot } from '../../src/core';
-import { ValidationError } from '../../src/shared';
-import {
-  UserNotFoundException,
-  EmailAlreadyInUseException,
-  UsernameAlreadyTakenException,
-} from '../../src/modules/users';
+import { UserExceptions } from '@dddforum/shared/src/modules/users';
+import { GenericErrors } from '@dddforum/shared/src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'));
 
 const compositionRoot = CompositionRoot.Create();
 
-let app: Server;
+let apiClient: APIClient;
 
 beforeEach(DatabaseFixtures.ClearDatabase);
 
 beforeAll(async () => {
-  compositionRoot.getWebServer().start();
-  app = compositionRoot.getWebServer().getServer();
+  await compositionRoot.getWebServer().start();
+  const app = compositionRoot.getWebServer().getServer();
+  apiClient = APIClient.FromServer(app);
 });
 
 afterAll(async () => {
@@ -33,7 +29,7 @@ afterAll(async () => {
 
 defineFeature(feature, (test) => {
   test('Successful user edit', ({ given, when, then }) => {
-    let updateUserResponse: supertest.Response;
+    let updateUserResponse: UpdateUserResponse;
     let updateUserInput: UserInput;
     let userId: number;
 
@@ -45,22 +41,21 @@ defineFeature(feature, (test) => {
 
     when('I try to update my user details using valid data', async () => {
       updateUserInput = new UserInputBuilder().withAllRandomDetails().build();
-      updateUserResponse = await supertest(app).post(`/users/edit/${userId}`).send(updateUserInput);
+      updateUserResponse = await apiClient.users.editUser(userId, updateUserInput);
     });
 
     then('my user details should be updated successfully', async () => {
-      expect(updateUserResponse.status).toBe(200);
-      expect(updateUserResponse.body.data).toBeDefined();
-      expect(updateUserResponse.body.data.id).toBe(userId);
-      expect(updateUserResponse.body.data.firstName).toBe(updateUserInput.firstName);
-      expect(updateUserResponse.body.data.lastName).toBe(updateUserInput.lastName);
-      expect(updateUserResponse.body.data.username).toBe(updateUserInput.username);
-      expect(updateUserResponse.body.data.email).toBe(updateUserInput.email);
+      expect(updateUserResponse.success).toBe(true);
+      expect(updateUserResponse.data?.id).toBe(userId);
+      expect(updateUserResponse.data?.firstName).toBe(updateUserInput.firstName);
+      expect(updateUserResponse.data?.lastName).toBe(updateUserInput.lastName);
+      expect(updateUserResponse.data?.username).toBe(updateUserInput.username);
+      expect(updateUserResponse.data?.email).toBe(updateUserInput.email);
     });
   });
 
   test('Invalid or missing user data', ({ given, when, then, and }) => {
-    let updateUserResponse: supertest.Response;
+    let updateUserResponse: UpdateUserResponse;
     let userId: number;
 
     given('I am a registered user', async () => {
@@ -71,21 +66,21 @@ defineFeature(feature, (test) => {
 
     when('I try to update my user details using invalid data', async () => {
       const invalidUserInput = new UserInputBuilder().withEmail('').build();
-      updateUserResponse = await supertest(app).post(`/users/edit/${userId}`).send(invalidUserInput);
+      updateUserResponse = await apiClient.users.editUser(userId, invalidUserInput);
     });
 
     then('I should receive an error indicating the request was invalid', () => {
-      expect(updateUserResponse.status).toBe(400);
-      expect(updateUserResponse.body.error).toBe(new ValidationError().message);
+      expect(updateUserResponse.success).toBe(false);
+      expect(updateUserResponse.error).toMatchObject({ code: GenericErrors.ValidationError });
     });
 
     and(`My user details shouldn't be updated`, async () => {
-      expect(updateUserResponse.body.data).toBeUndefined();
+      expect(updateUserResponse.data).toBeUndefined();
     });
   });
 
   test('User not found', ({ given, when, then }) => {
-    let updateUserResponse: supertest.Response;
+    let updateUserResponse: UpdateUserResponse;
 
     given('I am a registered user', async () => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().build();
@@ -93,19 +88,19 @@ defineFeature(feature, (test) => {
     });
 
     when('I attempt to edit a user that does not exist', async () => {
-      updateUserResponse = await supertest(app)
-        .post('/users/edit/999999')
-        .send(new UserInputBuilder().withAllRandomDetails().build());
+      updateUserResponse = await apiClient.users.editUser(
+        999999,
+        new UserInputBuilder().withAllRandomDetails().build()
+      );
     });
 
     then('I should receive an error indicating the user was not found', () => {
-      expect(updateUserResponse.status).toBe(404);
-      expect(updateUserResponse.body.error).toBe(new UserNotFoundException().message);
+      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.UserNotFound });
     });
   });
 
   test('Email already in use', ({ given, and, when, then }) => {
-    let updateUserResponse: supertest.Response;
+    let updateUserResponse: UpdateUserResponse;
     let userId: number;
 
     given(/^I am a registered user with email "(.*)"$/, async (email: string) => {
@@ -120,17 +115,16 @@ defineFeature(feature, (test) => {
     });
 
     when(/^I attempt to update my email to "(.*)"$/, async (newEmail: string) => {
-      updateUserResponse = await supertest(app).post(`/users/edit/${userId}`).send({ email: newEmail });
+      updateUserResponse = await apiClient.users.editUser(userId, { email: newEmail });
     });
 
     then('I should receive an error indicating the email is already in use', () => {
-      expect(updateUserResponse.status).toBe(409);
-      expect(updateUserResponse.body.error).toBe(new EmailAlreadyInUseException().message);
+      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.EmailAlreadyInUse });
     });
   });
 
   test('Username already taken', ({ given, and, when, then }) => {
-    let updateUserResponse: supertest.Response;
+    let updateUserResponse: UpdateUserResponse;
     let userId: number;
 
     given(/^I am a registered user with username "(.*)"$/, async (username: string) => {
@@ -145,12 +139,11 @@ defineFeature(feature, (test) => {
     });
 
     when(/^I attempt to update my username to "(.*)"$/, async (newUsername: string) => {
-      updateUserResponse = await supertest(app).post(`/users/edit/${userId}`).send({ username: newUsername });
+      updateUserResponse = await apiClient.users.editUser(userId, { username: newUsername });
     });
 
     then('I should receive an error indicating the username is already taken', () => {
-      expect(updateUserResponse.status).toBe(409);
-      expect(updateUserResponse.body.error).toBe(new UsernameAlreadyTakenException().message);
+      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.UsernameAlreadyTaken });
     });
   });
 });

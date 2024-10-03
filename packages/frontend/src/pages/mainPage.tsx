@@ -10,7 +10,7 @@ export const MainPage = () => {
     try {
       const response = await api.posts.getPosts();
 
-      setPosts(response.data.data.posts);
+      setPosts(response.data.data);
     } catch (err) {
       console.log(err);
     }

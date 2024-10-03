@@ -4,9 +4,10 @@ import { ClientError, Controller, ResponseBuilder } from '../../shared';
 import { CreateUserDTO } from './CreateUserDTO';
 import { UpdateUserDTO } from './UpdateUserDTO';
 import { UsersService } from './UsersService';
+import { CreateUserResponse, GetUserResponse, UpdateUserResponse } from '@dddforum/shared/src/modules/users';
 
 // We don't want to return the password within the request
-function parseUserForResponse(user: User) {
+function parseUserForResponse(user: User): Omit<User, 'password'> {
   const returnData = JSON.parse(JSON.stringify(user));
   delete returnData.password;
   return returnData;
@@ -33,9 +34,11 @@ export class UsersController extends Controller {
 
       const user = await this.usersService.createUser(createUserDTO);
 
-      return new ResponseBuilder(res).data(parseUserForResponse(user)).status(201).build();
+      const parsedUser = parseUserForResponse(user);
+
+      return new ResponseBuilder<CreateUserResponse>(res).data(parsedUser).status(201).build();
     } catch (error) {
-      return next(error);
+      next(error);
     }
   }
 
@@ -46,7 +49,7 @@ export class UsersController extends Controller {
 
       const updatedUser = await this.usersService.updateUser(userId, updateUserDTO);
 
-      return new ResponseBuilder(res).data(parseUserForResponse(updatedUser)).status(200).build();
+      return new ResponseBuilder<UpdateUserResponse>(res).data(parseUserForResponse(updatedUser)).status(200).build();
     } catch (error) {
       return next(error);
     }
@@ -62,7 +65,7 @@ export class UsersController extends Controller {
 
       const foundUser = await this.usersService.getUserByEmail(String(email));
 
-      return new ResponseBuilder(res).data(parseUserForResponse(foundUser)).status(200).build();
+      return new ResponseBuilder<GetUserResponse>(res).data(parseUserForResponse(foundUser)).status(200).build();
     } catch (error) {
       return next(error);
     }
