@@ -1,5 +1,20 @@
 import { APIResponse, GenericErrors } from '../../shared/api';
 
+export type Comment = {
+  id: number;
+  postId: number;
+  text: string;
+  memberId: number;
+  parentCommentId: number | null;
+};
+
+export type Vote = {
+  id: number;
+  postId: number;
+  memberId: number;
+  voteType: string;
+};
+
 export type Post = {
   id: number;
   memberId: number;
@@ -7,19 +22,8 @@ export type Post = {
   title: string;
   content: string;
   dateCreated: Date;
-  comments: {
-    id: number;
-    postId: number;
-    text: string;
-    memberId: number;
-    parentCommentId: number | null;
-  }[];
-  votes: {
-    id: number;
-    postId: number;
-    memberId: number;
-    voteType: string;
-  }[];
+  comments: Comment[];
+  votes: Vote[];
   memberPostedBy: {
     id: number;
     user: {

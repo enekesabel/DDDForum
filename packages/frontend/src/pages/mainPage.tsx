@@ -3,14 +3,19 @@ import { Layout } from '../components/layout';
 import { PostsList } from '../components/postsList';
 import { PostsViewSwitcher } from '../components/postsViewSwitcher';
 import { api } from '../api';
+import { Post } from '@dddforum/shared/src/modules/posts';
+import { toast } from 'react-toastify';
 
 export const MainPage = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const loadPosts = async () => {
     try {
-      const response = await api.posts.getPosts();
+      const response = await api.posts.getPosts('recent');
 
-      setPosts(response.data.data);
+      if (!response.data) {
+        return toast.error('Error while loading posts.');
+      }
+      setPosts(response.data);
     } catch (err) {
       console.log(err);
     }

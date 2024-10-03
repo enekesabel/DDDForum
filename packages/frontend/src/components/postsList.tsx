@@ -1,21 +1,7 @@
 import { Link } from 'react-router-dom';
 import arrow from '../assets/arrow.svg';
 import moment from 'moment';
-
-type Vote = { id: number; postId: number; voteType: 'Upvote' | 'Downvote' };
-type Comment = object;
-
-type Post = {
-  title: string;
-  dateCreated: string;
-  memberPostedBy: {
-    user: {
-      username: string;
-    };
-  };
-  comments: Comment[];
-  votes: Vote[];
-};
+import { Post, Vote } from '@dddforum/shared/src/modules/posts';
 
 function computeVoteCount(votes: Vote[]) {
   let count = 0;

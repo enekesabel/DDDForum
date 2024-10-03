@@ -6,6 +6,8 @@ import { useUser } from '../contexts/userContext';
 import { useNavigate } from 'react-router-dom';
 import { useSpinner } from '../contexts/spinnerContext';
 import { OverlaySpinner } from '../components/overlaySpinner';
+import { UserExceptions } from '@dddforum/shared/src/modules/users';
+import { GenericErrors } from '@dddforum/shared/src/shared';
 
 type ValidationResult = {
   success: boolean;
@@ -40,14 +42,31 @@ export const RegisterPage = () => {
     spinner.activate();
     try {
       // Make API call
-      const response = await api.register(registrationInput);
+      const response = await api.users.register(registrationInput);
+
+      if (!response.success) {
+        switch (response.error.code) {
+          case UserExceptions.EmailAlreadyInUse:
+            return toast.error('This email is already in use. Perhaps you want to log in?');
+          case UserExceptions.UsernameAlreadyTaken:
+            return toast.error('Please try a different username, this one is already taken.');
+          case GenericErrors.ValidationError:
+            // We could further improve this with more
+            // refined types to specify which
+            // form field was invalid.
+            return toast.error(response.error.message);
+          case GenericErrors.ServerError:
+          default:
+            return toast.error('Some backend error occurred');
+        }
+      }
+
       // Save the user details to the cache
-      setUser(response.data.data);
-      console.log('setting data', response.data.data);
+      setUser(response.data);
 
       // Handle signing up for marketing emails if necessary
       if (consent) {
-        await api.signUpForMarketingEmails(registrationInput.email);
+        await api.marketing.addEmailToList(registrationInput.email);
       }
 
       // Stop the loading spinner
