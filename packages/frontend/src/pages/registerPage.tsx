@@ -1,13 +1,13 @@
-import { Layout } from '../components/layout';
-import { MarketingEmailSignupInput, RegistrationForm, RegistrationInput } from '../components/registrationForm';
 import { ToastContainer, toast } from 'react-toastify';
-import { api } from '../api';
-import { useUser } from '../contexts/userContext';
 import { useNavigate } from 'react-router-dom';
-import { useSpinner } from '../contexts/spinnerContext';
-import { OverlaySpinner } from '../components/overlaySpinner';
 import { UserExceptions } from '@dddforum/shared/src/modules/users';
 import { GenericErrors } from '@dddforum/shared/src/shared';
+import { Layout } from '../components/layout';
+import { MarketingEmailSignupInput, RegistrationForm, RegistrationInput } from '../components/registrationForm';
+import { api } from '../api';
+import { useUser } from '../contexts/userContext';
+import { useSpinner } from '../contexts/spinnerContext';
+import { OverlaySpinner } from '../components/overlaySpinner';
 
 type ValidationResult = {
   success: boolean;

@@ -1,14 +1,14 @@
-import { defineFeature, loadFeature } from 'jest-cucumber';
-import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import path from 'path';
-import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
 import { Server } from 'http';
-import { CompositionRoot } from '../../src/core';
+import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { sharedTestRoot } from '@dddforum/shared/src/paths';
+import { defineFeature, loadFeature } from 'jest-cucumber';
 import { GenericErrors } from '@dddforum/shared/src/shared';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GetPostsResponse } from '@dddforum/shared/src/modules/posts';
 import { Post } from '@prisma/client';
+import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
+import { CompositionRoot } from '../../src/core';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'));
 

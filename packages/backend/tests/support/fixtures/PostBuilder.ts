@@ -1,6 +1,6 @@
 import { Post } from '@prisma/client';
-import { prisma } from '../../../src/shared';
 import { faker } from '@faker-js/faker';
+import { prisma } from '../../../src/shared';
 
 export class PostBuilder {
   private post = {} as Post;

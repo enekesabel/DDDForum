@@ -1,5 +1,5 @@
-import logo from '../assets/dddforumlogo.png';
 import { Link, useLocation } from 'react-router-dom';
+import logo from '../assets/dddforumlogo.png';
 import { UserData, useUser } from '../contexts/userContext';
 
 const Logo = () => (

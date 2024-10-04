@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for DDDForum",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "ts-node prepareEnv.ts npm run clean && tsc",
     "clean": "rimraf ./build",
@@ -14,6 +15,7 @@
     "start:dev:no-watch": "npm run migrate && npm run generate && ts-node prepareEnv.ts ts-node src/index.ts",
     "start": "npm run build && node build/index.js",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "jest",
     "test:dev": "jest --watchAll",
     "test:e2e": "jest -c jest.config.e2e.ts --detectOpenHandles"

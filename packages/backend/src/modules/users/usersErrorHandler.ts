@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { UserNotFoundException, EmailAlreadyInUseException, UsernameAlreadyTakenException } from './usersExceptions';
 import { ResponseBuilder } from '../../shared';
+import { UserNotFoundException, EmailAlreadyInUseException, UsernameAlreadyTakenException } from './usersExceptions';
 
 export const usersErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err) {

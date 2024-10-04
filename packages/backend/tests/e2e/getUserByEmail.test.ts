@@ -1,14 +1,13 @@
+import path from 'path';
+import { Server } from 'http';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import path from 'path';
-import { GetUserResponse } from '@dddforum/shared/src/modules/users';
-import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
+import { GetUserResponse, UserExceptions } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
-import { Server } from 'http';
-import { CompositionRoot } from '../../src/core';
-import { UserExceptions } from '@dddforum/shared/src/modules/users';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';
+import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
+import { CompositionRoot } from '../../src/core';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 
@@ -54,7 +53,7 @@ defineFeature(feature, (test) => {
   test('User not found', ({ given, when, then }) => {
     let getUserResponse: GetUserResponse;
 
-    given(/^No user with email "(.*)" exists$/, async (email: string) => {});
+    given(/^No user with email "(.*)" exists$/, async () => {});
 
     when(/^I request user details using the email "(.*)"$/, async (email: string) => {
       getUserResponse = await apiClient.users.getUserByEmail(email);

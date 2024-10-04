@@ -1,7 +1,7 @@
+import { WebServer } from '../../shared';
 import { ContactListAPI } from './ContactListAPI';
 import { MarketingController } from './MarketingController';
 import { MarketingService } from './MarketingService';
-import { WebServer } from '../../shared';
 
 export class MarketingModule {
   private contactListAPI: ContactListAPI;

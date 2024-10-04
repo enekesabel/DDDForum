@@ -1,6 +1,6 @@
+import { Server } from 'http';
 import express, { ErrorRequestHandler, Express, RequestHandler } from 'express';
 import cors from 'cors';
-import { Server } from 'http';
 import { Controller } from './Controller';
 
 type WebServerConfig = {

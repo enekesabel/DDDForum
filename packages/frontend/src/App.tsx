@@ -1,8 +1,7 @@
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { BrowserRouter } from 'react-router-dom';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MainPage } from './pages/mainPage';
 import { RegisterPage } from './pages/registerPage';
 import { UserProvider } from './contexts/userContext';

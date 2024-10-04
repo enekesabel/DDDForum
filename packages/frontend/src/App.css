@@ -174,7 +174,7 @@ h3 {
   width: 500px;
 }
 
-.registration-form input:not([type="checkbox"]) {
+.registration-form input:not([type='checkbox']) {
   display: block;
   padding: 0.6rem 1rem;
   border-radius: 3px;

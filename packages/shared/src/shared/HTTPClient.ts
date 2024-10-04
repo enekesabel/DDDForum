@@ -1,5 +1,5 @@
-import { APIResponse } from './api';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { APIResponse } from './api';
 
 export abstract class HTTPClient {
   constructor(private baseUrl: string) {}

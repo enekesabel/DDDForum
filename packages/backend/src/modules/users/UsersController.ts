@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { User } from '@prisma/client';
+import { CreateUserResponse, GetUserResponse, UpdateUserResponse } from '@dddforum/shared/src/modules/users';
 import { ClientError, Controller, ResponseBuilder } from '../../shared';
 import { CreateUserDTO } from './CreateUserDTO';
 import { UpdateUserDTO } from './UpdateUserDTO';
 import { UsersService } from './UsersService';
-import { CreateUserResponse, GetUserResponse, UpdateUserResponse } from '@dddforum/shared/src/modules/users';
 
 // We don't want to return the password within the request
 function parseUserForResponse(user: User): Omit<User, 'password'> {

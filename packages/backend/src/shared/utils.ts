@@ -1,8 +1,8 @@
 import { Response } from 'express';
 import { APIErrorResponse, APIResponse, APISuccessResponse } from '@dddforum/shared/src/shared';
 
-type DataFromAPIResponse<Type> = Type extends APIResponse<infer X, infer Y> ? X : never;
-type ErrorFromAPIResponse<Type> = Type extends APIResponse<infer X, infer Y> ? Y : never;
+type DataFromAPIResponse<Type> = Type extends APIResponse<infer X, infer _Y> ? X : never;
+type ErrorFromAPIResponse<Type> = Type extends APIResponse<infer _X, infer Y> ? Y : never;
 
 export class ResponseBuilder<T extends APIResponse<unknown, unknown> = never> {
   private errorMessage: string | undefined;

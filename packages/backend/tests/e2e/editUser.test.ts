@@ -1,13 +1,12 @@
+import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
-import path from 'path';
-import { UpdateUserResponse, UserInput } from '@dddforum/shared/src/modules/users';
+import { UpdateUserResponse, UserInput, UserExceptions } from '@dddforum/shared/src/modules/users';
 import { APIClient } from '@dddforum/shared/src/core';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { GenericErrors } from '@dddforum/shared/src/shared';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
 import { CompositionRoot } from '../../src/core';
-import { UserExceptions } from '@dddforum/shared/src/modules/users';
-import { GenericErrors } from '@dddforum/shared/src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'));
 

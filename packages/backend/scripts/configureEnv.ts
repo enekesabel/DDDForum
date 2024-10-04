@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
 import fs from 'fs';
+import dotenv from 'dotenv';
 import { cleanEnv, str } from 'envalid';
 
 const validateEnv = (envFile: string) => {

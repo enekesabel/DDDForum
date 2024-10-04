@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
+import { AddToEmailListResponse } from '@dddforum/shared/src/modules/marketing';
 import { Controller, ResponseBuilder } from '../../shared';
 import { MarketingService } from './MarketingService';
-import { AddToEmailListResponse } from '@dddforum/shared/src/modules/marketing';
 
 export class MarketingController extends Controller {
   constructor(private marketingService: MarketingService) {

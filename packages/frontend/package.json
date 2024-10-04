@@ -8,6 +8,7 @@
     "clean": "rimraf ./dist",
     "start:dev": "vite",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "test:e2e": "jest -c jest.config.js --verbose tests/e2e/ --runInBand --detectOpenHandles"
   },

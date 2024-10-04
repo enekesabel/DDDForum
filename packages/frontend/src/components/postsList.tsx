@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import arrow from '../assets/arrow.svg';
 import moment from 'moment';
 import { Post, Vote } from '@dddforum/shared/src/modules/posts';
+import arrow from '../assets/arrow.svg';
 
 function computeVoteCount(votes: Vote[]) {
   let count = 0;
