@@ -16,7 +16,7 @@
     "start": "npm run build && node build/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "jest",
+    "test:unit": "jest -c jest.config.ts",
     "test:dev": "jest --watchAll",
     "test:e2e": "jest -c jest.config.e2e.ts --detectOpenHandles"
   },
