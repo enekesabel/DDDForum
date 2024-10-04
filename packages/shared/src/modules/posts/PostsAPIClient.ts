@@ -1,4 +1,4 @@
-import { HTTPClient } from '../../shared/HTTPClient';
+import { HTTPClient } from '../../shared';
 import { GetPostsResponse } from './postsTypes';
 
 export class PostsAPIClient extends HTTPClient {

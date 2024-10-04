@@ -1,4 +1,4 @@
-import { HTTPClient } from '../../shared/HTTPClient';
+import { HTTPClient } from '../../shared';
 import { AddToEmailListResponse } from './marketingTypes';
 
 export class MarketingAPIClient extends HTTPClient {

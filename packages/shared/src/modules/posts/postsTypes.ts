@@ -1,4 +1,4 @@
-import { APIResponse, GenericErrors } from '../../shared/api';
+import { APIResponse, GenericErrors } from '../../shared';
 
 export type Comment = {
   id: number;

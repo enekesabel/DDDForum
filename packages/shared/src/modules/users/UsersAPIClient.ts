@@ -1,4 +1,4 @@
-import { HTTPClient } from '../../shared/HTTPClient';
+import { HTTPClient } from '../../shared';
 import { CreateUserResponse, GetUserResponse, UpdateUserResponse, UserInput } from './usersTypes';
 
 export class UsersAPIClient extends HTTPClient {
