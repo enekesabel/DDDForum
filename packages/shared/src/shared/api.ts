@@ -17,6 +17,8 @@ export const createAPISuccessResponseSchema = <T extends z.ZodTypeAny>(data: T) 
     error: z.undefined(),
   });
 
+export type APISuccessResponseSchema = ReturnType<typeof createAPISuccessResponseSchema>;
+
 export type APIErrorResponse<U> = {
   success: false;
   error: APIError<U>;
@@ -28,9 +30,11 @@ export const createAPIErrorResponseSchema = <U extends z.ZodTypeAny>(error: U) =
     error: error,
     data: z.undefined(),
   });
+export type APIErrorResponseSchema = ReturnType<typeof createAPIErrorResponseSchema>;
 
 export const createAPIResponseSchema = <D extends z.ZodTypeAny, E extends z.ZodTypeAny>(data: D, error: E) =>
   z.discriminatedUnion('success', [createAPISuccessResponseSchema(data), createAPIErrorResponseSchema(error)]);
+export type APIResponseSchema = ReturnType<typeof createAPIResponseSchema>;
 
 export type APIResponse<T, U> = APISuccessResponse<T> | APIErrorResponse<U>;
 
