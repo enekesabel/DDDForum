@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { User } from '@prisma/client';
 import { CreateUserResponse, GetUserResponse, UpdateUserResponse } from '@dddforum/shared/src/modules/users';
-import { ClientError, Controller, createDTO, ResponseBuilder } from '../../shared';
-import { CreateUserDTOSchema } from './CreateUserDTO';
-import { UpdateUserDTOSchema } from './UpdateUserDTO';
+import { ClientError, Controller, createCommand, ResponseBuilder } from '../../shared';
+import { CreateUserCommandSchema } from './CreateUserCommand';
+import { UpdateUserCommandSchema } from './UpdateUserCommand';
 import { UsersService } from './UsersService';
 
 // We don't want to return the password within the request
@@ -30,9 +30,9 @@ export class UsersController extends Controller {
 
   private async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const createUserDTO = createDTO(CreateUserDTOSchema, req.body);
+      const createUserCommand = createCommand(CreateUserCommandSchema, req.body);
 
-      const user = await this.usersService.createUser(createUserDTO);
+      const user = await this.usersService.createUser(createUserCommand);
 
       const parsedUser = parseUserForResponse(user);
 
@@ -45,9 +45,9 @@ export class UsersController extends Controller {
   private async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = Number(req.params.userId);
-      const updateUserDTO = createDTO(UpdateUserDTOSchema, req.body);
+      const updateUserCommand = createCommand(UpdateUserCommandSchema, req.body);
 
-      const updatedUser = await this.usersService.updateUser(userId, updateUserDTO);
+      const updatedUser = await this.usersService.updateUser(userId, updateUserCommand);
 
       return new ResponseBuilder<UpdateUserResponse>(res).data(parseUserForResponse(updatedUser)).status(200).build();
     } catch (error) {

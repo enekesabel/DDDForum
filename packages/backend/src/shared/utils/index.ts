@@ -1,2 +1,2 @@
 export * from './ResponseBuilder';
-export * from './createDTO';
+export * from './createCommand';

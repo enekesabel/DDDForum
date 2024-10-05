@@ -1,6 +1,6 @@
 import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
-import { CreateUserDTO } from './CreateUserDTO';
-import { UpdateUserDTO } from './UpdateUserDTO';
+import { CreateUserCommand } from './CreateUserCommand';
+import { UpdateUserCommand } from './UpdateUserCommand';
 import { UsersRepository } from './UsersRepository';
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from './usersExceptions';
 
@@ -22,19 +22,19 @@ export class UsersService {
     private transactionalEmailAPI: TransactionalEmailAPI
   ) {}
 
-  async createUser(createUserDTO: CreateUserDTO) {
-    const existingUserByEmail = await this.usersRepository.findUserByEmail(createUserDTO.email);
+  async createUser(createUserCommand: CreateUserCommand) {
+    const existingUserByEmail = await this.usersRepository.findUserByEmail(createUserCommand.email);
     if (existingUserByEmail) {
       throw new EmailAlreadyInUseException();
     }
 
-    const existingUserByUsername = await this.usersRepository.findUserByUsername(createUserDTO.username);
+    const existingUserByUsername = await this.usersRepository.findUserByUsername(createUserCommand.username);
     if (existingUserByUsername) {
       throw new UsernameAlreadyTakenException();
     }
 
     const createdUser = await this.usersRepository.createUser({
-      ...createUserDTO,
+      ...createUserCommand,
       password: generateRandomPassword(10),
     });
 
@@ -69,15 +69,15 @@ export class UsersService {
     return foundUserById;
   }
 
-  async updateUser(userId: number, updateUserDTO: UpdateUserDTO) {
+  async updateUser(userId: number, updateUserCommand: UpdateUserCommand) {
     const foundUserById = await this.usersRepository.findUserById(userId);
 
     if (!foundUserById) {
       throw new UserNotFoundException();
     }
 
-    if (updateUserDTO.email) {
-      const foundUserByEmail = await this.usersRepository.findUserByEmail(updateUserDTO.email);
+    if (updateUserCommand.email) {
+      const foundUserByEmail = await this.usersRepository.findUserByEmail(updateUserCommand.email);
       // Allow passing the email unchanged
       // Only throw error if we'd try to assing the same email to a different user
       if (foundUserByEmail && foundUserByEmail.id !== foundUserById.id) {
@@ -85,8 +85,8 @@ export class UsersService {
       }
     }
 
-    if (updateUserDTO.username) {
-      const foundUserByUsername = await this.usersRepository.findUserByUsername(updateUserDTO.username);
+    if (updateUserCommand.username) {
+      const foundUserByUsername = await this.usersRepository.findUserByUsername(updateUserCommand.username);
       // Allow passing the username unchanged
       // Only throw error if we'd try to assing the same username to a different user
       if (foundUserByUsername && foundUserByUsername.id !== foundUserById.id) {
@@ -94,6 +94,6 @@ export class UsersService {
       }
     }
 
-    return await this.usersRepository.updateUser(userId, updateUserDTO);
+    return await this.usersRepository.updateUser(userId, updateUserCommand);
   }
 }
