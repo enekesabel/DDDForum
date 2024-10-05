@@ -46,15 +46,32 @@ describe('buildAPIResponse', () => {
       buildAPIResponse(response)
         .schema(responseSchema)
         .error({ message: 'Something went wrong', code: GenericErrors.ServerError })
-        .status(200)
+        .status(500)
         .build()
         .send();
 
-      expect(response.statusCode).toBe(200);
+      expect(response.statusCode).toBe(500);
       expect(response._getJSONData()).toMatchObject({
         error: { message: 'Something went wrong', code: GenericErrors.ServerError },
         success: false,
       });
+    });
+    it('Should throw an error if an invalid status code is used for success response', () => {
+      const data = {
+        name: 'John Doe',
+        age: 30,
+      };
+      expect(() => buildAPIResponse(response).schema(responseSchema).data(data).status(500).build().send()).toThrow();
+    });
+    it('Should throw an error if an invalid status code is used for error response', () => {
+      expect(() =>
+        buildAPIResponse(response)
+          .schema(responseSchema)
+          .error({ message: 'Something went wrong', code: GenericErrors.ServerError })
+          .status(200)
+          .build()
+          .send()
+      ).toThrow();
     });
   });
 

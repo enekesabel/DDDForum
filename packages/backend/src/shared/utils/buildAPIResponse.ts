@@ -7,6 +7,7 @@ import {
   APIResponseSchema,
   APIErrorResponseSchema,
   APISuccessResponseSchema,
+  StatusCodes,
 } from '@dddforum/shared/src/shared';
 
 const serialize = (schema: unknown) => JSON.parse(JSON.stringify(schema));
@@ -102,7 +103,11 @@ const buildSuccessResponse = (response: Response) => {
       return {
         data: (data: z.infer<T>['data']) => {
           return {
-            status: (status: number) => {
+            status: (status: StatusCodes) => {
+              // Validate status code
+              if (!Object.values(StatusCodes).includes(status) || status > 299 || status < 200) {
+                throw new Error(`Invalid status code: ${status}`);
+              }
               response.status(status);
               return {
                 build: () => {
@@ -131,7 +136,10 @@ const buildErrorResponse = (response: Response) => {
       return {
         error: (error: z.infer<T>['error']) => {
           return {
-            status: (status: number) => {
+            status: (status: StatusCodes) => {
+              if (!Object.values(StatusCodes).includes(status) || status > 599 || status < 400) {
+                throw new Error(`Invalid status code: ${status}`);
+              }
               response.status(status);
               return {
                 build: () => {
