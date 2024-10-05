@@ -1,7 +1,11 @@
 import { z } from 'zod';
-import { createAPISuccessResponseSchema } from '@dddforum/shared/src/shared';
+import {
+  createAPISuccessResponseSchema,
+  createAPIErrorResponseSchema,
+  GenericErrors,
+} from '@dddforum/shared/src/shared';
 import { createResponse, MockResponse } from 'node-mocks-http';
-import { buildSuccessResponse } from './buildResponse';
+import { buildSuccessResponse, buildErrorResponse } from './buildResponse';
 
 describe('buildResponse', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,10 +66,60 @@ describe('buildResponse', () => {
         error: z.any(),
         success: z.literal(true),
       });
-      const data = {};
+      const data = {
+        error: 'Something went wrong',
+        success: true,
+      };
 
       // @ts-expect-error: schema is not an APISuccessResponseSchema
       expect(() => buildSuccessResponse(response).schema(schema).data(data).status(200).build().send()).toThrow();
+    });
+  });
+
+  describe('Building error response', () => {
+    const schema = createAPIErrorResponseSchema(
+      z.object({
+        message: z.nativeEnum(GenericErrors),
+        code: z.number(),
+      })
+    );
+
+    it('Should be able to build an error response', () => {
+      const error = {
+        message: GenericErrors.ServerError,
+        code: 500,
+      };
+
+      buildErrorResponse(response).schema(schema).error(error).status(500).build().send();
+
+      expect(response.statusCode).toBe(500);
+      expect(response._getJSONData()).toMatchObject({
+        success: false,
+        error,
+      });
+    });
+
+    it('Should throw an error if error does not match the schema', () => {
+      const error = {
+        message: 'CustomError',
+        code: 500,
+      };
+      // @ts-expect-error: error does not match schema
+      expect(() => buildErrorResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();
+    });
+
+    it('Should throw an error if schema is not an APIErrorResponseSchema', () => {
+      const schema = z.object({
+        error: z.any(),
+        success: z.literal(false),
+      });
+      const error = {
+        message: 'Something went wrong',
+        code: 500,
+      };
+
+      // @ts-expect-error: schema is not an APIErrorResponseSchema
+      expect(() => buildErrorResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();
     });
   });
 });
