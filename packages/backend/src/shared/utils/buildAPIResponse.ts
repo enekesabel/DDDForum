@@ -4,11 +4,13 @@ import { Response } from 'express';
 import {
   createAPISuccessResponseSchema,
   createAPIErrorResponseSchema,
-  APIResponseSchema,
-  APIErrorResponseSchema,
-  APISuccessResponseSchema,
+  createAPIResponseSchema,
   StatusCodes,
 } from '@dddforum/shared/src/shared';
+
+type APISuccessResponseSchema = ReturnType<typeof createAPISuccessResponseSchema>;
+type APIErrorResponseSchema = ReturnType<typeof createAPIErrorResponseSchema>;
+type APIResponseSchema = ReturnType<typeof createAPIResponseSchema>;
 
 const serialize = (schema: unknown) => JSON.parse(JSON.stringify(schema));
 const serializedAPISuccessResponseSchema = serialize(createAPISuccessResponseSchema(z.any()).shape);
