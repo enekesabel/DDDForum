@@ -46,16 +46,16 @@ export const RegisterPage = () => {
 
       if (!response.success) {
         switch (response.error.code) {
-          case UserExceptions.EmailAlreadyInUse:
+          case UserExceptions.enum.EmailAlreadyInUse:
             return toast.error('This email is already in use. Perhaps you want to log in?');
-          case UserExceptions.UsernameAlreadyTaken:
+          case UserExceptions.enum.UsernameAlreadyTaken:
             return toast.error('Please try a different username, this one is already taken.');
-          case GenericErrors.ValidationError:
+          case GenericErrors.enum.ValidationError:
             // We could further improve this with more
             // refined types to specify which
             // form field was invalid.
             return toast.error(response.error.message);
-          case GenericErrors.ServerError:
+          case GenericErrors.enum.ServerError:
           default:
             return toast.error('Some backend error occurred');
         }

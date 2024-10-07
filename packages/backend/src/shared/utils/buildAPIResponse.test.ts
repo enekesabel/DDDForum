@@ -22,7 +22,7 @@ describe('buildAPIResponse', () => {
       age: z.number(),
     });
     const errorSchema = z.object({
-      code: z.nativeEnum(GenericErrors),
+      code: GenericErrors,
       message: z.string(),
     });
     const responseSchema = createAPIResponseSchema(dataSchema, errorSchema);
@@ -45,14 +45,14 @@ describe('buildAPIResponse', () => {
     it('Should be able to build an APIErrorResponse from an APIResponseSchema', () => {
       buildAPIResponse(response)
         .schema(responseSchema)
-        .error({ message: 'Something went wrong', code: GenericErrors.ServerError })
+        .error({ message: 'Something went wrong', code: GenericErrors.enum.ServerError })
         .status(500)
         .build()
         .send();
 
       expect(response.statusCode).toBe(500);
       expect(response._getJSONData()).toMatchObject({
-        error: { message: 'Something went wrong', code: GenericErrors.ServerError },
+        error: { message: 'Something went wrong', code: GenericErrors.enum.ServerError },
         success: false,
       });
     });
@@ -67,7 +67,7 @@ describe('buildAPIResponse', () => {
       expect(() =>
         buildAPIResponse(response)
           .schema(responseSchema)
-          .error({ message: 'Something went wrong', code: GenericErrors.ServerError })
+          .error({ message: 'Something went wrong', code: GenericErrors.enum.ServerError })
           .status(200)
           .build()
           .send()
@@ -139,7 +139,7 @@ describe('buildAPIResponse', () => {
     it('Should throw an error if one tries to build an error response', () => {
       const error = {
         message: 'Something went wrong',
-        code: GenericErrors.ServerError,
+        code: GenericErrors.enum.ServerError,
       };
       // @ts-expect-error: cannot pass error when building an APISuccessResponse
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(200).build().send()).toThrow();
@@ -149,15 +149,15 @@ describe('buildAPIResponse', () => {
   describe('Building APIErrorResponse', () => {
     const schema = createAPIErrorResponseSchema(
       z.object({
-        message: z.nativeEnum(GenericErrors),
-        code: z.number(),
+        message: z.string(),
+        code: GenericErrors,
       })
     );
 
     it('Should be able to build an APIErrorResponse', () => {
       const error = {
-        message: GenericErrors.ServerError,
-        code: 500,
+        message: GenericErrors.enum.ServerError,
+        code: GenericErrors.enum.ServerError,
       };
 
       buildAPIResponse(response).schema(schema).error(error).status(500).build().send();
@@ -172,7 +172,7 @@ describe('buildAPIResponse', () => {
     it('Should throw an error if error does not match the schema', () => {
       const error = {
         message: 'CustomError',
-        code: 500,
+        code: 'CustomError',
       };
       // @ts-expect-error: error does not match schema
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();

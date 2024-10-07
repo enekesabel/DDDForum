@@ -62,7 +62,7 @@ defineFeature(feature, (test) => {
     });
 
     then(/^I should receive a client error$/, () => {
-      expect(getPostsResponse.error).toMatchObject({ code: GenericErrors.ClientError });
+      expect(getPostsResponse.error).toMatchObject({ code: GenericErrors.enum.ClientError });
     });
   });
 });

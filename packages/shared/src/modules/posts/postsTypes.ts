@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { APIResponse, GenericErrors } from '../../shared';
 
 export type Comment = {
@@ -36,4 +37,4 @@ export type Post = {
   };
 };
 
-export type GetPostsResponse = APIResponse<Post[], GenericErrors>;
+export type GetPostsResponse = APIResponse<Post[], z.infer<typeof GenericErrors>>;

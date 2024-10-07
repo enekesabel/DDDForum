@@ -38,8 +38,4 @@ export type APIResponseSchema = ReturnType<typeof createAPIResponseSchema>;
 
 export type APIResponse<T, U> = APISuccessResponse<T> | APIErrorResponse<U>;
 
-export enum GenericErrors {
-  ValidationError = 'ValidationError',
-  ServerError = 'ServerError',
-  ClientError = 'ClientError',
-}
+export const GenericErrors = z.enum(['ValidationError', 'ServerError', 'ClientError']);

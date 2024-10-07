@@ -61,7 +61,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating that the user was not found', () => {
       expect(getUserResponse.success).toBe(false);
-      expect(getUserResponse.error).toMatchObject({ code: UserExceptions.UserNotFound });
+      expect(getUserResponse.error).toMatchObject({ code: UserExceptions.enum.UserNotFound });
     });
   });
 
@@ -74,7 +74,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating that was a client error', () => {
       expect(getUserResponse.success).toBe(false);
-      expect(getUserResponse.error).toMatchObject({ code: GenericErrors.ClientError });
+      expect(getUserResponse.error).toMatchObject({ code: GenericErrors.enum.ClientError });
     });
   });
 });

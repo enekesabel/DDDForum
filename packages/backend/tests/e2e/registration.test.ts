@@ -103,7 +103,7 @@ defineFeature(feature, (test) => {
     then('I should see an error notifying me that my input is invalid', () => {
       expect(createUserResponse.success).toBe(false);
       expect(createUserResponse.error).toMatchObject({
-        code: GenericErrors.ValidationError,
+        code: GenericErrors.enum.ValidationError,
       });
     });
 
@@ -143,7 +143,7 @@ defineFeature(feature, (test) => {
       for (const response of createUserResponses) {
         expect(response.success).toBe(false);
         expect(response.error).toMatchObject({
-          code: UserExceptions.EmailAlreadyInUse,
+          code: UserExceptions.enum.EmailAlreadyInUse,
         });
       }
     });
@@ -195,7 +195,7 @@ defineFeature(feature, (test) => {
       for (const response of createUserResponses) {
         expect(response.success).toBe(false);
         expect(response.error).toMatchObject({
-          code: UserExceptions.UsernameAlreadyTaken,
+          code: UserExceptions.enum.UsernameAlreadyTaken,
         });
       }
     });

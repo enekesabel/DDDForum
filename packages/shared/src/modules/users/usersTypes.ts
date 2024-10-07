@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { APIResponse, GenericErrors } from '../../shared';
 
 export type UserInput = {
@@ -15,17 +16,17 @@ export type User = {
   username: string;
 };
 
-export enum UserExceptions {
-  EmailAlreadyInUse = 'EmailAlreadyInUse',
-  UsernameAlreadyTaken = 'UsernameAlreadyTaken',
-  UserNotFound = 'UserNotFound',
-}
+export const UserExceptions = z.enum(['EmailAlreadyInUse', 'UsernameAlreadyTaken', 'UserNotFound']);
 
-export type GetUserExceptions = GenericErrors | UserExceptions.UserNotFound;
-export type GetUserResponse = APIResponse<User, GetUserExceptions>;
+export const GetUserExceptions = z.enum([...GenericErrors.options, UserExceptions.enum.UserNotFound]);
+export type GetUserResponse = APIResponse<User, z.infer<typeof GetUserExceptions>>;
 
-export type UpdateUserExceptions = GenericErrors | UserExceptions;
-export type UpdateUserResponse = APIResponse<User, UpdateUserExceptions>;
+export const UpdateUserExceptions = z.enum([...GenericErrors.options, ...UserExceptions.options]);
+export type UpdateUserResponse = APIResponse<User, z.infer<typeof UpdateUserExceptions>>;
 
-export type CreateUserErrors = GenericErrors | UserExceptions.EmailAlreadyInUse | UserExceptions.UsernameAlreadyTaken;
-export type CreateUserResponse = APIResponse<User, CreateUserErrors>;
+export const CreateUserErrors = z.enum([
+  ...GenericErrors.options,
+  UserExceptions.enum.EmailAlreadyInUse,
+  UserExceptions.enum.UsernameAlreadyTaken,
+]);
+export type CreateUserResponse = APIResponse<User, z.infer<typeof CreateUserErrors>>;

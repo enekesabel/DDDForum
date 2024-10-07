@@ -70,7 +70,7 @@ defineFeature(feature, (test) => {
 
     then('I should receive an error indicating the request was invalid', () => {
       expect(updateUserResponse.success).toBe(false);
-      expect(updateUserResponse.error).toMatchObject({ code: GenericErrors.ValidationError });
+      expect(updateUserResponse.error).toMatchObject({ code: GenericErrors.enum.ValidationError });
     });
 
     and(`My user details shouldn't be updated`, async () => {
@@ -94,7 +94,7 @@ defineFeature(feature, (test) => {
     });
 
     then('I should receive an error indicating the user was not found', () => {
-      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.UserNotFound });
+      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.enum.UserNotFound });
     });
   });
 
@@ -118,7 +118,7 @@ defineFeature(feature, (test) => {
     });
 
     then('I should receive an error indicating the email is already in use', () => {
-      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.EmailAlreadyInUse });
+      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.enum.EmailAlreadyInUse });
     });
   });
 
@@ -142,7 +142,7 @@ defineFeature(feature, (test) => {
     });
 
     then('I should receive an error indicating the username is already taken', () => {
-      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.UsernameAlreadyTaken });
+      expect(updateUserResponse.error).toMatchObject({ code: UserExceptions.enum.UsernameAlreadyTaken });
     });
   });
 });
