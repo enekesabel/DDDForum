@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend for DDDForum",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "ts-node prepareEnv.ts npm run clean && tsc",
     "clean": "rimraf ./build",
