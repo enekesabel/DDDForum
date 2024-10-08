@@ -19,6 +19,13 @@ export type APIErrorResponse<U> = {
 
 export type APIResponse<T, U> = APISuccessResponse<T> | APIErrorResponse<U>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createAPIErrorSchema = <T extends z.ZodEnum<any>>(error: T) =>
+  z.object({
+    message: z.string(),
+    code: error,
+  });
+
 export const createAPISuccessResponseSchema = <T extends z.ZodTypeAny>(data: T) =>
   z.object({
     success: z.literal(true),
@@ -26,14 +33,16 @@ export const createAPISuccessResponseSchema = <T extends z.ZodTypeAny>(data: T) 
     error: z.undefined(),
   });
 
-export const createAPIErrorResponseSchema = <U extends z.ZodTypeAny>(error: U) =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createAPIErrorResponseSchema = <T extends z.ZodEnum<any>>(error: T) =>
   z.object({
     success: z.literal(false),
-    error: error,
+    error: createAPIErrorSchema(error),
     data: z.undefined(),
   });
 
-export const createAPIResponseSchema = <D extends z.ZodTypeAny, E extends z.ZodTypeAny>(data: D, error: E) =>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createAPIResponseSchema = <D extends z.ZodTypeAny, E extends z.ZodEnum<any>>(data: D, error: E) =>
   z.discriminatedUnion('success', [createAPISuccessResponseSchema(data), createAPIErrorResponseSchema(error)]);
 
 export const GenericErrors = z.enum(['ValidationError', 'ServerError', 'ClientError']);

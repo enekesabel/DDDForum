@@ -14,7 +14,7 @@ type APIResponseSchema = ReturnType<typeof createAPIResponseSchema>;
 
 const serialize = (schema: unknown) => JSON.parse(JSON.stringify(schema));
 const serializedAPISuccessResponseSchema = serialize(createAPISuccessResponseSchema(z.any()).shape);
-const serializedAPIErrorResponseSchema = serialize(createAPIErrorResponseSchema(z.any()).shape);
+const serializedAPIErrorResponseSchema = serialize(createAPIErrorResponseSchema(z.enum(['error'])).shape);
 
 // @ts-expect-error: good enough typecheck
 function isAPIResponseSchema<T extends z.ZodTypeAny>(schema: T): schema is APIResponseSchema {

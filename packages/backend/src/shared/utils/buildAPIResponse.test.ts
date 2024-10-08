@@ -21,11 +21,8 @@ describe('buildAPIResponse', () => {
       name: z.string(),
       age: z.number(),
     });
-    const errorSchema = z.object({
-      code: GenericErrors,
-      message: z.string(),
-    });
-    const responseSchema = createAPIResponseSchema(dataSchema, errorSchema);
+
+    const responseSchema = createAPIResponseSchema(dataSchema, GenericErrors);
 
     it('Should be able to build an APISuccessResponse from an APIResponseSchema', () => {
       const data = {
@@ -147,12 +144,7 @@ describe('buildAPIResponse', () => {
   });
 
   describe('Building APIErrorResponse', () => {
-    const schema = createAPIErrorResponseSchema(
-      z.object({
-        message: z.string(),
-        code: GenericErrors,
-      })
-    );
+    const schema = createAPIErrorResponseSchema(GenericErrors);
 
     it('Should be able to build an APIErrorResponse', () => {
       const error = {
