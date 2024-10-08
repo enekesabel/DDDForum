@@ -35,7 +35,10 @@ defineFeature(feature, (test) => {
     let posts: Post[];
 
     given(/^There are posts in the system already$/, async () => {
-      posts = await DatabaseFixtures.SetUpWithRandomPostsByUser(new UserInputBuilder().build(), 5);
+      posts = await DatabaseFixtures.SetUpWithRandomPostsByUser(
+        new UserInputBuilder().withAllRandomDetails().build(),
+        5
+      );
       posts.sort((a, b) => b.dateCreated.getTime() - a.dateCreated.getTime());
     });
 
@@ -53,7 +56,10 @@ defineFeature(feature, (test) => {
     let posts: Post[];
 
     given(/^There are posts in the system already$/, async () => {
-      posts = await DatabaseFixtures.SetUpWithRandomPostsByUser(new UserInputBuilder().build(), 5);
+      posts = await DatabaseFixtures.SetUpWithRandomPostsByUser(
+        new UserInputBuilder().withAllRandomDetails().build(),
+        5
+      );
       posts.sort((a, b) => b.dateCreated.getTime() - a.dateCreated.getTime());
     });
 
