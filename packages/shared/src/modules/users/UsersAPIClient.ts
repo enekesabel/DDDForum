@@ -6,15 +6,15 @@ export class UsersAPIClient extends HTTPClient {
     super(`${baseUrl}/users`);
   }
 
-  async register(userInput: UserInput): Promise<CreateUserResponse> {
-    return await this.post('/new', userInput);
+  async register(userInput: UserInput) {
+    return (await this.post('/new', userInput)) as CreateUserResponse;
   }
 
-  async getUserByEmail(email: string): Promise<GetUserResponse> {
-    return await this.get(`/`, { params: { email } });
+  async getUserByEmail(email: string) {
+    return (await this.get(`/`, { params: { email } })) as GetUserResponse;
   }
 
-  async editUser(userId: number, userInput: Partial<UserInput>): Promise<UpdateUserResponse> {
-    return await this.post(`/edit/${userId}`, userInput);
+  async editUser(userId: number, userInput: Partial<UserInput>) {
+    return (await this.post(`/edit/${userId}`, userInput)) as UpdateUserResponse;
   }
 }

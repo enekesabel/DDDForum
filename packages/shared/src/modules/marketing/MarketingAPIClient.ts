@@ -6,7 +6,7 @@ export class MarketingAPIClient extends HTTPClient {
     super(`${baseUrl}/marketing`);
   }
 
-  async addEmailToList(email: string): Promise<AddToEmailListResponse> {
-    return await this.post('/new', { email });
+  async addEmailToList(email: string) {
+    return (await this.post('/new', { email })) as AddToEmailListResponse;
   }
 }

@@ -4,12 +4,12 @@ import { APIResponse } from './api';
 export abstract class HTTPClient {
   constructor(private baseUrl: string) {}
 
-  private async request<T, U>(
+  private async request(
     method: 'get' | 'post' | 'put' | 'patch' | 'delete',
     path: string,
     data?: unknown,
     config: AxiosRequestConfig = {}
-  ): Promise<APIResponse<T, U>> {
+  ): Promise<APIResponse<unknown, unknown>> {
     try {
       const response = await axios({
         method,
@@ -28,14 +28,12 @@ export abstract class HTTPClient {
     }
   }
 
-  protected get = <T, U>(path: string, config: AxiosRequestConfig = {}) =>
-    this.request<T, U>('get', path, undefined, config);
-  protected post = <T, U>(path: string, data: unknown, config: AxiosRequestConfig = {}) =>
-    this.request<T, U>('post', path, data, config);
-  protected put = <T, U>(path: string, data: unknown, config: AxiosRequestConfig = {}) =>
-    this.request<T, U>('put', path, data, config);
-  protected patch = <T, U>(path: string, data: unknown, config: AxiosRequestConfig = {}) =>
-    this.request<T, U>('patch', path, data, config);
-  protected delete = <T, U>(path: string, config: AxiosRequestConfig = {}) =>
-    this.request<T, U>('delete', path, undefined, config);
+  protected get = (path: string, config: AxiosRequestConfig = {}) => this.request('get', path, undefined, config);
+  protected post = (path: string, data: unknown, config: AxiosRequestConfig = {}) =>
+    this.request('post', path, data, config);
+  protected put = (path: string, data: unknown, config: AxiosRequestConfig = {}) =>
+    this.request('put', path, data, config);
+  protected patch = (path: string, data: unknown, config: AxiosRequestConfig = {}) =>
+    this.request('patch', path, data, config);
+  protected delete = (path: string, config: AxiosRequestConfig = {}) => this.request('delete', path, undefined, config);
 }

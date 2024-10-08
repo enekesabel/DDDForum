@@ -6,7 +6,7 @@ export class PostsAPIClient extends HTTPClient {
     super(`${baseUrl}/posts`);
   }
 
-  async getPosts(sort: string): Promise<GetPostsResponse> {
-    return await this.get('/', { params: { sort } });
+  async getPosts(sort: string) {
+    return (await this.get('/', { params: { sort } })) as GetPostsResponse;
   }
 }
