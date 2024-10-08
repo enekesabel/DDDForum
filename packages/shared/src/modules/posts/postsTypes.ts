@@ -1,40 +1,39 @@
 import { z } from 'zod';
-import { APIResponse, GenericErrors } from '../../shared';
+import { createAPIResponseSchema, GenericErrors } from '../../shared';
+import { UserSchema } from '../users/usersTypes';
 
-export type Comment = {
-  id: number;
-  postId: number;
-  text: string;
-  memberId: number;
-  parentCommentId: number | null;
-};
+export const CommentSchema = z.object({
+  id: z.number().int(),
+  postId: z.number().int(),
+  text: z.string(),
+  memberId: z.number().int(),
+  parentCommentId: z.number().int().nullable(),
+});
+export type Comment = z.infer<typeof CommentSchema>;
 
-export type Vote = {
-  id: number;
-  postId: number;
-  memberId: number;
-  voteType: string;
-};
+export const VoteSchema = z.object({
+  id: z.number().int(),
+  postId: z.number().int(),
+  memberId: z.number().int(),
+  voteType: z.string(),
+});
+export type Vote = z.infer<typeof VoteSchema>;
 
-export type Post = {
-  id: number;
-  memberId: number;
-  postType: string;
-  title: string;
-  content: string;
-  dateCreated: Date;
-  comments: Comment[];
-  votes: Vote[];
-  memberPostedBy: {
-    id: number;
-    user: {
-      id: number;
-      email: string;
-      firstName: string;
-      lastName: string;
-      username: string;
-    };
-  };
-};
+export const PostSchema = z.object({
+  id: z.number().int(),
+  memberId: z.number().int(),
+  postType: z.string(),
+  title: z.string(),
+  content: z.string(),
+  dateCreated: z.date(),
+  comments: z.array(CommentSchema),
+  votes: z.array(VoteSchema),
+  memberPostedBy: z.object({
+    id: z.number().int(),
+    user: UserSchema,
+  }),
+});
+export type Post = z.infer<typeof PostSchema>;
+export const GetPostsResponseSchema = createAPIResponseSchema(PostSchema.array(), GenericErrors);
 
-export type GetPostsResponse = APIResponse<Post[], z.infer<typeof GenericErrors>>;
+export type GetPostsResponse = z.infer<typeof GetPostsResponseSchema>;

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { GetPostsResponse } from '@dddforum/shared/src/modules/posts';
-import { ClientError, Controller, ResponseBuilder } from '../../shared';
+import { GetPostsResponseSchema } from '@dddforum/shared/src/modules/posts';
+import { ClientError, Controller, buildAPIResponse } from '../../shared';
 import { PostsService } from './PostsService';
 
 export class PostsController extends Controller {
@@ -20,7 +20,8 @@ export class PostsController extends Controller {
         return next(new ClientError());
       }
       const posts = await this.postsService.getPosts();
-      return new ResponseBuilder<GetPostsResponse>(res).data(posts).status(200).build();
+
+      return buildAPIResponse(res).schema(GetPostsResponseSchema).data(posts).status(200).build();
     } catch (error) {
       return next(error);
     }

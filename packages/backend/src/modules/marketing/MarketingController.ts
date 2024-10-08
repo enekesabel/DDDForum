@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AddToEmailListResponse } from '@dddforum/shared/src/modules/marketing';
-import { Controller, ResponseBuilder } from '../../shared';
+import { AddToEmailListResponseSchema } from '@dddforum/shared/src/modules/marketing';
+import { buildAPIResponse, Controller } from '../../shared';
 import { MarketingService } from './MarketingService';
 
 export class MarketingController extends Controller {
@@ -17,7 +17,7 @@ export class MarketingController extends Controller {
       const email = req.body.email;
       await this.marketingService.addEmailToList(email);
 
-      return new ResponseBuilder<AddToEmailListResponse>(res).data().status(201).build();
+      return buildAPIResponse(res).schema(AddToEmailListResponseSchema).data(undefined).status(201).build();
     } catch (error) {
       return next(error);
     }
