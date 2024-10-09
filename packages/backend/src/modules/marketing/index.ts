@@ -1,0 +1,1 @@
+export { MarketingModule } from './MarketingModule';

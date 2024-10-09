@@ -1,0 +1,13 @@
+{
+  "name": "@dddforum/shared",
+  "version": "1.0.0",
+  "description": "Shared library for DDDForum",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "http-status-codes": "^2.3.0"
+  }
+}
