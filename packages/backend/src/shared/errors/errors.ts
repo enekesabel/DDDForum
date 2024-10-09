@@ -1,5 +1,10 @@
+import { GenericErrors } from '@dddforum/shared/src/shared';
+import { z } from 'zod';
+
 // https://stackoverflow.com/questions/41102060/typescript-extending-error-class/48342359#48342359
-export abstract class CustomError extends Error {
+export abstract class CustomError<T extends string> extends Error {
+  abstract readonly name: T;
+
   constructor(message?: string) {
     // 'Error' breaks prototype chain here
     super(message);
@@ -17,24 +22,20 @@ export abstract class CustomError extends Error {
   }
 }
 
-export abstract class BaseError extends CustomError {}
+export abstract class BaseError<T extends string> extends CustomError<T> {}
 
-export abstract class BaseException extends CustomError {}
+export abstract class BaseException<T extends string> extends CustomError<T> {}
 
-export class ValidationError extends BaseError {
-  constructor() {
-    super('ValidationError');
-  }
+export abstract class GenericError extends BaseError<z.infer<typeof GenericErrors>> {}
+
+export class ValidationError extends GenericError {
+  readonly name = GenericErrors.Enum.ValidationError;
 }
 
-export class ServerError extends BaseError {
-  constructor() {
-    super('ServerError');
-  }
+export class ServerError extends GenericError {
+  readonly name = GenericErrors.Enum.ServerError;
 }
 
-export class ClientError extends BaseError {
-  constructor() {
-    super('ClientError');
-  }
+export class ClientError extends GenericError {
+  readonly name = GenericErrors.Enum.ClientError;
 }
