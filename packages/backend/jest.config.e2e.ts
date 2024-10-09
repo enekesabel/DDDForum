@@ -1,10 +1,11 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
+import defaultConfig from './jest.config';
 
-export default async (): Promise<JestConfigWithTsJest> => ({
+const e2eConfig: JestConfigWithTsJest = {
+  ...defaultConfig,
   displayName: 'Backend (E2E)',
-  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
-  preset: 'ts-jest/presets/js-with-ts',
   maxWorkers: 1,
   roots: ['<rootDir>/tests/e2e'],
-  globalSetup: './tests/support/globalDevEnvTestSetup.ts',
-});
+};
+
+export default e2eConfig;
