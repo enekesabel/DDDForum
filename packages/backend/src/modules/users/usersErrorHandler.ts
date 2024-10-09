@@ -15,9 +15,6 @@ export const usersErrorHandler = (err: Error, req: Request, res: Response, next:
         return responseBuilder.status(StatusCodes.CONFLICT).build();
       case UserExceptions.Enum.UsernameAlreadyTaken:
         return responseBuilder.status(StatusCodes.CONFLICT).build();
-      default:
-        // if the error is not handled by the switch statement, pass it to the next error handler
-        return next(err);
     }
   } else {
     next(err);

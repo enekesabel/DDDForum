@@ -10,10 +10,14 @@ module.exports = {
   ],
   plugins: ['unused-imports'],
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: ['**/tsconfig.eslint.json'],
+  },
   rules: {
     // Import
     'import/no-duplicates': 'error',
     'import/order': 'error',
+
     // Allow unused variables starting with exactly one underscore.
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
@@ -26,6 +30,14 @@ module.exports = {
         args: 'after-used',
         argsIgnorePattern: '^_',
         caughtErrorsIgnorePattern: '^_',
+      },
+    ],
+    // Swich statements
+    '@typescript-eslint/switch-exhaustiveness-check': [
+      'error',
+      {
+        allowDefaultCaseForExhaustiveSwitch: false,
+        requireDefaultForNonUnion: true,
       },
     ],
   },
