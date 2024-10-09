@@ -6,10 +6,7 @@ import { UsersException } from './usersExceptions';
 
 export const usersErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err && err instanceof UsersException) {
-    const responseBuilder = buildAPIResponse(res).schema(createAPIErrorResponseSchema(UserExceptions)).error({
-      code: err.name,
-      message: err.message,
-    });
+    const responseBuilder = buildAPIResponse(res).schema(createAPIErrorResponseSchema(UserExceptions)).error(err);
 
     switch (err.name) {
       case UserExceptions.Enum.UserNotFound:

@@ -6,10 +6,7 @@ import { ServerError, GenericError } from './errors';
 export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err) {
     if (err instanceof GenericError) {
-      const responseBuilder = buildAPIResponse(res).schema(createAPIErrorResponseSchema(GenericErrors)).error({
-        code: err.name,
-        message: err.message,
-      });
+      const responseBuilder = buildAPIResponse(res).schema(createAPIErrorResponseSchema(GenericErrors)).error(err);
 
       switch (err.name) {
         case GenericErrors.Enum.ClientError:

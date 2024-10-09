@@ -6,6 +6,7 @@ import {
   createAPIResponseSchema,
 } from '@dddforum/shared/src/shared';
 import { createResponse, MockResponse } from 'node-mocks-http';
+import { CustomError, ServerError } from '../errors/errors';
 import { buildAPIResponse } from './buildAPIResponse';
 
 describe('buildAPIResponse', () => {
@@ -40,19 +41,17 @@ describe('buildAPIResponse', () => {
     });
 
     it('Should be able to build an APIErrorResponse from an APIResponseSchema', () => {
-      buildAPIResponse(response)
-        .schema(responseSchema)
-        .error({ message: 'Something went wrong', code: GenericErrors.enum.ServerError })
-        .status(500)
-        .build()
-        .send();
+      const error = new ServerError('Something went wrong');
+
+      buildAPIResponse(response).schema(responseSchema).error(error).status(500).build().send();
 
       expect(response.statusCode).toBe(500);
       expect(response._getJSONData()).toMatchObject({
-        error: { message: 'Something went wrong', code: GenericErrors.enum.ServerError },
+        error: { message: 'Something went wrong', code: GenericErrors.Enum.ServerError },
         success: false,
       });
     });
+
     it('Should throw an error if an invalid status code is used for success response', () => {
       const data = {
         name: 'John Doe',
@@ -60,15 +59,11 @@ describe('buildAPIResponse', () => {
       };
       expect(() => buildAPIResponse(response).schema(responseSchema).data(data).status(500).build().send()).toThrow();
     });
+
     it('Should throw an error if an invalid status code is used for error response', () => {
-      expect(() =>
-        buildAPIResponse(response)
-          .schema(responseSchema)
-          .error({ message: 'Something went wrong', code: GenericErrors.enum.ServerError })
-          .status(200)
-          .build()
-          .send()
-      ).toThrow();
+      const error = new ServerError('Something went wrong');
+
+      expect(() => buildAPIResponse(response).schema(responseSchema).error(error).status(200).build().send()).toThrow();
     });
   });
 
@@ -134,10 +129,8 @@ describe('buildAPIResponse', () => {
     });
 
     it('Should throw an error if one tries to build an error response', () => {
-      const error = {
-        message: 'Something went wrong',
-        code: GenericErrors.enum.ServerError,
-      };
+      const error = new ServerError('Something went wrong');
+
       // @ts-expect-error: cannot pass error when building an APISuccessResponse
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(200).build().send()).toThrow();
     });
@@ -147,26 +140,26 @@ describe('buildAPIResponse', () => {
     const schema = createAPIErrorResponseSchema(GenericErrors);
 
     it('Should be able to build an APIErrorResponse', () => {
-      const error = {
-        message: GenericErrors.enum.ServerError,
-        code: GenericErrors.enum.ServerError,
-      };
+      const error = new ServerError('Something went wrong');
 
       buildAPIResponse(response).schema(schema).error(error).status(500).build().send();
 
       expect(response.statusCode).toBe(500);
       expect(response._getJSONData()).toMatchObject({
         success: false,
-        error,
+        error: {
+          message: 'Something went wrong',
+          code: GenericErrors.Enum.ServerError,
+        },
       });
     });
 
     it('Should throw an error if error does not match the schema', () => {
-      const error = {
-        message: 'CustomError',
-        code: 'CustomError',
-      };
-      // @ts-expect-error: error does not match schema
+      class InvalidError extends CustomError<'InvalidError'> {
+        readonly name = 'InvalidError';
+      }
+      const error = new InvalidError('Custom error');
+
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();
     });
 
@@ -175,10 +168,7 @@ describe('buildAPIResponse', () => {
         error: z.any(),
         success: z.literal(false),
       });
-      const error = {
-        message: 'Something went wrong',
-        code: 500,
-      };
+      const error = new ServerError('Something went wrong');
 
       // @ts-expect-error: schema is not an APIErrorResponseSchema
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();

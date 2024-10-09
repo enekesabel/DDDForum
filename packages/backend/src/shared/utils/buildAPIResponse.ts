@@ -7,6 +7,7 @@ import {
   createAPIResponseSchema,
   StatusCodes,
 } from '@dddforum/shared/src/shared';
+import { CustomError } from '../errors';
 
 type APISuccessResponseSchema = ReturnType<typeof createAPISuccessResponseSchema>;
 type APIErrorResponseSchema = ReturnType<typeof createAPIErrorResponseSchema>;
@@ -82,7 +83,7 @@ export const buildAPIResponse = (response: Response) => {
       }
       if (isAPISuccessResponseSchema(schema)) {
         return {
-          error: (_: z.infer<T>['error']) => {
+          error: (_: CustomError<string>) => {
             throw new Error('Error function is not supported for success responses');
           },
           data: buildSuccessResponse(response).schema(schema).data,
@@ -136,7 +137,7 @@ const buildErrorResponse = (response: Response) => {
       }
 
       return {
-        error: (error: z.infer<T>['error']) => {
+        error: (error: CustomError<z.infer<T>['error']['code']>) => {
           return {
             status: (status: StatusCodes) => {
               if (!Object.values(StatusCodes).includes(status) || status > 599 || status < 400) {
@@ -145,9 +146,12 @@ const buildErrorResponse = (response: Response) => {
               response.status(status);
               return {
                 build: () => {
-                  const res = {
+                  const res: z.infer<T> = {
                     success: false,
-                    error,
+                    error: {
+                      code: error.name,
+                      message: error.message,
+                    },
                   };
                   return response.json(schema.parse(res));
                 },
