@@ -13,9 +13,9 @@
     "test:e2e": "jest -c jest.config.e2e.ts --verbose --runInBand --detectOpenHandles"
   },
   "dependencies": {
+    "@dddforum/shared": "file:../shared",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@dddforum/shared": "file:../shared",
     "axios": "^1.6.2",
     "dayjs": "^1.11.10",
     "moment": "^2.29.4",
@@ -32,6 +32,7 @@
     "@vitejs/plugin-react": "^4.2.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.12",
+    "puppeteer": "^23.5.2",
     "vite": "^5.0.0"
   }
 }
