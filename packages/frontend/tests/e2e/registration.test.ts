@@ -82,4 +82,41 @@ defineFeature(feature, (test) => {
       expect(await app.layout.header.isUserLoggedIn()).toBe(false);
     });
   });
+
+  test('Account already created with email', ({ given, when, then, and }) => {
+    let existingUserInput: UserInput;
+
+    given(
+      'a set of users already created accounts',
+      async (table: { firstName: string; lastName: string; email: string }[]) => {
+        const userInputs = table.map((row) =>
+          new UserInputBuilder()
+            .withAllRandomDetails()
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .build()
+        );
+
+        existingUserInput = userInputs[0];
+
+        await DatabaseFixtures.SetupWithExistingUsers(...userInputs);
+      }
+    );
+
+    when('new users attempt to register with those emails', async () => {
+      await pages.registrationPage.open();
+      await pages.registrationPage.enterAccountDetails(existingUserInput);
+      await pages.registrationPage.submitRegistrationForm();
+    });
+
+    then('they should see an error notifying them that the account already exists', async () => {
+      const errorMessage = await app.layout.notifications.getErrorMessage();
+      expect(errorMessage).toContain('This email is already in use.');
+    });
+
+    and('they should not have been sent access to account details', async () => {
+      expect(await app.layout.header.isUserLoggedIn()).toBe(false);
+    });
+  });
 });
