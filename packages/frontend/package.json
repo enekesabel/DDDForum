@@ -2,7 +2,6 @@
   "name": "@dddforum/frontend",
   "version": "0.0.0",
   "description": "Frontend for DDDForum",
-  "type": "module",
   "scripts": {
     "build": "tsc && vite build",
     "clean": "rimraf ./dist",

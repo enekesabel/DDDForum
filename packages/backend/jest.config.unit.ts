@@ -1,5 +1,5 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
-import defaultConfig from './jest.config';
+import defaultConfig from '../../jest.base.config';
 
 const unitConfig: JestConfigWithTsJest = {
   ...defaultConfig,
