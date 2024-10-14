@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
+    "test:dev": "jest -c jest.config.ts --detectOpenHandles",
     "test:e2e": "jest -c jest.config.e2e.ts --verbose --runInBand --detectOpenHandles"
   },
   "dependencies": {
