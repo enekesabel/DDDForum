@@ -1,9 +1,10 @@
 import { PageComponent } from '../PageComponent';
 import { PuppeteerPageDriver } from '../PuppeteerPageDriver';
+import { AppSelectors } from '../../../src/shared/selectors';
 
 const pageElementsConfig = {
-  errorToast: { selector: '.Toastify__toast--error' },
-  successToast: { selector: '.Toastify__toast--default' },
+  errorToast: { selector: AppSelectors.notifications.failure.selector },
+  successToast: { selector: AppSelectors.notifications.success.selector },
 } as const;
 
 export class NotificationsComponent extends PageComponent<typeof pageElementsConfig> {

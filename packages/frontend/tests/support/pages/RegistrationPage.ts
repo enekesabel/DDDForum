@@ -2,14 +2,15 @@ import { UserInput } from '@dddforum/shared/src/modules/users';
 import { PageObject } from '../PageObject';
 import { PuppeteerPageDriver } from '../PuppeteerPageDriver';
 import { createPageElementsConfig } from '../PageElements';
+import { AppSelectors } from '../../../src/shared/selectors';
 
 const pageElementsConfig = createPageElementsConfig({
-  emailInput: { selector: 'input[type="email"]' },
-  usernameInput: { selector: 'input[placeholder="username"]' },
-  firstNameInput: { selector: 'input[placeholder="first name"]' },
-  lastNameInput: { selector: 'input[placeholder="last name"]' },
-  marketingCheckbox: { selector: 'input[type="checkbox"]' },
-  submitButton: { selector: 'button.submit-button' },
+  emailInput: { selector: AppSelectors.registration.registrationForm.email.selector },
+  usernameInput: { selector: AppSelectors.registration.registrationForm.username.selector },
+  firstNameInput: { selector: AppSelectors.registration.registrationForm.firstname.selector },
+  lastNameInput: { selector: AppSelectors.registration.registrationForm.lastname.selector },
+  marketingCheckbox: { selector: AppSelectors.registration.registrationForm.marketingCheckbox.selector },
+  submitButton: { selector: AppSelectors.registration.registrationForm.submit.selector },
 });
 
 export class RegistrationPage extends PageObject<typeof pageElementsConfig> {

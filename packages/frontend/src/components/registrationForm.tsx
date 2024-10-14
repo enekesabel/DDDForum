@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AppSelectors } from '../shared/selectors';
 
 export type RegistrationInput = {
   email: string;
@@ -38,25 +39,25 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
     <div className="registration-form">
       <div>Create Account</div>
       <input
-        className="registration email"
+        className={AppSelectors.registration.registrationForm.email.toClass()}
         type="email"
         placeholder="email"
         onChange={(e) => setEmail(e.target.value)}
       ></input>
       <input
-        className="registatation-input username"
+        className={AppSelectors.registration.registrationForm.username.toClass()}
         type="text"
         placeholder="username"
         onChange={(e) => setUsername(e.target.value)}
       ></input>
       <input
-        className="registatation-input username"
+        className={AppSelectors.registration.registrationForm.firstname.toClass()}
         type="text"
         placeholder="first name"
         onChange={(e) => setFirstName(e.target.value)}
       ></input>
       <input
-        className="registatation-input username"
+        className={AppSelectors.registration.registrationForm.lastname.toClass()}
         type="text"
         placeholder="last name"
         onChange={(e) => setLastName(e.target.value)}
@@ -64,6 +65,7 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
       <label className="flex">
         Sign up for marketing emails
         <input
+          className={AppSelectors.registration.registrationForm.marketingCheckbox.toClass()}
           type="checkbox"
           onChange={(e) => setConsent(e.target.checked)}
         />
@@ -75,7 +77,7 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
         </div>
         <button
           onClick={() => handleSubmit()}
-          className="submit-button"
+          className={AppSelectors.registration.registrationForm.submit.toClass()}
           type="submit"
         >
           Submit

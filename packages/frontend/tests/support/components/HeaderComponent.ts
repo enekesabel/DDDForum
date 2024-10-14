@@ -1,10 +1,11 @@
 import { PageComponent } from '../PageComponent';
 import { createPageElementsConfig } from '../PageElements';
 import { PuppeteerPageDriver } from '../PuppeteerPageDriver';
+import { AppSelectors } from '../../../src/shared/selectors';
 
 const pageElementsConfig = createPageElementsConfig({
   userName: {
-    selector: '#header-action-button .username',
+    selector: AppSelectors.header.username.selector,
   },
 });
 
