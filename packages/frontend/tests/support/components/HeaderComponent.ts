@@ -1,16 +1,29 @@
 import { PageComponent } from '../PageComponent';
+import { createPageElementsConfig } from '../PageElements';
+import { PuppeteerPageDriver } from '../PuppeteerPageDriver';
 
-export class HeaderComponent extends PageComponent {
+const pageElementsConfig = createPageElementsConfig({
+  userName: {
+    selector: '#header-action-button .username',
+  },
+});
+
+export class HeaderComponent extends PageComponent<typeof pageElementsConfig> {
+  constructor(protected driver: PuppeteerPageDriver) {
+    super(driver, pageElementsConfig);
+  }
+
   async getLoggedInUserName(): Promise<string | null> {
-    const userNameElement = await this.driver.page.$('#header-action-button > div > div:first-child');
-    if (userNameElement) {
-      return await userNameElement.evaluate((el) => el.textContent);
-    }
-    return null;
+    const userNameElement = await this.pageElements.get('userName');
+    return userNameElement.evaluate((el) => el.textContent);
   }
 
   async isUserLoggedIn(): Promise<boolean> {
-    const userName = await this.getLoggedInUserName();
-    return userName !== null;
+    try {
+      const userName = await this.getLoggedInUserName();
+      return userName !== null;
+    } catch (_err) {
+      return false;
+    }
   }
 }

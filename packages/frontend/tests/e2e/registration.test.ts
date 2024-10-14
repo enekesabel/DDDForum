@@ -80,6 +80,7 @@ defineFeature(feature, (test) => {
 
     and('I should not have been sent access to account details', async () => {
       expect(await app.layout.header.isUserLoggedIn()).toBe(false);
+      console.log('checked that user is not logged in');
     });
   });
 
