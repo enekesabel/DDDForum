@@ -2,24 +2,19 @@ import { PageComponent } from '../PageComponent';
 import { PuppeteerPageDriver } from '../PuppeteerPageDriver';
 import { AppSelectors } from '../../../src/shared/selectors';
 
-const pageElementsConfig = {
-  errorToast: { selector: AppSelectors.notifications.failure.selector },
-  successToast: { selector: AppSelectors.notifications.success.selector },
-} as const;
-
-export class NotificationsComponent extends PageComponent<typeof pageElementsConfig> {
+export class NotificationsComponent extends PageComponent<typeof AppSelectors.notifications> {
   constructor(driver: PuppeteerPageDriver) {
-    super(driver, pageElementsConfig);
+    super(driver, AppSelectors.notifications);
   }
 
   async getErrorMessage(): Promise<string | null> {
-    const toastElement = await this.pageElements.get('errorToast');
+    const toastElement = await this.pageElements.get('failure');
 
     return toastElement.evaluate((el) => el.textContent);
   }
 
   async getSuccessMessage(): Promise<string | null> {
-    const toastElement = await this.pageElements.get('successToast');
+    const toastElement = await this.pageElements.get('success');
     return toastElement.evaluate((el) => el.textContent);
   }
 }

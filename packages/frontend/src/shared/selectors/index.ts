@@ -1,4 +1,5 @@
 import { buildAppSelectors } from './appSelectorUtils';
+export { ElementSelector } from './appSelectorUtils';
 
 export const AppSelectors = buildAppSelectors({
   registration: {

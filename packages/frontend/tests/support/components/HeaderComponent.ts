@@ -1,21 +1,14 @@
 import { PageComponent } from '../PageComponent';
-import { createPageElementsConfig } from '../PageElements';
 import { PuppeteerPageDriver } from '../PuppeteerPageDriver';
 import { AppSelectors } from '../../../src/shared/selectors';
 
-const pageElementsConfig = createPageElementsConfig({
-  userName: {
-    selector: AppSelectors.header.username.selector,
-  },
-});
-
-export class HeaderComponent extends PageComponent<typeof pageElementsConfig> {
+export class HeaderComponent extends PageComponent<typeof AppSelectors.header> {
   constructor(protected driver: PuppeteerPageDriver) {
-    super(driver, pageElementsConfig);
+    super(driver, AppSelectors.header);
   }
 
   async getLoggedInUserName(): Promise<string | null> {
-    const userNameElement = await this.pageElements.get('userName');
+    const userNameElement = await this.pageElements.get('username');
     return userNameElement.evaluate((el) => el.textContent);
   }
 

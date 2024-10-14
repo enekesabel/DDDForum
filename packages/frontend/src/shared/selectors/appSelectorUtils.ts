@@ -8,7 +8,7 @@ interface AppSelectorDefinition {
   [key: string]: AppSelectorDefinitionLeaf | AppSelectorDefinition;
 }
 
-class AppSelector {
+export class ElementSelector {
   constructor(readonly selector: string) {}
 
   toClass(): string {
@@ -22,7 +22,7 @@ class AppSelector {
 
 type ToAppSelectors<T extends AppSelectorDefinition> = {
   [K in keyof T]: T[K] extends AppSelectorDefinitionLeaf
-    ? AppSelector
+    ? ElementSelector
     : T[K] extends AppSelectorDefinition
       ? ToAppSelectors<T[K]>
       : never;
@@ -34,7 +34,7 @@ export const buildAppSelectors = <T extends AppSelectorDefinition>(definition: T
 
   Object.entries(definition).forEach(([key, value]) => {
     if (isAppSelectorDefinitionLeaf(value)) {
-      selectors[key] = new AppSelector(value.selector);
+      selectors[key] = new ElementSelector(value.selector);
     } else {
       selectors[key] = buildAppSelectors(value);
     }

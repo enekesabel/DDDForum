@@ -1,16 +1,13 @@
 import { ElementHandle } from 'puppeteer';
+import { ElementSelector } from '../../src/shared';
 import { PageComponent } from './PageComponent';
 import { PuppeteerPageDriver } from './PuppeteerPageDriver';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type PageElementsSelector = { selector: string } | PageComponent<any>;
+type PageElementsSelector = ElementSelector | PageComponent<any>;
 
 export type PageElementsConfig = {
   [key: string]: PageElementsSelector;
-};
-
-export const createPageElementsConfig = <T extends PageElementsConfig>(config: T) => {
-  return config;
 };
 
 type ReturnTypeFromConfig<T extends PageElementsConfig, Name extends keyof T> =
@@ -23,10 +20,7 @@ export class PageElements<T extends PageElementsConfig> {
     private driver: PuppeteerPageDriver
   ) {}
 
-  async get<Name extends keyof typeof this.config>(
-    nameKey: Name,
-    timeout = 1000
-  ): Promise<ReturnTypeFromConfig<T, Name>> {
+  async get<Name extends keyof T>(nameKey: Name, timeout = 1000): Promise<ReturnTypeFromConfig<T, Name>> {
     const component = this.config[nameKey];
 
     if (component instanceof PageComponent) {
