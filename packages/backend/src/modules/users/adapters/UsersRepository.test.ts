@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { Database } from '../../../shared';
 import { ProductionUsersRepository } from './ProductionUsersRepository';
 

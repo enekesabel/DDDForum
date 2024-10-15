@@ -3,7 +3,7 @@ import { Server } from 'http';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { GetUserResponse, UserExceptions } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';
 import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';

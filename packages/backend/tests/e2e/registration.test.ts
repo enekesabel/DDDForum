@@ -3,7 +3,7 @@ import { Server } from 'http';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserExceptions, UserInput, CreateUserResponse } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { AddToEmailListResponse } from '@dddforum/shared/src/modules/marketing';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';

@@ -1,6 +1,6 @@
 import path from 'path';
 import { Server } from 'http';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { GenericErrors } from '@dddforum/shared/src/shared';
