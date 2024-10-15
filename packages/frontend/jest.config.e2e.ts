@@ -3,8 +3,7 @@ import defaultConfig from '../../jest.base.config';
 
 const e2eConfig: JestConfigWithTsJest = {
   ...defaultConfig,
-  displayName: 'Backend (E2E)',
-  maxWorkers: 1,
+  displayName: 'Frontend (E2E)',
   roots: ['<rootDir>/tests/e2e'],
 };
 

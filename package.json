@@ -1,7 +1,6 @@
 {
   "name": "@dddforum",
   "private": true,
-  "type": "module",
   "workspaces": [
     "packages/*"
   ],

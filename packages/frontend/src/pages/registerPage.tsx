@@ -8,6 +8,7 @@ import { api } from '../api';
 import { useUser } from '../contexts/userContext';
 import { useSpinner } from '../contexts/spinnerContext';
 import { OverlaySpinner } from '../components/overlaySpinner';
+import { AppSelectors } from '../shared';
 
 type ValidationResult = {
   success: boolean;
@@ -25,6 +26,18 @@ export const RegisterPage = () => {
   const navigate = useNavigate();
   const spinner = useSpinner();
 
+  const showFailureToast = (message: string) => {
+    toast.error(message, {
+      className: AppSelectors.notifications.failure.toClass(),
+    });
+  };
+
+  const showSuccessToast = (message: string) => {
+    toast.success(message, {
+      className: AppSelectors.notifications.success.toClass(),
+    });
+  };
+
   const handleSubmitRegistrationForm = async (input: RegistrationInput & MarketingEmailSignupInput) => {
     const { consent, ...registrationInput } = input;
 
@@ -34,7 +47,7 @@ export const RegisterPage = () => {
     // If the form is invalid
     if (!validationResult.success) {
       // Show an error toast (for invalid input)
-      return toast.error(validationResult.errorMessage);
+      return showFailureToast(validationResult.errorMessage);
     }
 
     // If the form is valid
@@ -47,17 +60,17 @@ export const RegisterPage = () => {
       if (!response.success) {
         switch (response.error.code) {
           case UserExceptions.enum.EmailAlreadyInUse:
-            return toast.error('This email is already in use. Perhaps you want to log in?');
+            return showFailureToast('This email is already in use. Perhaps you want to log in?');
           case UserExceptions.enum.UsernameAlreadyTaken:
-            return toast.error('Please try a different username, this one is already taken.');
+            return showFailureToast('Please try a different username, this one is already taken.');
           case GenericErrors.enum.ValidationError:
             // We could further improve this with more
             // refined types to specify which
             // form field was invalid.
-            return toast.error(response.error.message);
+            return showFailureToast(response.error.message);
           case GenericErrors.enum.ServerError:
           default:
-            return toast.error('Some backend error occurred');
+            return showFailureToast('Some backend error occurred');
         }
       }
 
@@ -73,7 +86,7 @@ export const RegisterPage = () => {
       spinner.deactivate();
 
       // Show the toast
-      toast('Success! Redirecting home.');
+      showSuccessToast('Success! Redirecting home.');
       // In 3 seconds, redirect to the main page
       setTimeout(() => {
         navigate('/');
@@ -83,7 +96,7 @@ export const RegisterPage = () => {
       // Stop the spinner
       spinner.deactivate();
       // Show the toast (for unknown error)
-      return toast.error('Some backend error occurred');
+      return showFailureToast('Some backend error occurred');
     }
   };
 
