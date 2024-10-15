@@ -1,7 +1,8 @@
 import { Prisma } from '@prisma/client';
-import { Repository } from '../../shared';
+import { Repository } from '../../../shared';
+import { UsersRepository } from '../ports/UsersRepository';
 
-export class UsersRepository extends Repository {
+export class ProductionUsersRepository extends Repository implements UsersRepository {
   findUserById = (id: number) => this.prisma.user.findUnique({ where: { id } });
   findUserByEmail = (email: string) => this.prisma.user.findUnique({ where: { email } });
   findUserByUsername = (username: string) => this.prisma.user.findUnique({ where: { username } });

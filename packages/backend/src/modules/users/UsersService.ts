@@ -1,7 +1,7 @@
 import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
 import { CreateUserCommand } from './CreateUserCommand';
+import { UsersRepository } from './ports/UsersRepository';
 import { UpdateUserCommand } from './UpdateUserCommand';
-import { UsersRepository } from './UsersRepository';
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from './usersExceptions';
 
 function generateRandomPassword(length: number): string {
