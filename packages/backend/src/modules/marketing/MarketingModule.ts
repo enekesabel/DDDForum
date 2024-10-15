@@ -1,7 +1,8 @@
 import { WebServer } from '../../shared';
-import { ContactListAPI } from './ContactListAPI';
 import { MarketingController } from './MarketingController';
+import { ProductionContactListAPI } from './adapters/ProductionContactListAPI';
 import { MarketingService } from './MarketingService';
+import { ContactListAPI } from './ports/ContactListAPI';
 
 export class MarketingModule {
   private contactListAPI: ContactListAPI;
@@ -9,7 +10,7 @@ export class MarketingModule {
   private marketingController: MarketingController;
 
   constructor(webServer: WebServer) {
-    this.contactListAPI = new ContactListAPI();
+    this.contactListAPI = new ProductionContactListAPI();
     this.marketingService = new MarketingService(this.contactListAPI);
     this.marketingController = new MarketingController(this.marketingService);
 
