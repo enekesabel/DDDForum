@@ -1,5 +1,5 @@
 import { Database, WebServer } from '../../shared';
-import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
+import { TransactionalEmailAPI } from '../notifications';
 import { UsersRepository } from './ports/UsersRepository';
 import { UsersController } from './UsersController';
 import { usersErrorHandler } from './usersErrorHandler';

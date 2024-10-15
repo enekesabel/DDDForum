@@ -1,7 +1,8 @@
-import { TransactionalEmailAPI } from './TransactionalEmailAPI';
+import { ProductionTransactionalEmailAPI } from './adapters/ProductionTransactionalEmailAPI';
+import { TransactionalEmailAPI } from './ports/TransactionalEmailAPI';
 
 export class NotificationsModule {
-  private transactionalEmailAPI = new TransactionalEmailAPI();
+  private transactionalEmailAPI: TransactionalEmailAPI = new ProductionTransactionalEmailAPI();
 
   getTransactionalEmailAPI() {
     return this.transactionalEmailAPI;

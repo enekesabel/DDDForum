@@ -1,4 +1,4 @@
-import { TransactionalEmailAPI } from '../notifications/TransactionalEmailAPI';
+import { TransactionalEmailAPI } from '../notifications';
 import { CreateUserCommand } from './CreateUserCommand';
 import { UsersRepository } from './ports/UsersRepository';
 import { UpdateUserCommand } from './UpdateUserCommand';
