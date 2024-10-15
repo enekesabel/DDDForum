@@ -1,4 +1,4 @@
-import { PostsRepository } from './PostsRepository';
+import { PostsRepository } from './ports/PostsRepository';
 
 export class PostsService {
   private postsRepository: PostsRepository;

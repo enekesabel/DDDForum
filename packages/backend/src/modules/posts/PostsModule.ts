@@ -1,6 +1,7 @@
 import { Database, WebServer } from '../../shared';
+import { PostsRepository } from './ports/PostsRepository';
 import { PostsController } from './PostsController';
-import { PostsRepository } from './PostsRepository';
+import { ProductionPostsRepository } from './adapters/ProductionPostsRepository';
 import { PostsService } from './PostsService';
 
 export class PostsModule {
@@ -11,9 +12,10 @@ export class PostsModule {
 
   constructor(database: Database, webServer: WebServer) {
     this.database = database;
-    this.postsRepository = new PostsRepository(this.database);
+    this.postsRepository = new ProductionPostsRepository(this.database);
     this.postsService = new PostsService(this.postsRepository);
     this.postsController = new PostsController(this.postsService);
+
     webServer.registerController('/posts', this.postsController);
   }
 }
