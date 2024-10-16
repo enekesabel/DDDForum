@@ -1,4 +1,4 @@
-import { TransactionalEmailAPI } from '../notifications';
+import { NotificationsService } from '../notifications';
 import { CreateUserCommand } from './CreateUserCommand';
 import { UsersRepository } from './ports/UsersRepository';
 import { UpdateUserCommand } from './UpdateUserCommand';
@@ -19,7 +19,7 @@ function generateRandomPassword(length: number): string {
 export class UsersService {
   constructor(
     private usersRepository: UsersRepository,
-    private transactionalEmailAPI: TransactionalEmailAPI
+    private notificationsService: NotificationsService
   ) {}
 
   async createUser(createUserCommand: CreateUserCommand) {
@@ -38,13 +38,13 @@ export class UsersService {
       password: generateRandomPassword(10),
     });
 
-    await this.transactionalEmailAPI.sendMail({
-      to: createdUser.email,
-      subject: 'Welcome to DDD Forum',
-      text: `Welcome to DDDForum. You can login with the following details </br>
+    await this.notificationsService.sendMail(
+      createdUser.email,
+      'Welcome to DDD Forum',
+      `Welcome to DDDForum. You can login with the following details </br>
       email: ${createdUser.email}
-      password: ${createdUser.password}`,
-    });
+      password: ${createdUser.password}`
+    );
 
     return createdUser;
   }

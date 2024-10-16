@@ -31,7 +31,7 @@ export class CompositionRoot {
     this.usersModule = new UsersModule(
       this.config,
       database,
-      this.notificationsModule.getTransactionalEmailAPI(),
+      this.notificationsModule.getNotificationsService(),
       webServer
     );
     this.postsModule = new PostsModule(this.config, database, webServer);
@@ -50,6 +50,7 @@ export class CompositionRoot {
       users: this.usersModule.getUsersService(),
       posts: this.postsModule.getPostsService(),
       marketing: this.marketingModule.getMarketingService(),
+      notifications: this.notificationsModule.getNotificationsService(),
     };
   }
 }
