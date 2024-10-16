@@ -5,13 +5,15 @@ import { UserInput } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { Application, CompositionRoot } from '../../../src/core';
 import { Config, createCommand, GenericError, ValidationError } from '../../../src/shared';
-import { EmailAlreadyInUseException, UserNotFoundException } from '../../../src/modules/users';
+import {
+  EmailAlreadyInUseException,
+  UserNotFoundException,
+  UsernameAlreadyTakenException,
+} from '../../../src/modules/users';
 import { CreateUserCommandSchema } from '../../../src/modules/users/CreateUserCommand';
 import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {
-  tagFilter: '@unit',
-});
+const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 
 let compositionRoot: CompositionRoot;
 let application: Application;
@@ -149,9 +151,51 @@ defineFeature(feature, (test) => {
     });
 
     then('they should see an error notifying them that the account already exists', async () => {
-      for (const promise of createUserPromises) {
-        expect(promise).rejects.toThrow(EmailAlreadyInUseException);
+      await Promise.all(createUserPromises.map((p) => expect(p).rejects.toThrow(EmailAlreadyInUseException)));
+    });
+
+    and('they should not have been sent access to account details', () => {
+      expect(sendEmailSpy).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  test('Username already taken', ({ given, when, then, and }) => {
+    let userInputs: UserInput[] = [];
+    let createUserPromises: ReturnType<typeof application.users.createUser>[] = [];
+
+    given(
+      'a set of users have already created their accounts with valid details',
+      async (table: { firstName: string; lastName: string; email: string; username: string }[]) => {
+        userInputs = table.map((row) => {
+          return new UserInputBuilder()
+            .withUsername(row.username)
+            .withFirstName(row.firstName)
+            .withLastName(row.lastName)
+            .withEmail(row.email)
+            .build();
+        });
+        await databaseFixtures.setupWithExistingUsers(...userInputs);
       }
+    );
+
+    when(
+      'new users attempt to register with already taken usernames',
+      async (table: { firstName: string; lastName: string; email: string; username: string }[]) => {
+        createUserPromises = table.map((row) => {
+          return application.users.createUser(
+            new UserInputBuilder()
+              .withEmail(row.email)
+              .withUsername(row.username)
+              .withFirstName(row.firstName)
+              .withLastName(row.lastName)
+              .build()
+          );
+        });
+      }
+    );
+
+    then('they see an error notifying them that the username has already been taken', async () => {
+      await Promise.all(createUserPromises.map((p) => expect(p).rejects.toThrow(UsernameAlreadyTakenException)));
     });
 
     and('they should not have been sent access to account details', () => {
