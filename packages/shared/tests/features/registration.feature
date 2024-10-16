@@ -27,6 +27,7 @@ Feature: Registration
     And I should not have been sent access to account details
 
   @frontend
+  @unit
   Scenario: Account already created with email
     Given a set of users already created accounts
       | firstName | lastName | email             |
