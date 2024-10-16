@@ -1,8 +1,8 @@
 import { User } from '@prisma/client';
-import { UserCreateInput, UsersRepository, UserUpdateInput } from '../ports/UsersRepository';
+import { UserCreateInput, UserCreateOutput, UsersRepository, UserUpdateInput } from '../ports/UsersRepository';
 
 export class InMemoryUsersRepository implements UsersRepository {
-  private users: User[];
+  private users: UserCreateOutput[];
 
   constructor() {
     this.users = [];
@@ -16,10 +16,15 @@ export class InMemoryUsersRepository implements UsersRepository {
   async findUserByUsername(username: string): Promise<User | null> {
     return this.users.find((user) => user.username === username) || null;
   }
-  async createUser(userData: UserCreateInput): Promise<User> {
+  async createUser(userData: UserCreateInput): Promise<UserCreateOutput> {
+    const id = this.users.length + 1;
     const user = {
-      id: this.users.length + 1,
+      id: id,
       ...userData,
+      member: {
+        id: id,
+        userId: id,
+      },
     };
     this.users.push(user);
     return user;
@@ -35,5 +40,8 @@ export class InMemoryUsersRepository implements UsersRepository {
     };
     this.users[index] = user;
     return user;
+  }
+  async clear(): Promise<void> {
+    this.users = [];
   }
 }

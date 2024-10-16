@@ -1,8 +1,9 @@
-import type { PrismaClient } from '@prisma/client';
+import type { Post, PrismaClient, Prisma } from '@prisma/client';
+import { Repository } from '../../../shared';
 
 let _client: PrismaClient;
 
-type Posts = Awaited<
+export type GetPostsOutput = Awaited<
   ReturnType<
     typeof _client.post.findMany<{
       include: {
@@ -21,6 +22,11 @@ type Posts = Awaited<
   >
 >;
 
-export interface PostsRepository {
-  getPosts(): Promise<Posts>;
+export type PostCreateInput = Omit<Prisma.PostUncheckedCreateInput, 'id'>;
+export type PostCreateOutput = Post;
+
+export interface PostsRepository extends Repository {
+  getPosts(): Promise<GetPostsOutput>;
+
+  create(post: PostCreateInput): Promise<PostCreateOutput>;
 }
