@@ -6,8 +6,8 @@ import { GetUserResponse, UserExceptions } from '@dddforum/shared/src/modules/us
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';
-import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
-import { CompositionRoot } from '../../src/core';
+import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { CompositionRoot } from '../../../src/core';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 

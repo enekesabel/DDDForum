@@ -7,8 +7,8 @@ import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { AddToEmailListResponse } from '@dddforum/shared/src/modules/marketing';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';
-import { CompositionRoot } from '../../src/core';
-import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
+import { CompositionRoot } from '../../../src/core';
+import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
 const compositionRoot = CompositionRoot.Create();

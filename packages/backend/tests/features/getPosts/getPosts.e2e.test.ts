@@ -7,8 +7,8 @@ import { GenericErrors } from '@dddforum/shared/src/shared';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GetPostsResponse } from '@dddforum/shared/src/modules/posts';
 import { Post } from '@prisma/client';
-import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
-import { CompositionRoot } from '../../src/core';
+import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { CompositionRoot } from '../../../src/core';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'));
 
