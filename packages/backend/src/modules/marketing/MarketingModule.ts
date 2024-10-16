@@ -16,4 +16,8 @@ export class MarketingModule {
 
     webServer.registerController('/marketing', this.marketingController);
   }
+
+  getMarketingService() {
+    return this.marketingService;
+  }
 }

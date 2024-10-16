@@ -3,6 +3,7 @@ import { UsersModule } from '../modules/users';
 import { NotificationsModule } from '../modules/notifications';
 import { PostsModule } from '../modules/posts';
 import { MarketingModule } from '../modules/marketing';
+import { Application } from './Application';
 
 export class CompositionRoot {
   private static Instance: CompositionRoot;
@@ -35,5 +36,13 @@ export class CompositionRoot {
 
   getWebServer() {
     return this.sharedModule.getWebServer();
+  }
+
+  getApplication(): Application {
+    return {
+      users: this.usersModule.getUsersService(),
+      posts: this.postsModule.getPostsService(),
+      marketing: this.marketingModule.getMarketingService(),
+    };
   }
 }

@@ -18,4 +18,8 @@ export class PostsModule {
 
     webServer.registerController('/posts', this.postsController);
   }
+
+  public getPostsService() {
+    return this.postsService;
+  }
 }

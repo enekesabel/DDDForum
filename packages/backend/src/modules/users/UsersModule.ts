@@ -22,4 +22,8 @@ export class UsersModule {
 
     webServer.registerController('/users', this.usersController);
   }
+
+  getUsersService() {
+    return this.usersService;
+  }
 }
