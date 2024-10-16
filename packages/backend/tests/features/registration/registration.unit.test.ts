@@ -61,6 +61,35 @@ defineFeature(feature, (test) => {
       expect(addEmailToListSpy).toHaveBeenCalledWith(createUserInput.email);
     });
   });
+  test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
+    let createdUser: Awaited<ReturnType<typeof application.users.createUser>>;
+    let createUserInput: UserInput;
+
+    given('I am a new user', async () => {
+      createUserInput = new UserInputBuilder().withAllRandomDetails().build();
+    });
+
+    when('I register with valid account details declining marketing emails', async () => {
+      createdUser = await application.users.createUser(createUserInput);
+    });
+
+    then('I should be granted access to my account', async () => {
+      expect(createdUser.id).toBeDefined();
+      expect(createdUser.email).toEqual(createUserInput.email);
+      expect(createdUser.firstName).toEqual(createUserInput.firstName);
+      expect(createdUser.lastName).toEqual(createUserInput.lastName);
+      expect(createdUser.username).toEqual(createUserInput.username);
+
+      const newUser = await application.users.getUserByEmail(createUserInput.email);
+
+      expect(newUser.email).toEqual(createUserInput.email);
+      expect(sendEmailSpy).toHaveBeenCalledTimes(1);
+    });
+
+    and('I should not expect to receive marketing emails', () => {
+      expect(addEmailToListSpy).toHaveBeenCalledTimes(0);
+    });
+  });
 
   test('Invalid or missing registration details', ({ given, when, then, and }) => {
     let createUserInput: UserInput;

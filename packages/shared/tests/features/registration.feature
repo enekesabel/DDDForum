@@ -11,6 +11,7 @@ Feature: Registration
 		Then I should be granted access to my account
 		And I should expect to receive marketing emails
 
+  @unit
   Scenario: Successful registration without marketing emails accepted
     Given I am a new user
 		When I register with valid account details declining marketing emails
