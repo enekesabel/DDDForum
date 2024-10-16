@@ -39,4 +39,8 @@ export class UsersModule {
   getUsersService() {
     return this.usersService;
   }
+
+  getUsersRepository() {
+    return this.usersRepository;
+  }
 }

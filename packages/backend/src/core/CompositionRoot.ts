@@ -15,11 +15,11 @@ export class CompositionRoot {
   }
 
   private config: Config;
-  private sharedModule: SharedModule;
-  private notificationsModule: NotificationsModule;
-  private usersModule: UsersModule;
-  private postsModule: PostsModule;
-  private marketingModule: MarketingModule;
+  readonly sharedModule: SharedModule;
+  readonly notificationsModule: NotificationsModule;
+  readonly usersModule: UsersModule;
+  readonly postsModule: PostsModule;
+  readonly marketingModule: MarketingModule;
 
   private constructor(config: Config) {
     this.config = config;
