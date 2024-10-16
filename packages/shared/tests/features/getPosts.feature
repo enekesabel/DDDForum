@@ -4,6 +4,7 @@ Feature: Get Posts
   So that I can see what others have shared.
 
   @e2e
+  @unit
   Scenario: Successfully retrieve posts sorted by recent
     Given There are posts in the system already
     When I request the list of posts
