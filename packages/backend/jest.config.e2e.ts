@@ -5,7 +5,8 @@ const e2eConfig: JestConfigWithTsJest = {
   ...defaultConfig,
   displayName: 'Backend (E2E)',
   maxWorkers: 1,
-  roots: ['<rootDir>/tests/e2e'],
+  roots: ['<rootDir>/tests/features'],
+  testMatch: ['**/*.e2e.test.ts'],
 };
 
 export default e2eConfig;

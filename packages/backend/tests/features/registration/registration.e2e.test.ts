@@ -3,22 +3,27 @@ import { Server } from 'http';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserExceptions, UserInput, CreateUserResponse } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { AddToEmailListResponse } from '@dddforum/shared/src/modules/marketing';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';
-import { CompositionRoot } from '../../src/core';
-import { DatabaseFixtures } from '../support/fixtures/DatabaseFixtures';
+import { CompositionRoot } from '../../../src/core';
+import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { Config } from '../../../src/shared';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
-const compositionRoot = CompositionRoot.Create();
+const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {
+  tagFilter: '@e2e',
+});
 
 let app: Server;
 let apiClient: APIClient;
-
-beforeEach(DatabaseFixtures.ClearDatabase);
+let databaseFixtures: DatabaseFixtures;
+let compositionRoot: CompositionRoot;
 
 beforeAll(async () => {
+  compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
+  databaseFixtures = new DatabaseFixtures(compositionRoot);
+  await databaseFixtures.clearDatabase();
   await compositionRoot.getWebServer().start();
   app = compositionRoot.getWebServer().getServer();
   apiClient = APIClient.FromServer(app);
@@ -127,7 +132,7 @@ defineFeature(feature, (test) => {
             .withEmail(row.email)
             .build();
         });
-        await DatabaseFixtures.SetupWithExistingUsers(...userInputs);
+        await databaseFixtures.setupWithExistingUsers(...userInputs);
       }
     );
 
@@ -169,7 +174,7 @@ defineFeature(feature, (test) => {
             .withEmail(row.email)
             .build();
         });
-        await DatabaseFixtures.SetupWithExistingUsers(...existingUserInputs);
+        await databaseFixtures.setupWithExistingUsers(...existingUserInputs);
       }
     );
 
