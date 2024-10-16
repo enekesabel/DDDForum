@@ -1,4 +1,4 @@
-import { Database, WebServer } from '../../shared';
+import { Database, WebServer, Config } from '../../shared';
 import { PostsRepository } from './ports/PostsRepository';
 import { PostsController } from './PostsController';
 import { ProductionPostsRepository } from './adapters/ProductionPostsRepository';
@@ -9,14 +9,22 @@ export class PostsModule {
   private postsRepository: PostsRepository;
   private postsService: PostsService;
   private postsController: PostsController;
+  private config: Config;
 
-  constructor(database: Database, webServer: WebServer) {
+  constructor(config: Config, database: Database, webServer: WebServer) {
+    this.config = config;
     this.database = database;
-    this.postsRepository = new ProductionPostsRepository(this.database);
+    this.postsRepository = this.createPostsRepository();
     this.postsService = new PostsService(this.postsRepository);
     this.postsController = new PostsController(this.postsService);
 
     webServer.registerController('/posts', this.postsController);
+  }
+
+  private createPostsRepository() {
+    if (this.config.env === 'production') return new ProductionPostsRepository(this.database);
+
+    return new ProductionPostsRepository(this.database);
   }
 
   public getPostsService() {

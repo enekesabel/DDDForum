@@ -6,3 +6,4 @@ export { WebServer } from './WebServer';
 export { Repository } from './Repository';
 export * from './utils';
 export { prisma } from './database/prisma/prisma';
+export { Config } from './config';

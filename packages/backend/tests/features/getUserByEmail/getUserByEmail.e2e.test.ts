@@ -8,10 +8,11 @@ import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';
 import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 import { CompositionRoot } from '../../../src/core';
+import { Config } from '../../../src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 
-const compositionRoot = CompositionRoot.Create();
+const compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
 
 let app: Server;
 let apiClient: APIClient;

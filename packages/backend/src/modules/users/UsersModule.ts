@@ -1,4 +1,4 @@
-import { Database, WebServer } from '../../shared';
+import { Database, WebServer, Config } from '../../shared';
 import { TransactionalEmailAPI } from '../notifications';
 import { UsersRepository } from './ports/UsersRepository';
 import { UsersController } from './UsersController';
@@ -12,15 +12,23 @@ export class UsersModule {
   private usersRepository: UsersRepository;
   private usersService: UsersService;
   private usersController: UsersController;
+  private config: Config;
 
-  constructor(database: Database, transactionalEmailAPI: TransactionalEmailAPI, webServer: WebServer) {
+  constructor(config: Config, database: Database, transactionalEmailAPI: TransactionalEmailAPI, webServer: WebServer) {
+    this.config = config;
     this.database = database;
     this.transactionalEmailAPI = transactionalEmailAPI;
-    this.usersRepository = new ProductionUsersRepository(this.database);
+    this.usersRepository = this.createUsersRepository();
     this.usersService = new UsersService(this.usersRepository, this.transactionalEmailAPI);
     this.usersController = new UsersController(this.usersService, usersErrorHandler);
 
     webServer.registerController('/users', this.usersController);
+  }
+
+  private createUsersRepository() {
+    if (this.config.env === 'production') return new ProductionUsersRepository(this.database);
+
+    return new ProductionUsersRepository(this.database);
   }
 
   getUsersService() {

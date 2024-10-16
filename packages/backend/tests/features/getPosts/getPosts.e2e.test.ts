@@ -9,10 +9,11 @@ import { GetPostsResponse } from '@dddforum/shared/src/modules/posts';
 import { Post } from '@prisma/client';
 import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 import { CompositionRoot } from '../../../src/core';
+import { Config } from '../../../src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'));
 
-const compositionRoot = CompositionRoot.Create();
+const compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
 
 let app: Server;
 let apiClient: APIClient;
