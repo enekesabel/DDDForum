@@ -9,7 +9,9 @@ import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 import { CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'));
+const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature'), {
+  tagFilter: '@e2e',
+});
 
 let apiClient: APIClient;
 let databaseFixtures: DatabaseFixtures;
@@ -18,7 +20,7 @@ let compositionRoot: CompositionRoot;
 beforeAll(async () => {
   compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
   databaseFixtures = new DatabaseFixtures(compositionRoot);
-  await databaseFixtures.ClearDatabase();
+  await databaseFixtures.clearDatabase();
   await compositionRoot.getWebServer().start();
   const app = compositionRoot.getWebServer().getServer();
   apiClient = APIClient.FromServer(app);
@@ -36,7 +38,7 @@ defineFeature(feature, (test) => {
 
     given('I am a registered user', async () => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().build();
-      const createdUsers = await databaseFixtures.SetupWithExistingUsers(createUserInput);
+      const createdUsers = await databaseFixtures.setupWithExistingUsers(createUserInput);
       userId = createdUsers[0].id;
     });
 
@@ -61,7 +63,7 @@ defineFeature(feature, (test) => {
 
     given('I am a registered user', async () => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().build();
-      const createdUsers = await databaseFixtures.SetupWithExistingUsers(createUserInput);
+      const createdUsers = await databaseFixtures.setupWithExistingUsers(createUserInput);
       userId = createdUsers[0].id;
     });
 
@@ -85,7 +87,7 @@ defineFeature(feature, (test) => {
 
     given('I am a registered user', async () => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().build();
-      await databaseFixtures.SetupWithExistingUsers(createUserInput);
+      await databaseFixtures.setupWithExistingUsers(createUserInput);
     });
 
     when('I attempt to edit a user that does not exist', async () => {
@@ -106,13 +108,13 @@ defineFeature(feature, (test) => {
 
     given(/^I am a registered user with email "(.*)"$/, async (email: string) => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().withEmail(email).build();
-      const createdUsers = await databaseFixtures.SetupWithExistingUsers(createUserInput);
+      const createdUsers = await databaseFixtures.setupWithExistingUsers(createUserInput);
       userId = createdUsers[0].id;
     });
 
     and(/^another user exists with email "(.*)"$/, async (anotherEmail: string) => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().withEmail(anotherEmail).build();
-      await databaseFixtures.SetupWithExistingUsers(createUserInput);
+      await databaseFixtures.setupWithExistingUsers(createUserInput);
     });
 
     when(/^I attempt to update my email to "(.*)"$/, async (newEmail: string) => {
@@ -130,13 +132,13 @@ defineFeature(feature, (test) => {
 
     given(/^I am a registered user with username "(.*)"$/, async (username: string) => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().withUsername(username).build();
-      const createdUsers = await databaseFixtures.SetupWithExistingUsers(createUserInput);
+      const createdUsers = await databaseFixtures.setupWithExistingUsers(createUserInput);
       userId = createdUsers[0].id;
     });
 
     and(/^another user exists with username "(.*)"$/, async (anotherUsername: string) => {
       const createUserInput = new UserInputBuilder().withAllRandomDetails().withUsername(anotherUsername).build();
-      await databaseFixtures.SetupWithExistingUsers(createUserInput);
+      await databaseFixtures.setupWithExistingUsers(createUserInput);
     });
 
     when(/^I attempt to update my username to "(.*)"$/, async (newUsername: string) => {

@@ -11,7 +11,9 @@ import { CompositionRoot } from '../../../src/core';
 import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 import { Config } from '../../../src/shared';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
+const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {
+  tagFilter: '@e2e',
+});
 
 let app: Server;
 let apiClient: APIClient;
@@ -21,7 +23,7 @@ let compositionRoot: CompositionRoot;
 beforeAll(async () => {
   compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
   databaseFixtures = new DatabaseFixtures(compositionRoot);
-  await databaseFixtures.ClearDatabase();
+  await databaseFixtures.clearDatabase();
   await compositionRoot.getWebServer().start();
   app = compositionRoot.getWebServer().getServer();
   apiClient = APIClient.FromServer(app);
@@ -130,7 +132,7 @@ defineFeature(feature, (test) => {
             .withEmail(row.email)
             .build();
         });
-        await databaseFixtures.SetupWithExistingUsers(...userInputs);
+        await databaseFixtures.setupWithExistingUsers(...userInputs);
       }
     );
 
@@ -172,7 +174,7 @@ defineFeature(feature, (test) => {
             .withEmail(row.email)
             .build();
         });
-        await databaseFixtures.SetupWithExistingUsers(...existingUserInputs);
+        await databaseFixtures.setupWithExistingUsers(...existingUserInputs);
       }
     );
 

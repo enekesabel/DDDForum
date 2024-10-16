@@ -11,7 +11,9 @@ import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 import { CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'));
+const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'), {
+  tagFilter: '@e2e',
+});
 
 let app: Server;
 let apiClient: APIClient;
@@ -21,7 +23,7 @@ let compositionRoot: CompositionRoot;
 beforeAll(async () => {
   compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
   databaseFixtures = new DatabaseFixtures(compositionRoot);
-  await databaseFixtures.ClearDatabase();
+  await databaseFixtures.clearDatabase();
   await compositionRoot.getWebServer().start();
   app = compositionRoot.getWebServer().getServer();
   apiClient = APIClient.FromServer(app);
@@ -38,7 +40,7 @@ defineFeature(feature, (test) => {
 
     given(/^There are posts in the system already$/, async () => {
       const userInput = new UserInputBuilder().withAllRandomDetails().build();
-      posts = await databaseFixtures.SetUpWithRandomPostsByUser(userInput, 5);
+      posts = await databaseFixtures.setUpWithRandomPostsByUser(userInput, 5);
       posts.sort((a, b) => b.dateCreated.getTime() - a.dateCreated.getTime());
     });
 
@@ -57,7 +59,7 @@ defineFeature(feature, (test) => {
 
     given(/^There are posts in the system already$/, async () => {
       const userInput = new UserInputBuilder().withAllRandomDetails().build();
-      posts = await databaseFixtures.SetUpWithRandomPostsByUser(userInput, 5);
+      posts = await databaseFixtures.setUpWithRandomPostsByUser(userInput, 5);
       posts.sort((a, b) => b.dateCreated.getTime() - a.dateCreated.getTime());
     });
 

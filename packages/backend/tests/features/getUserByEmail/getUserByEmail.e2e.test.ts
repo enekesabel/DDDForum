@@ -10,7 +10,9 @@ import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 import { CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
 
-const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
+const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'), {
+  tagFilter: '@e2e',
+});
 
 let app: Server;
 let apiClient: APIClient;
