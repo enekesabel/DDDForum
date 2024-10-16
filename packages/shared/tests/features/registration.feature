@@ -18,6 +18,7 @@ Feature: Registration
 		And I should not expect to receive marketing emails
 
   @frontend
+  @unit
   Scenario: Invalid or missing registration details
     Given I am a new user
     When I register with invalid account details
