@@ -1,9 +1,15 @@
-import { PrismaClient } from '@prisma/client';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
-import { Database } from '../../../shared';
+import { Database, prisma } from '../../../shared';
+import { UsersRepository } from '../ports/UsersRepository';
 import { ProductionUsersRepository } from './ProductionUsersRepository';
+import { InMemoryUsersRepository } from './InMemoryUsersRepository';
 
-describe.each([[new ProductionUsersRepository(new Database(new PrismaClient()))]])('UsersRepository', (userRepo) => {
+const repositories: UsersRepository[] = [
+  new ProductionUsersRepository(new Database(prisma)),
+  new InMemoryUsersRepository(),
+];
+
+describe.each(repositories)('UsersRepository', (userRepo) => {
   it('can save and retrieve users by email', async () => {
     const createUserInput = new UserInputBuilder().withAllRandomDetails().build();
 
