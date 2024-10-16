@@ -5,6 +5,7 @@ import { UsersController } from './UsersController';
 import { usersErrorHandler } from './usersErrorHandler';
 import { ProductionUsersRepository } from './adapters/ProductionUsersRepository';
 import { UsersService } from './UsersService';
+import { InMemoryUsersRepository } from './adapters/InMemoryUsersRepository';
 
 export class UsersModule {
   private database: Database;
@@ -26,9 +27,13 @@ export class UsersModule {
   }
 
   private createUsersRepository() {
-    if (this.config.env === 'production') return new ProductionUsersRepository(this.database);
-
-    return new ProductionUsersRepository(this.database);
+    switch (this.config.script) {
+      case 'test:unit':
+      case 'start:dev':
+        return new InMemoryUsersRepository();
+      default:
+        return new ProductionUsersRepository(this.database);
+    }
   }
 
   getUsersService() {
