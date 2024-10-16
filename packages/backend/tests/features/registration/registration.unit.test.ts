@@ -7,6 +7,7 @@ import { Application, CompositionRoot } from '../../../src/core';
 import { Config, createCommand, GenericError, ValidationError } from '../../../src/shared';
 import { EmailAlreadyInUseException, UserNotFoundException } from '../../../src/modules/users';
 import { CreateUserCommandSchema } from '../../../src/modules/users/CreateUserCommand';
+import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {
   tagFilter: '@unit',
@@ -16,16 +17,19 @@ let compositionRoot: CompositionRoot;
 let application: Application;
 let addEmailToListSpy: jest.SpyInstance;
 let sendEmailSpy: jest.SpyInstance;
-
-beforeEach(async () => {
-  jest.clearAllMocks();
-  addEmailToListSpy = jest.spyOn(application.marketing, 'addEmailToList');
-  sendEmailSpy = jest.spyOn(application.notifications, 'sendMail');
-});
+let databaseFixtures: DatabaseFixtures;
 
 beforeAll(async () => {
   compositionRoot = CompositionRoot.Create(new Config('test:unit'));
   application = compositionRoot.getApplication();
+  databaseFixtures = new DatabaseFixtures(compositionRoot);
+});
+
+beforeEach(async () => {
+  await databaseFixtures.clearDatabase();
+  jest.clearAllMocks();
+  addEmailToListSpy = jest.spyOn(application.marketing, 'addEmailToList');
+  sendEmailSpy = jest.spyOn(application.notifications, 'sendMail');
 });
 
 defineFeature(feature, (test) => {
@@ -61,6 +65,7 @@ defineFeature(feature, (test) => {
       expect(addEmailToListSpy).toHaveBeenCalledWith(createUserInput.email);
     });
   });
+
   test('Successful registration without marketing emails accepted', ({ given, when, then, and }) => {
     let createdUser: Awaited<ReturnType<typeof application.users.createUser>>;
     let createUserInput: UserInput;
@@ -133,9 +138,7 @@ defineFeature(feature, (test) => {
             .withEmail(row.email)
             .build();
         });
-        await Promise.all(userInputs.map((userInput) => application.users.createUser(userInput)));
-        // TODO: make DatabaseFixtures work with different configs
-        // await DatabaseFixtures.SetupWithExistingUsers(...userInputs);
+        await databaseFixtures.setupWithExistingUsers(...userInputs);
       }
     );
 
@@ -152,8 +155,7 @@ defineFeature(feature, (test) => {
     });
 
     and('they should not have been sent access to account details', () => {
-      // will be called during initial creation
-      expect(sendEmailSpy).toHaveBeenCalledTimes(createUserPromises.length);
+      expect(sendEmailSpy).toHaveBeenCalledTimes(0);
     });
   });
 });

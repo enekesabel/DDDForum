@@ -13,14 +13,15 @@ import { Config } from '../../../src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'));
 
-const compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
-
 let app: Server;
 let apiClient: APIClient;
-
-beforeEach(DatabaseFixtures.ClearDatabase);
+let databaseFixtures: DatabaseFixtures;
+let compositionRoot: CompositionRoot;
 
 beforeAll(async () => {
+  compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
+  databaseFixtures = new DatabaseFixtures(compositionRoot);
+  await databaseFixtures.ClearDatabase();
   await compositionRoot.getWebServer().start();
   app = compositionRoot.getWebServer().getServer();
   apiClient = APIClient.FromServer(app);
@@ -36,10 +37,8 @@ defineFeature(feature, (test) => {
     let posts: Post[];
 
     given(/^There are posts in the system already$/, async () => {
-      posts = await DatabaseFixtures.SetUpWithRandomPostsByUser(
-        new UserInputBuilder().withAllRandomDetails().build(),
-        5
-      );
+      const userInput = new UserInputBuilder().withAllRandomDetails().build();
+      posts = await databaseFixtures.SetUpWithRandomPostsByUser(userInput, 5);
       posts.sort((a, b) => b.dateCreated.getTime() - a.dateCreated.getTime());
     });
 
@@ -57,10 +56,8 @@ defineFeature(feature, (test) => {
     let posts: Post[];
 
     given(/^There are posts in the system already$/, async () => {
-      posts = await DatabaseFixtures.SetUpWithRandomPostsByUser(
-        new UserInputBuilder().withAllRandomDetails().build(),
-        5
-      );
+      const userInput = new UserInputBuilder().withAllRandomDetails().build();
+      posts = await databaseFixtures.SetUpWithRandomPostsByUser(userInput, 5);
       posts.sort((a, b) => b.dateCreated.getTime() - a.dateCreated.getTime());
     });
 

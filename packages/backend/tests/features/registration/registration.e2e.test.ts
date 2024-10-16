@@ -12,14 +12,16 @@ import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 import { Config } from '../../../src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'));
-const compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
 
 let app: Server;
 let apiClient: APIClient;
-
-beforeEach(DatabaseFixtures.ClearDatabase);
+let databaseFixtures: DatabaseFixtures;
+let compositionRoot: CompositionRoot;
 
 beforeAll(async () => {
+  compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
+  databaseFixtures = new DatabaseFixtures(compositionRoot);
+  await databaseFixtures.ClearDatabase();
   await compositionRoot.getWebServer().start();
   app = compositionRoot.getWebServer().getServer();
   apiClient = APIClient.FromServer(app);
@@ -128,7 +130,7 @@ defineFeature(feature, (test) => {
             .withEmail(row.email)
             .build();
         });
-        await DatabaseFixtures.SetupWithExistingUsers(...userInputs);
+        await databaseFixtures.SetupWithExistingUsers(...userInputs);
       }
     );
 
@@ -170,7 +172,7 @@ defineFeature(feature, (test) => {
             .withEmail(row.email)
             .build();
         });
-        await DatabaseFixtures.SetupWithExistingUsers(...existingUserInputs);
+        await databaseFixtures.SetupWithExistingUsers(...existingUserInputs);
       }
     );
 

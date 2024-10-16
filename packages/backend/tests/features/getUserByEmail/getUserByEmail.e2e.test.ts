@@ -12,14 +12,15 @@ import { Config } from '../../../src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'));
 
-const compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
-
 let app: Server;
 let apiClient: APIClient;
-
-beforeEach(DatabaseFixtures.ClearDatabase);
+let databaseFixtures: DatabaseFixtures;
+let compositionRoot: CompositionRoot;
 
 beforeAll(async () => {
+  compositionRoot = CompositionRoot.Create(new Config('test:e2e'));
+  databaseFixtures = new DatabaseFixtures(compositionRoot);
+  await databaseFixtures.clearDatabase();
   await compositionRoot.getWebServer().start();
   app = compositionRoot.getWebServer().getServer();
   apiClient = APIClient.FromServer(app);
@@ -36,7 +37,7 @@ defineFeature(feature, (test) => {
 
     given(/^a user exists with the email "(.*)"$/, async (email: string) => {
       emailToFind = email;
-      await DatabaseFixtures.SetupWithExistingUsers(
+      await databaseFixtures.setupWithExistingUsers(
         new UserInputBuilder().withAllRandomDetails().withEmail(email).build()
       );
     });

@@ -1,11 +1,17 @@
 import { UserInput } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { faker } from '@faker-js/faker';
-import { prisma } from '../../../src/shared';
+import { UsersRepository } from '../../../src/modules/users/ports/UsersRepository';
 
 export class UserBuilder {
-  static FromUserInput(userInput: UserInput) {
-    const builder = new UserBuilder();
+  private usersRepository: UsersRepository;
+
+  constructor(usersRepository: UsersRepository) {
+    this.usersRepository = usersRepository;
+  }
+
+  static FromUserInput(userInput: UserInput, usersRepository: UsersRepository) {
+    const builder = new UserBuilder(usersRepository);
     builder.userInputBuilder = UserInputBuilder.FromUserInput(userInput);
     return builder;
   }
@@ -17,19 +23,11 @@ export class UserBuilder {
     return this;
   }
 
-  build() {
+  async build() {
     const userInput = this.userInputBuilder.build();
-    return prisma.user.create({
-      data: {
-        ...userInput,
-        member: {
-          create: {},
-        },
-        password: faker.internet.password(),
-      },
-      include: {
-        member: true,
-      },
+    return await this.usersRepository.createUser({
+      ...userInput,
+      password: faker.internet.password(),
     });
   }
 }
