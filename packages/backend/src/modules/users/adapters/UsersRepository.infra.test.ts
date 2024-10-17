@@ -4,10 +4,16 @@ import { UsersRepository } from '../ports/UsersRepository';
 import { ProductionUsersRepository } from './ProductionUsersRepository';
 import { InMemoryUsersRepository } from './InMemoryUsersRepository';
 
-const repositories: UsersRepository[] = [
-  new ProductionUsersRepository(new Database(prisma)),
-  new InMemoryUsersRepository(),
-];
+const database = new Database(prisma);
+const repositories: UsersRepository[] = [new ProductionUsersRepository(database), new InMemoryUsersRepository()];
+
+beforeAll(async () => {
+  await database.connect();
+});
+
+afterAll(async () => {
+  await database.disconnect();
+});
 
 describe.each(repositories)('UsersRepository', (userRepo) => {
   it('can save and retrieve users by email', async () => {

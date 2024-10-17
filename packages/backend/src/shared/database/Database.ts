@@ -10,4 +10,12 @@ export class Database {
   getConnection() {
     return this.prisma;
   }
+
+  async connect() {
+    return this.prisma.$connect();
+  }
+
+  async disconnect() {
+    return this.prisma.$disconnect();
+  }
 }

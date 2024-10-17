@@ -12,5 +12,11 @@ export abstract class ProductionRepository implements Repository {
     return this.database.getConnection();
   }
 
-  abstract clear(): Promise<void>;
+  async clear(): Promise<void> {
+    await this.database.connect();
+    await this.clearData();
+    await this.database.disconnect();
+  }
+
+  protected abstract clearData(): Promise<void>;
 }

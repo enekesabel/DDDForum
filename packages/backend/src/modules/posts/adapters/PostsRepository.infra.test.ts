@@ -7,19 +7,28 @@ import { InMemoryUsersRepository } from '../../users/adapters/InMemoryUsersRepos
 import { ProductionPostsRepository } from './ProductionPostsRepository';
 import { InMemoryPostsRepository } from './InMemoryPostsRepository';
 
+const database = new Database(prisma);
 const repositories: {
   postsRepo: PostsRepository;
   usersRepo: UsersRepository;
 }[] = [
   {
-    postsRepo: new ProductionPostsRepository(new Database(prisma)),
-    usersRepo: new ProductionUsersRepository(new Database(prisma)),
+    postsRepo: new ProductionPostsRepository(database),
+    usersRepo: new ProductionUsersRepository(database),
   },
   {
     postsRepo: new InMemoryPostsRepository(),
     usersRepo: new InMemoryUsersRepository(),
   },
 ];
+
+beforeAll(async () => {
+  await database.connect();
+});
+
+afterAll(async () => {
+  await database.disconnect();
+});
 
 describe.each(repositories)('PostsRepository', ({ postsRepo, usersRepo }) => {
   let user: Awaited<ReturnType<typeof usersRepo.createUser>>;
