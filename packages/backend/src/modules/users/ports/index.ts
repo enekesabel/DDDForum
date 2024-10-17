@@ -1,1 +1,1 @@
-export { UsersRepository } from './UsersRepository';
+export type { UsersRepository } from './UsersRepository';

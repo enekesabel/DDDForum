@@ -1,2 +1,2 @@
 export { CompositionRoot } from './CompositionRoot';
-export { Application } from './Application';
+export type { Application } from './Application';

@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "types": ["node", "jest"],
     "skipLibCheck": true,
+    "isolatedModules": true
   },
   "include": ["src"],
   "exclude": ["**/*.test.*"]}
