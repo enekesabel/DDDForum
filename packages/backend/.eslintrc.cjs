@@ -7,7 +7,7 @@ module.exports = {
       {
         patterns: [
           {
-            group: ['*/modules/*/*'],
+            group: ['**/modules/*/*'],
             message: 'Please use only import from the root of the modules.',
           },
           {

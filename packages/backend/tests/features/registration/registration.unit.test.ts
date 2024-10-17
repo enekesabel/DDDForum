@@ -9,8 +9,8 @@ import {
   EmailAlreadyInUseException,
   UserNotFoundException,
   UsernameAlreadyTakenException,
+  CreateUserCommandSchema,
 } from '../../../src/modules/users';
-import { CreateUserCommandSchema } from '../../../src/modules/users/CreateUserCommand';
 import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {

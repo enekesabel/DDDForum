@@ -1,7 +1,7 @@
 import { UserInput } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
 import { faker } from '@faker-js/faker';
-import { UsersRepository } from '../../../src/modules/users/ports/UsersRepository';
+import { UsersRepository } from '../../../src/modules/users';
 
 export class UserBuilder {
   private usersRepository: UsersRepository;

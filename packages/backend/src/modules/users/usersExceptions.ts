@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserExceptions } from '@dddforum/shared/src/modules/users/usersTypes';
+import { UserExceptions } from '@dddforum/shared/src/modules/users';
 import { BaseException } from '../../shared';
 
 export abstract class UsersException extends BaseException<z.infer<typeof UserExceptions>> {}
