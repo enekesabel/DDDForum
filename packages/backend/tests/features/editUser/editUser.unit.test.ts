@@ -2,10 +2,10 @@ import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { User, UserInput } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { Application, CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
-import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { DatabaseFixtures } from '../../support';
 import {
   EmailAlreadyInUseException,
   UserNotFoundException,

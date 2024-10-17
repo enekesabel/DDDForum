@@ -2,10 +2,10 @@ import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserInput } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { App, createApp } from '../support/app';
 import { PuppeteerPageDriver } from '../support/PuppeteerPageDriver';
-import { DatabaseFixtures } from '../../../backend/tests/support/fixtures/DatabaseFixtures';
+import { DatabaseFixtures } from '../../../backend/tests/support';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {
   tagFilter: '@frontend',

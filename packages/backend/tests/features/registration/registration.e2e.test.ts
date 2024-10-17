@@ -3,12 +3,12 @@ import { Server } from 'http';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserExceptions, UserInput, CreateUserResponse } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { AddToEmailListResponse } from '@dddforum/shared/src/modules/marketing';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GenericErrors } from '@dddforum/shared/src/shared';
 import { CompositionRoot } from '../../../src/core';
-import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { DatabaseFixtures } from '../../support';
 import { Config } from '../../../src/shared';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {

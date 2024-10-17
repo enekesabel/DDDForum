@@ -1,5 +1,5 @@
 import { UserInput } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { faker } from '@faker-js/faker';
 import { UsersRepository } from '../../../src/modules/users';
 

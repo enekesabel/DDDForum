@@ -1,4 +1,4 @@
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { Database, prisma } from '../../../shared';
 import { UsersRepository } from '../ports/UsersRepository';
 import { ProductionUsersRepository } from './ProductionUsersRepository';

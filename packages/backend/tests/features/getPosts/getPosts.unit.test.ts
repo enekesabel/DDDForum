@@ -1,11 +1,11 @@
 import path from 'path';
 import { Post } from '@prisma/client';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CompositionRoot, Application } from '../../../src/core';
 import { Config } from '../../../src/shared';
-import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { DatabaseFixtures } from '../../support';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'), {
   tagFilter: '@unit',

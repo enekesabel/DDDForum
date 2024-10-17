@@ -1,13 +1,13 @@
 import path from 'path';
 import { Server } from 'http';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { GenericErrors } from '@dddforum/shared/src/shared';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GetPostsResponse } from '@dddforum/shared/src/modules/posts';
 import { Post } from '@prisma/client';
-import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { DatabaseFixtures } from '../../support';
 import { CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
 

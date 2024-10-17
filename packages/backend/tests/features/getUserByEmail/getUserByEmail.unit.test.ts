@@ -2,10 +2,10 @@ import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { User } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { Application, CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
-import { DatabaseFixtures } from '../../support/fixtures/DatabaseFixtures';
+import { DatabaseFixtures } from '../../support';
 import { UserNotFoundException } from '../../../src/modules/users';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'), {

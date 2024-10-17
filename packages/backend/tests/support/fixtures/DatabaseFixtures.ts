@@ -1,5 +1,5 @@
 import { UserInput } from '@dddforum/shared/src/modules/users';
-import { CompositionRoot } from '../../../src/core/CompositionRoot';
+import { CompositionRoot } from '../../../src/core';
 import { UserBuilder } from './UserBuilder';
 import { PostBuilder } from './PostBuilder';
 
