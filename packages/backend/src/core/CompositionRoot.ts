@@ -27,7 +27,7 @@ export class CompositionRoot {
     const webServer = this.sharedModule.getWebServer();
     const database = this.sharedModule.getDatabase();
 
-    this.notificationsModule = new NotificationsModule();
+    this.notificationsModule = new NotificationsModule(this.config);
     this.usersModule = new UsersModule(
       this.config,
       database,

@@ -1,7 +1,11 @@
 import { TransactionalEmailAPI } from '../ports/TransactionalEmailAPI';
 import { ProductionTransactionalEmailAPI } from './ProductionTransactionalEmailAPI';
+import { MockTransactionalEmailAPI } from './MockTransactionalEmailAPI';
 
-const transactionalEmailAPIs: TransactionalEmailAPI[] = [new ProductionTransactionalEmailAPI()];
+const transactionalEmailAPIs: TransactionalEmailAPI[] = [
+  new ProductionTransactionalEmailAPI(),
+  new MockTransactionalEmailAPI(),
+];
 
 describe.each(transactionalEmailAPIs)('TransactionalEmailAPI', (transactionalEmailAPI: TransactionalEmailAPI) => {
   it('should send an email', async () => {

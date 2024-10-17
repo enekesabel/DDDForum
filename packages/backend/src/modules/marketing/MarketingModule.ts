@@ -1,6 +1,6 @@
 import { WebServer, Config } from '../../shared';
 import { MarketingController } from './MarketingController';
-import { ProductionContactListAPI } from './adapters/ProductionContactListAPI';
+import { MockContactListAPI, ProductionContactListAPI } from './adapters';
 import { MarketingService } from './MarketingService';
 import { ContactListAPI } from './ports/ContactListAPI';
 
@@ -20,9 +20,13 @@ export class MarketingModule {
   }
 
   private createContactListAPI() {
-    if (this.config.env === 'production') return new ProductionContactListAPI();
-
-    return new ProductionContactListAPI();
+    switch (this.config.script) {
+      case 'test:unit':
+      case 'start:dev':
+        return new MockContactListAPI();
+      default:
+        return new ProductionContactListAPI();
+    }
   }
 
   getMarketingService() {

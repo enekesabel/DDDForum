@@ -22,7 +22,7 @@ export class ProductionPostsRepository extends ProductionRepository implements P
     return this.prisma.post.create({ data: post });
   }
 
-  async clear(): Promise<void> {
+  protected async clearData(): Promise<void> {
     await this.prisma.$transaction([
       this.prisma.comment.deleteMany(),
       this.prisma.vote.deleteMany(),

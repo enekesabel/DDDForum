@@ -21,7 +21,7 @@ export class ProductionUsersRepository extends ProductionRepository implements U
       },
       data: userData,
     });
-  async clear(): Promise<void> {
+  protected async clearData(): Promise<void> {
     await this.prisma.$transaction([this.prisma.member.deleteMany(), this.prisma.user.deleteMany()]);
   }
 }

@@ -1,7 +1,8 @@
 import { ContactListAPI } from '../ports/ContactListAPI';
+import { MockContactListAPI } from './MockContactListAPI';
 import { ProductionContactListAPI } from './ProductionContactListAPI';
 
-const contactListAPIs: ContactListAPI[] = [new ProductionContactListAPI()];
+const contactListAPIs: ContactListAPI[] = [new ProductionContactListAPI(), new MockContactListAPI()];
 
 describe.each(contactListAPIs)('ContactListAPI', (contactListApi: ContactListAPI) => {
   it('should add an email to the list', async () => {

@@ -1,10 +1,26 @@
-import { ProductionTransactionalEmailAPI } from './adapters/ProductionTransactionalEmailAPI';
+import { Config } from '../../shared';
 import { TransactionalEmailAPI } from './ports/TransactionalEmailAPI';
 import { NotificationsService } from './NotificationsService';
+import { MockTransactionalEmailAPI, ProductionTransactionalEmailAPI } from './adapters';
 
 export class NotificationsModule {
-  private transactionalEmailAPI: TransactionalEmailAPI = new ProductionTransactionalEmailAPI();
-  private notificationsService: NotificationsService = new NotificationsService(this.transactionalEmailAPI);
+  private transactionalEmailAPI: TransactionalEmailAPI;
+  private notificationsService: NotificationsService;
+
+  constructor(private config: Config) {
+    this.transactionalEmailAPI = this.createTransactionalEmailAPI();
+    this.notificationsService = new NotificationsService(this.transactionalEmailAPI);
+  }
+
+  createTransactionalEmailAPI() {
+    switch (this.config.script) {
+      case 'test:unit':
+      case 'start:dev':
+        return new MockTransactionalEmailAPI();
+      default:
+        return new ProductionTransactionalEmailAPI();
+    }
+  }
 
   getNotificationsService() {
     return this.notificationsService;
