@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { GetPostsResponseSchema } from '@dddforum/shared/src/modules/posts';
-import { ClientError, Controller, buildAPIResponse } from '../../shared';
+import { Controller, InvalidRequestQueryException, MissingRequestQueryException, buildAPIResponse } from '../../shared';
 import { PostsService } from './PostsService';
 
 export class PostsController extends Controller {
@@ -16,8 +16,12 @@ export class PostsController extends Controller {
     try {
       const { sort } = req.query;
 
+      if (!sort) {
+        return next(new MissingRequestQueryException('Sort is required.'));
+      }
+
       if (sort !== 'recent') {
-        return next(new ClientError());
+        return next(new InvalidRequestQueryException('Sort must be "recent".'));
       }
       const posts = await this.postsService.getPosts();
 

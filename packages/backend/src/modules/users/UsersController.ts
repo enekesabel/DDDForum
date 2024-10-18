@@ -4,7 +4,7 @@ import {
   GetUserResponseSchema,
   UpdateUserResponseSchema,
 } from '@dddforum/shared/src/modules/users';
-import { buildAPIResponse, ClientError, Controller, createCommand } from '../../shared';
+import { buildAPIResponse, Controller, createCommand, MissingRequestQueryException } from '../../shared';
 import { CreateUserCommandSchema } from './CreateUserCommand';
 import { UpdateUserCommandSchema } from './UpdateUserCommand';
 import { UsersService } from './UsersService';
@@ -54,7 +54,7 @@ export class UsersController extends Controller {
       const { email } = req.query;
 
       if (!email) {
-        return next(new ClientError());
+        return next(new MissingRequestQueryException('Email is required'));
       }
 
       const foundUser = await this.usersService.getUserByEmail(String(email));

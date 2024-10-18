@@ -4,7 +4,7 @@ import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserInput } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { Application, CompositionRoot } from '../../../src/core';
-import { Config, createCommand, GenericError, ValidationError } from '../../../src/shared';
+import { Config, createCommand, InvalidRequestBodyException } from '../../../src/shared';
 import {
   EmailAlreadyInUseException,
   UserNotFoundException,
@@ -102,7 +102,7 @@ defineFeature(feature, (test) => {
 
   test('Invalid or missing registration details', ({ given, when, then, and }) => {
     let createUserInput: UserInput;
-    let createdUserResult: Awaited<ReturnType<typeof application.users.createUser>> | GenericError;
+    let createdUserResult: Awaited<ReturnType<typeof application.users.createUser>> | InvalidRequestBodyException;
 
     given('I am a new user', async () => {
       createUserInput = new UserInputBuilder().withEmail('').build();
@@ -113,12 +113,12 @@ defineFeature(feature, (test) => {
         const createUserCommand = createCommand(CreateUserCommandSchema, createUserInput);
         createdUserResult = await application.users.createUser(createUserCommand);
       } catch (error) {
-        createdUserResult = error as GenericError;
+        createdUserResult = error as InvalidRequestBodyException;
       }
     });
 
     then('I should see an error notifying me that my input is invalid', () => {
-      expect(createdUserResult).toBeInstanceOf(ValidationError);
+      expect(createdUserResult).toBeInstanceOf(InvalidRequestBodyException);
     });
 
     and('I should not have been sent access to account details', () => {
