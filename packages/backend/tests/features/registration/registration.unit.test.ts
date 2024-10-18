@@ -3,13 +3,14 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserInput } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support';
+import { createRequest } from 'node-mocks-http';
 import { Application, CompositionRoot } from '../../../src/core';
-import { Config, createCommand, InvalidRequestBodyException } from '../../../src/shared';
+import { Config, InvalidRequestBodyException } from '../../../src/shared';
 import {
   EmailAlreadyInUseException,
   UserNotFoundException,
   UsernameAlreadyTakenException,
-  CreateUserCommandSchema,
+  CreateUserCommand,
 } from '../../../src/modules/users';
 import { DatabaseFixtures } from '../../support';
 
@@ -46,7 +47,7 @@ defineFeature(feature, (test) => {
     });
 
     when('I register with valid account details accepting marketing emails', async () => {
-      createdUser = await application.users.createUser(createUserInput);
+      createdUser = await application.users.createUser(CreateUserCommand.Create(createUserInput));
 
       await application.marketing.addEmailToList(createUserInput.email);
     });
@@ -79,7 +80,7 @@ defineFeature(feature, (test) => {
     });
 
     when('I register with valid account details declining marketing emails', async () => {
-      createdUser = await application.users.createUser(createUserInput);
+      createdUser = await application.users.createUser(CreateUserCommand.Create(createUserInput));
     });
 
     then('I should be granted access to my account', async () => {
@@ -110,7 +111,8 @@ defineFeature(feature, (test) => {
 
     when('I register with invalid account details', async () => {
       try {
-        const createUserCommand = createCommand(CreateUserCommandSchema, createUserInput);
+        const request = createRequest({ body: createUserInput });
+        const createUserCommand = CreateUserCommand.FromRequest(request);
         createdUserResult = await application.users.createUser(createUserCommand);
       } catch (error) {
         createdUserResult = error as InvalidRequestBodyException;
@@ -148,7 +150,7 @@ defineFeature(feature, (test) => {
 
     when('new users attempt to register with those emails', async () => {
       createUserPromises = userInputs.map((userInput) => {
-        return application.users.createUser(userInput);
+        return application.users.createUser(CreateUserCommand.Create(userInput));
       });
     });
 
@@ -185,12 +187,14 @@ defineFeature(feature, (test) => {
       async (table: { firstName: string; lastName: string; email: string; username: string }[]) => {
         createUserPromises = table.map((row) => {
           return application.users.createUser(
-            new UserInputBuilder()
-              .withEmail(row.email)
-              .withUsername(row.username)
-              .withFirstName(row.firstName)
-              .withLastName(row.lastName)
-              .build()
+            CreateUserCommand.Create(
+              new UserInputBuilder()
+                .withEmail(row.email)
+                .withUsername(row.username)
+                .withFirstName(row.firstName)
+                .withLastName(row.lastName)
+                .build()
+            )
           );
         });
       }

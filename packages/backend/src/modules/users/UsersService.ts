@@ -23,18 +23,18 @@ export class UsersService {
   ) {}
 
   async createUser(createUserCommand: CreateUserCommand) {
-    const existingUserByEmail = await this.usersRepository.findUserByEmail(createUserCommand.email);
+    const existingUserByEmail = await this.usersRepository.findUserByEmail(createUserCommand.value.email);
     if (existingUserByEmail) {
       throw new EmailAlreadyInUseException();
     }
 
-    const existingUserByUsername = await this.usersRepository.findUserByUsername(createUserCommand.username);
+    const existingUserByUsername = await this.usersRepository.findUserByUsername(createUserCommand.value.username);
     if (existingUserByUsername) {
       throw new UsernameAlreadyTakenException();
     }
 
     const createdUser = await this.usersRepository.createUser({
-      ...createUserCommand,
+      ...createUserCommand.value,
       password: generateRandomPassword(10),
     });
 

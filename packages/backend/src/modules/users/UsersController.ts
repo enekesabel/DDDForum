@@ -5,9 +5,9 @@ import {
   UpdateUserResponseSchema,
 } from '@dddforum/shared/src/modules/users';
 import { buildAPIResponse, Controller, createCommand, MissingRequestQueryException } from '../../shared';
-import { CreateUserCommandSchema } from './CreateUserCommand';
 import { UpdateUserCommandSchema } from './UpdateUserCommand';
 import { UsersService } from './UsersService';
+import { CreateUserCommand } from './CreateUserCommand';
 
 export class UsersController extends Controller {
   constructor(
@@ -26,7 +26,7 @@ export class UsersController extends Controller {
 
   private async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const createUserCommand = createCommand(CreateUserCommandSchema, req.body);
+      const createUserCommand = CreateUserCommand.FromRequest(req);
 
       const user = await this.usersService.createUser(createUserCommand);
 
