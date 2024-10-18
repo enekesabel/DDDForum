@@ -4,8 +4,8 @@ import {
   GetUserResponseSchema,
   UpdateUserResponseSchema,
 } from '@dddforum/shared/src/modules/users';
-import { buildAPIResponse, Controller, createCommand, MissingRequestQueryException } from '../../shared';
-import { UpdateUserCommandSchema } from './UpdateUserCommand';
+import { buildAPIResponse, Controller, MissingRequestQueryException } from '../../shared';
+import { UpdateUserCommand } from './UpdateUserCommand';
 import { UsersService } from './UsersService';
 import { CreateUserCommand } from './CreateUserCommand';
 
@@ -38,10 +38,9 @@ export class UsersController extends Controller {
 
   private async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = Number(req.params.userId);
-      const updateUserCommand = createCommand(UpdateUserCommandSchema, req.body);
+      const updateUserCommand = UpdateUserCommand.FromRequest(req);
 
-      const updatedUser = await this.usersService.updateUser(userId, updateUserCommand);
+      const updatedUser = await this.usersService.updateUser(updateUserCommand);
 
       return buildAPIResponse(res).schema(UpdateUserResponseSchema).data(updatedUser).status(200).build();
     } catch (error) {

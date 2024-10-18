@@ -19,24 +19,16 @@ describe('CreateUserCommand', () => {
     });
 
     describe('it should throw an error if props are invalid', () => {
-      const invalidProps = [
-        { email: 'invalid-email', field: 'email' },
-        { username: '', field: 'username' },
-        { firstName: '', field: 'firstName' },
-        { lastName: '', field: 'lastName' },
-      ];
+      const invalidProps = [{ email: 'invalid-email' }, { username: '' }, { firstName: '' }, { lastName: '' }];
 
-      it.each(invalidProps)(
-        'should throw an error if $field is invalid',
-        ({ email, username, firstName, lastName, field }) => {
-          const props = {
-            ...validProps,
-            [field]: email || username || firstName || lastName,
-          };
+      it.each(invalidProps)('should throw an error if a field is invalid', (fields) => {
+        const props = {
+          ...validProps,
+          ...fields,
+        };
 
-          expect(() => CreateUserCommand.Create(props)).toThrow(ZodError);
-        }
-      );
+        expect(() => CreateUserCommand.Create(props)).toThrow(ZodError);
+      });
     });
   });
 

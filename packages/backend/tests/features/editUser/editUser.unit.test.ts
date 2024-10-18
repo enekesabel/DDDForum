@@ -8,6 +8,7 @@ import { Config } from '../../../src/shared';
 import { DatabaseFixtures } from '../../support';
 import {
   EmailAlreadyInUseException,
+  UpdateUserCommand,
   UserNotFoundException,
   UsernameAlreadyTakenException,
 } from '../../../src/modules/users';
@@ -43,7 +44,12 @@ defineFeature(feature, (test) => {
 
     when('I try to update my user details using valid data', async () => {
       updateUserInput = new UserInputBuilder().withAllRandomDetails().build();
-      updatedUser = await application.users.updateUser(userId, updateUserInput);
+
+      const updateUserCommand = UpdateUserCommand.Create({
+        ...updateUserInput,
+        userId,
+      });
+      updatedUser = await application.users.updateUser(updateUserCommand);
     });
 
     then('my user details should be updated successfully', async () => {
@@ -66,7 +72,13 @@ defineFeature(feature, (test) => {
 
     when('I attempt to edit a user that does not exist', async () => {
       try {
-        updatedUser = await application.users.updateUser(999999, new UserInputBuilder().withAllRandomDetails().build());
+        const updateUserInput = new UserInputBuilder().withAllRandomDetails().build();
+
+        const updateUserCommand = UpdateUserCommand.Create({
+          ...updateUserInput,
+          userId: 999999,
+        });
+        updatedUser = await application.users.updateUser(updateUserCommand);
       } catch (e) {
         error = e as UserNotFoundException;
       }
@@ -96,7 +108,12 @@ defineFeature(feature, (test) => {
 
     when(/^I attempt to update my email to "(.*)"$/, async (newEmail: string) => {
       try {
-        updatedUser = await application.users.updateUser(userId, { email: newEmail });
+        const updateUserInput = new UserInputBuilder().withAllRandomDetails().withEmail(newEmail).build();
+        const updateUserCommand = UpdateUserCommand.Create({
+          ...updateUserInput,
+          userId,
+        });
+        updatedUser = await application.users.updateUser(updateUserCommand);
       } catch (e) {
         error = e as EmailAlreadyInUseException;
       }
@@ -126,7 +143,12 @@ defineFeature(feature, (test) => {
 
     when(/^I attempt to update my username to "(.*)"$/, async (newUsername: string) => {
       try {
-        updatedUser = await application.users.updateUser(userId, { username: newUsername });
+        const updateUserInput = new UserInputBuilder().withAllRandomDetails().withUsername(newUsername).build();
+        const updateUserCommand = UpdateUserCommand.Create({
+          ...updateUserInput,
+          userId,
+        });
+        updatedUser = await application.users.updateUser(updateUserCommand);
       } catch (e) {
         error = e as UsernameAlreadyTakenException;
       }

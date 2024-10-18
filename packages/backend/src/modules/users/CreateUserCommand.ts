@@ -1,6 +1,6 @@
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 import { Request } from 'express';
-import { InvalidRequestBodyException } from '../../shared';
+import { RequestValidator } from '../../shared';
 
 export const CreateUserCommandSchema = z.object({
   email: z.string().email(),
@@ -13,15 +13,7 @@ type Props = z.infer<typeof CreateUserCommandSchema>;
 
 export class CreateUserCommand {
   static FromRequest(request: Request) {
-    try {
-      return this.Create(request.body);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        throw new InvalidRequestBodyException(error.message);
-      }
-
-      throw error;
-    }
+    return this.Create(RequestValidator.ValidateRequestBody(request, CreateUserCommandSchema));
   }
 
   static Create(value: Props) {

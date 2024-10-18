@@ -69,15 +69,17 @@ export class UsersService {
     return foundUserById;
   }
 
-  async updateUser(userId: number, updateUserCommand: UpdateUserCommand) {
+  async updateUser(updateUserCommand: UpdateUserCommand) {
+    const { userId, ...userData } = updateUserCommand.value;
+
     const foundUserById = await this.usersRepository.findUserById(userId);
 
     if (!foundUserById) {
       throw new UserNotFoundException();
     }
 
-    if (updateUserCommand.email) {
-      const foundUserByEmail = await this.usersRepository.findUserByEmail(updateUserCommand.email);
+    if (userData.email) {
+      const foundUserByEmail = await this.usersRepository.findUserByEmail(userData.email);
       // Allow passing the email unchanged
       // Only throw error if we'd try to assing the same email to a different user
       if (foundUserByEmail && foundUserByEmail.id !== foundUserById.id) {
@@ -85,8 +87,8 @@ export class UsersService {
       }
     }
 
-    if (updateUserCommand.username) {
-      const foundUserByUsername = await this.usersRepository.findUserByUsername(updateUserCommand.username);
+    if (userData.username) {
+      const foundUserByUsername = await this.usersRepository.findUserByUsername(userData.username);
       // Allow passing the username unchanged
       // Only throw error if we'd try to assing the same username to a different user
       if (foundUserByUsername && foundUserByUsername.id !== foundUserById.id) {
@@ -94,6 +96,6 @@ export class UsersService {
       }
     }
 
-    return await this.usersRepository.updateUser(userId, updateUserCommand);
+    return await this.usersRepository.updateUser(userId, userData);
   }
 }
