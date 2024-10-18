@@ -6,7 +6,7 @@ import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { Application, CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
 import { DatabaseFixtures } from '../../support';
-import { UserNotFoundException } from '../../../src/modules/users';
+import { GetUserQuery, UserNotFoundException } from '../../../src/modules/users';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getUserByEmail.feature'), {
   tagFilter: '@unit',
@@ -39,7 +39,7 @@ defineFeature(feature, (test) => {
     });
 
     when(/^I request user details using the email "(.*)"$/, async (email: string) => {
-      user = await application.users.getUserByEmail(email);
+      user = await application.users.getUser(GetUserQuery.Create(email));
     });
 
     then('I should receive the user details', () => {
@@ -53,7 +53,7 @@ defineFeature(feature, (test) => {
 
     when(/^I request user details using the email "(.*)"$/, async (email: string) => {
       try {
-        await application.users.getUserByEmail(email);
+        await application.users.getUser(GetUserQuery.Create(email));
       } catch (error) {
         getUserError = error as UserNotFoundException;
       }

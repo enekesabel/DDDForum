@@ -4,10 +4,11 @@ import {
   GetUserResponseSchema,
   UpdateUserResponseSchema,
 } from '@dddforum/shared/src/modules/users';
-import { buildAPIResponse, Controller, MissingRequestQueryException } from '../../shared';
+import { buildAPIResponse, Controller } from '../../shared';
 import { UpdateUserCommand } from './UpdateUserCommand';
 import { UsersService } from './UsersService';
 import { CreateUserCommand } from './CreateUserCommand';
+import { GetUserQuery } from './GetUserQuery';
 
 export class UsersController extends Controller {
   constructor(
@@ -50,13 +51,9 @@ export class UsersController extends Controller {
 
   private async getUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email } = req.query;
+      const getUserQuery = GetUserQuery.FromRequest(req);
 
-      if (!email) {
-        return next(new MissingRequestQueryException('Email is required'));
-      }
-
-      const foundUser = await this.usersService.getUserByEmail(String(email));
+      const foundUser = await this.usersService.getUser(getUserQuery);
 
       return buildAPIResponse(res).schema(GetUserResponseSchema).data(foundUser).status(200).build();
     } catch (error) {

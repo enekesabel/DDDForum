@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Request } from 'express';
-import { RequestValidator } from '../../shared';
+import { RequestValidator, ValidationErrorException } from '../../shared';
 import { CreateUserCommandSchema } from './CreateUserCommand';
 
 const RequestParamsSchema = z.object({
@@ -23,12 +23,15 @@ export class UpdateUserCommand {
   }
 
   static Create(value: Props) {
-    return new UpdateUserCommand(value);
+    try {
+      return new UpdateUserCommand(UpdateUserCommandSchema.parse(value));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new ValidationErrorException(error.message);
+      }
+      throw error;
+    }
   }
 
-  readonly value: Props;
-
-  private constructor(value: Props) {
-    this.value = UpdateUserCommandSchema.parse(value);
-  }
+  private constructor(readonly value: Props) {}
 }

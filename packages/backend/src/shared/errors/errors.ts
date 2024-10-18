@@ -34,7 +34,7 @@ export abstract class ApplicationException<Name extends string> extends CustomEr
 
 export abstract class GenericError<Name extends string> extends CustomError<Name, z.infer<typeof GenericErrors>> {}
 
-export abstract class ValidationErrorException<
+export abstract class BaseValidationErrorException<
   Name extends z.infer<typeof ValidationErrorExceptions>,
 > extends GenericError<Name> {
   constructor(message: string, name: Name) {
@@ -42,7 +42,15 @@ export abstract class ValidationErrorException<
   }
 }
 
-export class InvalidRequestBodyException extends ValidationErrorException<
+export class ValidationErrorException extends BaseValidationErrorException<
+  typeof ValidationErrorExceptions.enum.ValidationErrorException
+> {
+  constructor(message: string) {
+    super(message, ValidationErrorExceptions.enum.ValidationErrorException);
+  }
+}
+
+export class InvalidRequestBodyException extends BaseValidationErrorException<
   typeof ValidationErrorExceptions.enum.InvalidRequestBodyException
 > {
   constructor(message: string) {
@@ -50,7 +58,7 @@ export class InvalidRequestBodyException extends ValidationErrorException<
   }
 }
 
-export class InvalidRequestParamException extends ValidationErrorException<
+export class InvalidRequestParamException extends BaseValidationErrorException<
   typeof ValidationErrorExceptions.enum.InvalidRequestParamException
 > {
   constructor(message: string) {
@@ -58,7 +66,7 @@ export class InvalidRequestParamException extends ValidationErrorException<
   }
 }
 
-export class InvalidRequestQueryException extends ValidationErrorException<
+export class InvalidRequestQueryException extends BaseValidationErrorException<
   typeof ValidationErrorExceptions.enum.InvalidRequestQueryException
 > {
   constructor(message: string) {
@@ -66,7 +74,7 @@ export class InvalidRequestQueryException extends ValidationErrorException<
   }
 }
 
-export abstract class ClientErrorException<
+export abstract class BaseClientErrorException<
   Name extends z.infer<typeof ClientErrorExceptions>,
 > extends GenericError<Name> {
   constructor(message: string, name: Name) {
@@ -74,7 +82,15 @@ export abstract class ClientErrorException<
   }
 }
 
-export class MissingRequestParamException extends ClientErrorException<
+export class ClientErrorException extends BaseClientErrorException<
+  typeof ClientErrorExceptions.enum.ClientErrorException
+> {
+  constructor(message: string) {
+    super(message, ClientErrorExceptions.enum.ClientErrorException);
+  }
+}
+
+export class MissingRequestParamException extends BaseClientErrorException<
   typeof ClientErrorExceptions.enum.MissingRequestParamException
 > {
   constructor(message: string) {
@@ -82,7 +98,7 @@ export class MissingRequestParamException extends ClientErrorException<
   }
 }
 
-export class MissingRequestQueryException extends ClientErrorException<
+export class MissingRequestQueryException extends BaseClientErrorException<
   typeof ClientErrorExceptions.enum.MissingRequestQueryException
 > {
   constructor(message: string) {

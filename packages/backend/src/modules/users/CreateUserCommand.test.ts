@@ -1,7 +1,6 @@
 import { createRequest } from 'node-mocks-http';
-import { ZodError } from 'zod';
 import { faker } from '@faker-js/faker';
-import { InvalidRequestBodyException } from '../../shared';
+import { InvalidRequestBodyException, ValidationErrorException } from '../../shared';
 import { CreateUserCommand } from './CreateUserCommand';
 
 describe('CreateUserCommand', () => {
@@ -27,7 +26,7 @@ describe('CreateUserCommand', () => {
           ...fields,
         };
 
-        expect(() => CreateUserCommand.Create(props)).toThrow(ZodError);
+        expect(() => CreateUserCommand.Create(props)).toThrow(ValidationErrorException);
       });
     });
   });

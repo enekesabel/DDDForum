@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Request } from 'express';
-import { RequestValidator } from '../../shared';
+import { RequestValidator, ValidationErrorException } from '../../shared';
 
 export const CreateUserCommandSchema = z.object({
   email: z.string().email(),
@@ -17,12 +17,16 @@ export class CreateUserCommand {
   }
 
   static Create(value: Props) {
-    return new CreateUserCommand(value);
+    try {
+      return new CreateUserCommand(CreateUserCommandSchema.parse(value));
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new ValidationErrorException(error.message);
+      }
+
+      throw error;
+    }
   }
 
-  readonly value: Props;
-
-  private constructor(value: Props) {
-    this.value = CreateUserCommandSchema.parse(value);
-  }
+  private constructor(readonly value: Props) {}
 }

@@ -73,7 +73,7 @@ defineFeature(feature, (test) => {
     let getUserResponse: GetUserResponse;
 
     when('I request user details without providing an email', async () => {
-      getUserResponse = await apiClient.users.getUserByEmail('');
+      getUserResponse = await apiClient.users.getUserByEmail(undefined as unknown as string);
     });
 
     then('I should receive an error indicating that was a client error', () => {

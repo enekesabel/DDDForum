@@ -5,12 +5,12 @@ import { UserInput } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { createRequest } from 'node-mocks-http';
 import { Application, CompositionRoot } from '../../../src/core';
-import { Config, InvalidRequestBodyException } from '../../../src/shared';
+import { Config, InvalidRequestBodyException, ValidationErrorException } from '../../../src/shared';
 import {
   EmailAlreadyInUseException,
-  UserNotFoundException,
   UsernameAlreadyTakenException,
   CreateUserCommand,
+  GetUserQuery,
 } from '../../../src/modules/users';
 import { DatabaseFixtures } from '../../support';
 
@@ -59,7 +59,7 @@ defineFeature(feature, (test) => {
       expect(createdUser.lastName).toEqual(createUserInput.lastName);
       expect(createdUser.username).toEqual(createUserInput.username);
 
-      const newUser = await application.users.getUserByEmail(createUserInput.email);
+      const newUser = await application.users.getUser(GetUserQuery.Create(createUserInput.email));
 
       expect(newUser.email).toEqual(createUserInput.email);
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
@@ -90,7 +90,7 @@ defineFeature(feature, (test) => {
       expect(createdUser.lastName).toEqual(createUserInput.lastName);
       expect(createdUser.username).toEqual(createUserInput.username);
 
-      const newUser = await application.users.getUserByEmail(createUserInput.email);
+      const newUser = await application.users.getUser(GetUserQuery.Create(createUserInput.email));
 
       expect(newUser.email).toEqual(createUserInput.email);
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
@@ -123,8 +123,15 @@ defineFeature(feature, (test) => {
       expect(createdUserResult).toBeInstanceOf(InvalidRequestBodyException);
     });
 
-    and('I should not have been sent access to account details', () => {
-      expect(application.users.getUserByEmail(createUserInput.email)).rejects.toThrow(UserNotFoundException);
+    and('I should not have been sent access to account details', async () => {
+      let error: ValidationErrorException | null = null;
+      try {
+        await application.users.getUser(GetUserQuery.Create(createUserInput.email));
+      } catch (e) {
+        error = e as ValidationErrorException;
+      }
+
+      expect(error).toBeInstanceOf(ValidationErrorException);
       expect(sendEmailSpy).toHaveBeenCalledTimes(0);
     });
   });

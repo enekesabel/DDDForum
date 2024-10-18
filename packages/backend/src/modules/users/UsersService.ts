@@ -1,5 +1,6 @@
 import { NotificationsService } from '../notifications';
 import { CreateUserCommand } from './CreateUserCommand';
+import { GetUserQuery } from './GetUserQuery';
 import { UsersRepository } from './ports/UsersRepository';
 import { UpdateUserCommand } from './UpdateUserCommand';
 import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from './usersExceptions';
@@ -49,24 +50,14 @@ export class UsersService {
     return createdUser;
   }
 
-  async getUserByEmail(email: string) {
-    const foundUser = await this.usersRepository.findUserByEmail(email);
+  async getUser(getUserQuery: GetUserQuery) {
+    const foundUser = await this.usersRepository.findUserByEmail(getUserQuery.value);
 
     if (!foundUser) {
       throw new UserNotFoundException();
     }
 
     return foundUser;
-  }
-
-  async getUserById(userId: number) {
-    const foundUserById = await this.usersRepository.findUserById(userId);
-
-    if (!foundUserById) {
-      throw new UserNotFoundException();
-    }
-
-    return foundUserById;
   }
 
   async updateUser(updateUserCommand: UpdateUserCommand) {
