@@ -1,3 +1,4 @@
 import { CompositionRoot } from './core';
+import { Config } from './shared';
 
-CompositionRoot.Create().getWebServer().start();
+CompositionRoot.Create(new Config('start:prod')).getWebServer().start();

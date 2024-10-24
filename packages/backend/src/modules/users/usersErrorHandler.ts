@@ -8,7 +8,7 @@ export const usersErrorHandler = (err: Error, req: Request, res: Response, next:
   if (err && err instanceof UsersException) {
     const responseBuilder = buildAPIResponse(res).schema(createAPIErrorResponseSchema(UserExceptions)).error(err);
 
-    switch (err.name) {
+    switch (err.code) {
       case UserExceptions.Enum.UserNotFound:
         return responseBuilder.status(StatusCodes.NOT_FOUND).build();
       case UserExceptions.Enum.EmailAlreadyInUse:

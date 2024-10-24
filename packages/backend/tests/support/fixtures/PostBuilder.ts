@@ -1,12 +1,18 @@
-import { Post } from '@prisma/client';
 import { faker } from '@faker-js/faker';
-import { prisma } from '../../../src/shared';
+import { PostsRepository, PostCreateOutput } from '../../../src/modules/posts';
 
 export class PostBuilder {
-  private post = {} as Post;
+  private post = {} as PostCreateOutput;
+  private postsRepository: PostsRepository;
 
-  withRandomData() {
-    return this.withTitle(faker.lorem.sentence())
+  constructor(postsRepository: PostsRepository) {
+    this.postsRepository = postsRepository;
+  }
+
+  static withRandomData(postsRepository: PostsRepository) {
+    const builder = new PostBuilder(postsRepository);
+    return builder
+      .withTitle(faker.lorem.sentence())
       .withContent(faker.lorem.paragraph())
       .withDateCreated(faker.date.recent());
   }
@@ -31,12 +37,10 @@ export class PostBuilder {
     return this;
   }
 
-  build() {
-    return prisma.post.create({
-      data: {
-        ...this.post,
-        postType: 'Text',
-      },
+  async build() {
+    return await this.postsRepository.create({
+      ...this.post,
+      postType: 'Text',
     });
   }
 }

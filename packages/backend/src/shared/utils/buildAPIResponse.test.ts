@@ -6,7 +6,7 @@ import {
   createAPIResponseSchema,
 } from '@dddforum/shared/src/shared';
 import { createResponse, MockResponse } from 'node-mocks-http';
-import { CustomError, ServerError } from '../errors/errors';
+import { CustomError, ServerErrorException } from '../errors';
 import { buildAPIResponse } from './buildAPIResponse';
 
 describe('buildAPIResponse', () => {
@@ -41,7 +41,7 @@ describe('buildAPIResponse', () => {
     });
 
     it('Should be able to build an APIErrorResponse from an APIResponseSchema', () => {
-      const error = new ServerError('Something went wrong');
+      const error = new ServerErrorException('Something went wrong');
 
       buildAPIResponse(response).schema(responseSchema).error(error).status(500).build().send();
 
@@ -61,7 +61,7 @@ describe('buildAPIResponse', () => {
     });
 
     it('Should throw an error if an invalid status code is used for error response', () => {
-      const error = new ServerError('Something went wrong');
+      const error = new ServerErrorException('Something went wrong');
 
       expect(() => buildAPIResponse(response).schema(responseSchema).error(error).status(200).build().send()).toThrow();
     });
@@ -129,7 +129,7 @@ describe('buildAPIResponse', () => {
     });
 
     it('Should throw an error if one tries to build an error response', () => {
-      const error = new ServerError('Something went wrong');
+      const error = new ServerErrorException('Something went wrong');
 
       // @ts-expect-error: cannot pass error when building an APISuccessResponse
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(200).build().send()).toThrow();
@@ -140,7 +140,7 @@ describe('buildAPIResponse', () => {
     const schema = createAPIErrorResponseSchema(GenericErrors);
 
     it('Should be able to build an APIErrorResponse', () => {
-      const error = new ServerError('Something went wrong');
+      const error = new ServerErrorException('Something went wrong');
 
       buildAPIResponse(response).schema(schema).error(error).status(500).build().send();
 
@@ -155,10 +155,10 @@ describe('buildAPIResponse', () => {
     });
 
     it('Should throw an error if error does not match the schema', () => {
-      class InvalidError extends CustomError<'InvalidError'> {
+      class InvalidError extends CustomError<'InvalidError', 'InvalidError'> {
         readonly name = 'InvalidError';
       }
-      const error = new InvalidError('Custom error');
+      const error = new InvalidError('Invalid error', 'InvalidError', 'InvalidError');
 
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();
     });
@@ -168,7 +168,7 @@ describe('buildAPIResponse', () => {
         error: z.any(),
         success: z.literal(false),
       });
-      const error = new ServerError('Something went wrong');
+      const error = new ServerErrorException('Something went wrong');
 
       // @ts-expect-error: schema is not an APIErrorResponseSchema
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();

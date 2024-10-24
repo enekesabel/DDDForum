@@ -3,6 +3,7 @@ import { z } from 'zod';
 export type APIError<U> = {
   message: string;
   code: U;
+  name: string;
 };
 
 export type APISuccessResponse<T> = {
@@ -24,6 +25,7 @@ const createAPIErrorSchema = <T extends z.ZodEnum<any>>(error: T) =>
   z.object({
     message: z.string(),
     code: error,
+    name: z.string(),
   });
 
 export const createAPISuccessResponseSchema = <T extends z.ZodTypeAny>(data: T) =>
@@ -44,5 +46,3 @@ export const createAPIErrorResponseSchema = <T extends z.ZodEnum<any>>(error: T)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createAPIResponseSchema = <D extends z.ZodTypeAny, E extends z.ZodEnum<any>>(data: D, error: E) =>
   z.discriminatedUnion('success', [createAPISuccessResponseSchema(data), createAPIErrorResponseSchema(error)]);
-
-export const GenericErrors = z.enum(['ValidationError', 'ServerError', 'ClientError']);

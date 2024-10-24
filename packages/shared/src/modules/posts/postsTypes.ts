@@ -2,6 +2,13 @@ import { z } from 'zod';
 import { createAPIResponseSchema, GenericErrors } from '../../shared';
 import { UserSchema } from '../users/usersTypes';
 
+export type PostInput = {
+  postType: string;
+  title: string;
+  content: string;
+  memberId: number;
+};
+
 export const CommentSchema = z.object({
   id: z.number().int(),
   postId: z.number().int(),

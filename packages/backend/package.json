@@ -17,7 +17,8 @@
     "lint:fix": "eslint . --fix",
     "test:unit": "jest -c jest.config.unit.ts --detectOpenHandles",
     "test:dev": "jest -c jest.config.ts --detectOpenHandles",
-    "test:e2e": "jest -c jest.config.e2e.ts --detectOpenHandles"
+    "test:e2e": "jest -c jest.config.e2e.ts --detectOpenHandles",
+    "test:infra": "jest -c jest.config.infra.ts --detectOpenHandles"
   },
   "prisma": {
     "schema": "src/shared/database/prisma/schema.prisma",

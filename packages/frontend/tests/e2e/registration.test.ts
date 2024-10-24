@@ -2,10 +2,12 @@ import path from 'path';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { UserInput } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
+import { DatabaseFixtures } from '@dddforum/backend/tests/support';
+import { CompositionRoot } from '@dddforum/backend/src/core';
+import { Config } from '@dddforum/backend/src/shared';
 import { App, createApp } from '../support/app';
 import { PuppeteerPageDriver } from '../support/PuppeteerPageDriver';
-import { DatabaseFixtures } from '../../../backend/tests/support/fixtures/DatabaseFixtures';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {
   tagFilter: '@frontend',
@@ -14,9 +16,11 @@ const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.fea
 let app: App;
 let pages: App['pages'];
 let pageDriver: PuppeteerPageDriver;
+let databaseFixtures: DatabaseFixtures;
 
 defineFeature(feature, (test) => {
   beforeAll(async () => {
+    databaseFixtures = new DatabaseFixtures(CompositionRoot.Create(new Config('test:e2e')));
     pageDriver = await PuppeteerPageDriver.Create({
       headless: false,
     });
@@ -29,7 +33,7 @@ defineFeature(feature, (test) => {
   });
 
   beforeEach(async () => {
-    await DatabaseFixtures.ClearDatabase();
+    await databaseFixtures.clearDatabase();
   });
 
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
@@ -101,7 +105,7 @@ defineFeature(feature, (test) => {
 
         existingUserInput = userInputs[0];
 
-        await DatabaseFixtures.SetupWithExistingUsers(...userInputs);
+        await databaseFixtures.setupWithExistingUsers(...userInputs);
       }
     );
 

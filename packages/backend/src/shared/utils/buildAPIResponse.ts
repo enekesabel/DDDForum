@@ -83,7 +83,7 @@ export const buildAPIResponse = (response: Response) => {
       }
       if (isAPISuccessResponseSchema(schema)) {
         return {
-          error: (_: CustomError<string>) => {
+          error: (_: CustomError<string, string>) => {
             throw new Error('Error function is not supported for success responses');
           },
           data: buildSuccessResponse(response).schema(schema).data,
@@ -137,7 +137,7 @@ const buildErrorResponse = (response: Response) => {
       }
 
       return {
-        error: (error: CustomError<z.infer<T>['error']['code']>) => {
+        error: (error: CustomError<z.infer<T>['error']['code'], z.infer<T>['error']['name']>) => {
           return {
             status: (status: StatusCodes) => {
               if (!Object.values(StatusCodes).includes(status) || status > 599 || status < 400) {
@@ -149,7 +149,8 @@ const buildErrorResponse = (response: Response) => {
                   const res: z.infer<T> = {
                     success: false,
                     error: {
-                      code: error.name,
+                      code: error.code,
+                      name: error.name,
                       message: error.message,
                     },
                   };
