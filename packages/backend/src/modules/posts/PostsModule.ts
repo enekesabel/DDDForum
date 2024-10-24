@@ -1,4 +1,5 @@
 import { Database, WebServer, Config } from '../../shared';
+import { Application } from '../../core';
 import { PostsRepository } from './ports/PostsRepository';
 import { PostsController } from './PostsController';
 import { ProductionPostsRepository } from './adapters/ProductionPostsRepository';
@@ -9,17 +10,13 @@ export class PostsModule {
   private database: Database;
   private postsRepository: PostsRepository;
   private postsService: PostsService;
-  private postsController: PostsController;
   private config: Config;
 
-  constructor(config: Config, database: Database, webServer: WebServer) {
+  constructor(config: Config, database: Database) {
     this.config = config;
     this.database = database;
     this.postsRepository = this.createPostsRepository();
     this.postsService = new PostsService(this.postsRepository);
-    this.postsController = new PostsController(this.postsService);
-
-    webServer.registerController('/posts', this.postsController);
   }
 
   private createPostsRepository() {
@@ -30,6 +27,11 @@ export class PostsModule {
       default:
         return new ProductionPostsRepository(this.database);
     }
+  }
+
+  setUpRoutes(app: Application, webServer: WebServer) {
+    const postsController = new PostsController(app);
+    webServer.registerController('/posts', postsController);
   }
 
   public getPostsService() {

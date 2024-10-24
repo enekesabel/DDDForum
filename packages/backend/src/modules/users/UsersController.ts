@@ -5,11 +5,12 @@ import {
   UpdateUserResponseSchema,
 } from '@dddforum/shared/src/modules/users';
 import { buildAPIResponse, Controller } from '../../shared';
-import { UpdateUserCommand, CreateUserCommand, GetUserQuery, UsersService } from './services';
+import { Application } from '../../core';
+import { UpdateUserCommand, CreateUserCommand, GetUserQuery } from './services';
 
 export class UsersController extends Controller {
   constructor(
-    private usersService: UsersService,
+    private app: Application,
     private errorHandler: ErrorRequestHandler
   ) {
     super();
@@ -26,7 +27,7 @@ export class UsersController extends Controller {
     try {
       const createUserCommand = CreateUserCommand.FromRequest(req);
 
-      const user = await this.usersService.createUser(createUserCommand);
+      const user = await this.app.users.createUser(createUserCommand);
 
       return buildAPIResponse(res).schema(CreateUserResponseSchema).data(user).status(201).build();
     } catch (error) {
@@ -38,7 +39,7 @@ export class UsersController extends Controller {
     try {
       const updateUserCommand = UpdateUserCommand.FromRequest(req);
 
-      const updatedUser = await this.usersService.updateUser(updateUserCommand);
+      const updatedUser = await this.app.users.updateUser(updateUserCommand);
 
       return buildAPIResponse(res).schema(UpdateUserResponseSchema).data(updatedUser).status(200).build();
     } catch (error) {
@@ -50,7 +51,7 @@ export class UsersController extends Controller {
     try {
       const getUserQuery = GetUserQuery.FromRequest(req);
 
-      const foundUser = await this.usersService.getUser(getUserQuery);
+      const foundUser = await this.app.users.getUser(getUserQuery);
 
       return buildAPIResponse(res).schema(GetUserResponseSchema).data(foundUser).status(200).build();
     } catch (error) {

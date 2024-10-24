@@ -24,21 +24,25 @@ export class CompositionRoot {
   private constructor(config: Config) {
     this.config = config;
     this.sharedModule = new SharedModule();
-    const webServer = this.sharedModule.getWebServer();
     const database = this.sharedModule.getDatabase();
 
     this.notificationsModule = new NotificationsModule(this.config);
-    this.usersModule = new UsersModule(
-      this.config,
-      database,
-      this.notificationsModule.getNotificationsService(),
-      webServer
-    );
-    this.postsModule = new PostsModule(this.config, database, webServer);
-    this.marketingModule = new MarketingModule(this.config, webServer);
+    this.usersModule = new UsersModule(this.config, database, this.notificationsModule.getNotificationsService());
+    this.postsModule = new PostsModule(this.config, database);
+    this.marketingModule = new MarketingModule(this.config);
 
-    // registering error handling middleware at last
-    webServer.registerMiddleware(errorHandler);
+    this.setUpRoutes();
+
+    // registering global error handling middleware at last
+    this.sharedModule.getWebServer().registerMiddleware(errorHandler);
+  }
+
+  private setUpRoutes() {
+    const app = this.getApplication();
+    const webServer = this.sharedModule.getWebServer();
+    this.usersModule.setUpRoutes(app, webServer);
+    this.postsModule.setUpRoutes(app, webServer);
+    this.marketingModule.setUpRoutes(app, webServer);
   }
 
   getWebServer() {

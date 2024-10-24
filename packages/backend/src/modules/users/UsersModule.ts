@@ -1,5 +1,6 @@
 import { Database, WebServer, Config } from '../../shared';
 import { NotificationsService } from '../notifications/NotificationsService';
+import { Application } from '../../core';
 import { UsersRepository } from './ports/UsersRepository';
 import { UsersController } from './UsersController';
 import { usersErrorHandler } from './usersErrorHandler';
@@ -12,18 +13,14 @@ export class UsersModule {
   private notificationsService: NotificationsService;
   private usersRepository: UsersRepository;
   private usersService: UsersService;
-  private usersController: UsersController;
   private config: Config;
 
-  constructor(config: Config, database: Database, notificationsService: NotificationsService, webServer: WebServer) {
+  constructor(config: Config, database: Database, notificationsService: NotificationsService) {
     this.config = config;
     this.database = database;
     this.notificationsService = notificationsService;
     this.usersRepository = this.createUsersRepository();
     this.usersService = new UsersService(this.usersRepository, this.notificationsService);
-    this.usersController = new UsersController(this.usersService, usersErrorHandler);
-
-    webServer.registerController('/users', this.usersController);
   }
 
   private createUsersRepository() {
@@ -34,6 +31,12 @@ export class UsersModule {
       default:
         return new ProductionUsersRepository(this.database);
     }
+  }
+
+  setUpRoutes(app: Application, webServer: WebServer) {
+    const usersController = new UsersController(app, usersErrorHandler);
+
+    webServer.registerController('/users', usersController);
   }
 
   getUsersService() {
