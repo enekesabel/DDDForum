@@ -2,7 +2,7 @@ import { Database, WebServer, Config } from '../../shared';
 import { PostsRepository } from './ports/PostsRepository';
 import { PostsController } from './PostsController';
 import { ProductionPostsRepository } from './adapters/ProductionPostsRepository';
-import { PostsService } from './PostsService';
+import { PostsService } from './services';
 import { InMemoryPostsRepository } from './adapters/InMemoryPostsRepository';
 
 export class PostsModule {

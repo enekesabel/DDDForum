@@ -1,5 +1,5 @@
 import { createRequest } from 'node-mocks-http';
-import { InvalidRequestQueryException, ValidationErrorException, MissingRequestQueryException } from '../../shared';
+import { InvalidRequestQueryException, ValidationErrorException, MissingRequestQueryException } from '../../../shared';
 import { GetPostsQuery } from './GetPostsQuery';
 
 describe('GetPostsQuery', () => {

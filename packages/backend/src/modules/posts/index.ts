@@ -1,4 +1,3 @@
 export { PostsModule } from './PostsModule';
-export { PostsService } from './PostsService';
+export * from './services';
 export type { PostsRepository } from './ports';
-export { GetPostsQuery } from './GetPostsQuery';

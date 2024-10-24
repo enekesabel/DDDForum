@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { GetPostsResponseSchema } from '@dddforum/shared/src/modules/posts';
 import { Controller, buildAPIResponse } from '../../shared';
-import { PostsService } from './PostsService';
-import { GetPostsQuery } from './GetPostsQuery';
+import { PostsService, GetPostsQuery } from './services';
 
 export class PostsController extends Controller {
   constructor(private postsService: PostsService) {
