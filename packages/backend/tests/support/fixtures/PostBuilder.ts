@@ -1,9 +1,8 @@
-import { Post } from '@prisma/client';
 import { faker } from '@faker-js/faker';
-import { PostsRepository } from '../../../src/modules/posts';
+import { PostsRepository, PostCreateOutput } from '../../../src/modules/posts';
 
 export class PostBuilder {
-  private post = {} as Post;
+  private post = {} as PostCreateOutput;
   private postsRepository: PostsRepository;
 
   constructor(postsRepository: PostsRepository) {

@@ -1,12 +1,11 @@
 import path from 'path';
-import { Post } from '@prisma/client';
 import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { defineFeature, loadFeature } from 'jest-cucumber';
 import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CompositionRoot, Application } from '../../../src/core';
 import { Config } from '../../../src/shared';
 import { DatabaseFixtures } from '../../support';
-import { GetPostsQuery } from '../../../src/modules/posts';
+import { GetPostsQuery, PostCreateOutput } from '../../../src/modules/posts';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'), {
   tagFilter: '@unit',
@@ -28,7 +27,7 @@ beforeEach(async () => {
 
 defineFeature(feature, (test) => {
   test('Successfully retrieve posts sorted by recent', ({ given, when, then }) => {
-    let posts: Post[];
+    let posts: PostCreateOutput[];
     let retrievedPosts: Awaited<ReturnType<typeof application.posts.getPosts>>;
 
     given(/^There are posts in the system already$/, async () => {

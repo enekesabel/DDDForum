@@ -5,6 +5,7 @@ let _client: PrismaClient;
 
 export type UserCreateInput = Omit<User, 'id'>;
 export type UserUpdateInput = Partial<UserCreateInput>;
+export type UserFindOutput = User;
 
 export type UserCreateOutput = Awaited<
   ReturnType<
@@ -17,9 +18,9 @@ export type UserCreateOutput = Awaited<
 >;
 
 export interface UsersRepository extends Repository {
-  findUserById(id: number): Promise<User | null>;
-  findUserByEmail(email: string): Promise<User | null>;
-  findUserByUsername(username: string): Promise<User | null>;
+  findUserById(id: number): Promise<UserFindOutput | null>;
+  findUserByEmail(email: string): Promise<UserFindOutput | null>;
+  findUserByUsername(username: string): Promise<UserFindOutput | null>;
   createUser(userData: UserCreateInput): Promise<UserCreateOutput>;
-  updateUser(id: number, userData: Partial<UserUpdateInput>): Promise<User>;
+  updateUser(id: number, userData: Partial<UserUpdateInput>): Promise<UserFindOutput>;
 }

@@ -3,7 +3,7 @@ import { Repository } from '../../../shared';
 
 let _client: PrismaClient;
 
-export type GetPostsOutput = Awaited<
+export type PostsGetOutput = Awaited<
   ReturnType<
     typeof _client.post.findMany<{
       include: {
@@ -26,7 +26,7 @@ export type PostCreateInput = Omit<Prisma.PostUncheckedCreateInput, 'id'>;
 export type PostCreateOutput = Post;
 
 export interface PostsRepository extends Repository {
-  getPosts(): Promise<GetPostsOutput>;
+  getPosts(): Promise<PostsGetOutput>;
 
   create(post: PostCreateInput): Promise<PostCreateOutput>;
 }

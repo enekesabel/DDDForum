@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import { UserCreateInput, UserCreateOutput, UsersRepository, UserUpdateInput } from '../ports/UsersRepository';
 
 export class InMemoryUsersRepository implements UsersRepository {
@@ -7,16 +6,16 @@ export class InMemoryUsersRepository implements UsersRepository {
   constructor() {
     this.users = [];
   }
-  async findUserById(id: number): Promise<User | null> {
+  async findUserById(id: number) {
     return this.users.find((user) => user.id === id) || null;
   }
-  async findUserByEmail(email: string): Promise<User | null> {
+  async findUserByEmail(email: string) {
     return this.users.find((user) => user.email === email) || null;
   }
-  async findUserByUsername(username: string): Promise<User | null> {
+  async findUserByUsername(username: string) {
     return this.users.find((user) => user.username === username) || null;
   }
-  async createUser(userData: UserCreateInput): Promise<UserCreateOutput> {
+  async createUser(userData: UserCreateInput) {
     const id = this.users.length + 1;
     const user = {
       id: id,
@@ -29,7 +28,7 @@ export class InMemoryUsersRepository implements UsersRepository {
     this.users.push(user);
     return user;
   }
-  async updateUser(id: number, userData: UserUpdateInput): Promise<User> {
+  async updateUser(id: number, userData: UserUpdateInput) {
     const index = this.users.findIndex((user) => user.id === id);
     if (index === -1) {
       throw new Error('User not found');

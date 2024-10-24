@@ -6,10 +6,10 @@ import { defineFeature, loadFeature } from 'jest-cucumber';
 import { GenericErrors } from '@dddforum/shared/src/shared';
 import { APIClient } from '@dddforum/shared/src/core';
 import { GetPostsResponse } from '@dddforum/shared/src/modules/posts';
-import { Post } from '@prisma/client';
 import { DatabaseFixtures } from '../../support';
 import { CompositionRoot } from '../../../src/core';
 import { Config } from '../../../src/shared';
+import { PostCreateOutput } from '../../../src/modules/posts';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'), {
   tagFilter: '@e2e',
@@ -36,7 +36,7 @@ afterAll(async () => {
 defineFeature(feature, (test) => {
   test('Successfully retrieve posts sorted by recent', ({ given, when, then }) => {
     let getPostsResponse: GetPostsResponse;
-    let posts: Post[];
+    let posts: PostCreateOutput[];
 
     given(/^There are posts in the system already$/, async () => {
       const userInput = new UserInputBuilder().withAllRandomDetails().build();
@@ -55,7 +55,7 @@ defineFeature(feature, (test) => {
 
   test('Fail to retrieve posts when sorting is not provided', ({ given, when, then }) => {
     let getPostsResponse: GetPostsResponse;
-    let posts: Post[];
+    let posts: PostCreateOutput[];
 
     given(/^There are posts in the system already$/, async () => {
       const userInput = new UserInputBuilder().withAllRandomDetails().build();

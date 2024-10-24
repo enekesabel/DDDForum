@@ -1,13 +1,13 @@
-import { PostsRepository, GetPostsOutput, PostCreateInput } from '../ports/PostsRepository';
+import { PostsRepository, PostsGetOutput, PostCreateInput } from '../ports/PostsRepository';
 
 export class InMemoryPostsRepository implements PostsRepository {
-  private posts: GetPostsOutput;
+  private posts: PostsGetOutput;
 
   constructor() {
     this.posts = [];
   }
 
-  async getPosts(): Promise<GetPostsOutput> {
+  async getPosts(): Promise<PostsGetOutput> {
     return [...this.posts].sort((a, b) => b.dateCreated.getTime() - a.dateCreated.getTime());
   }
 

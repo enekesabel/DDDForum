@@ -1,1 +1,1 @@
-export { PostsRepository } from './PostsRepository';
+export type * from './PostsRepository';
