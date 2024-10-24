@@ -1,6 +1,6 @@
 import { createRequest } from 'node-mocks-http';
 import { faker } from '@faker-js/faker';
-import { InvalidRequestBodyException, MissingRequestParamException, ValidationErrorException } from '../../shared';
+import { InvalidRequestBodyException, MissingRequestParamException, ValidationErrorException } from '../../../shared';
 import { UpdateUserCommand } from './UpdateUserCommand';
 
 describe('UpdateUserCommand', () => {

@@ -1,9 +1,9 @@
-import { NotificationsService } from '../notifications';
+import { UsersRepository } from '../ports/UsersRepository';
+import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from '../usersExceptions';
+import { NotificationsService } from '../../notifications';
 import { CreateUserCommand } from './CreateUserCommand';
 import { GetUserQuery } from './GetUserQuery';
-import { UsersRepository } from './ports/UsersRepository';
 import { UpdateUserCommand } from './UpdateUserCommand';
-import { EmailAlreadyInUseException, UsernameAlreadyTakenException, UserNotFoundException } from './usersExceptions';
 
 function generateRandomPassword(length: number): string {
   const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';

@@ -1,6 +1,6 @@
 import { createRequest } from 'node-mocks-http';
 import { faker } from '@faker-js/faker';
-import { InvalidRequestBodyException, ValidationErrorException } from '../../shared';
+import { InvalidRequestBodyException, ValidationErrorException } from '../../../shared';
 import { CreateUserCommand } from './CreateUserCommand';
 
 describe('CreateUserCommand', () => {

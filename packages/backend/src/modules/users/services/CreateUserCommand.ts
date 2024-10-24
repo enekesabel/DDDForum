@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Request } from 'express';
-import { RequestValidator, ValidationErrorException } from '../../shared';
+import { RequestValidator, ValidationErrorException } from '../../../shared';
 
 export const CreateUserCommandSchema = z.object({
   email: z.string().email(),

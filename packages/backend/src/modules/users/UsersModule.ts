@@ -4,7 +4,7 @@ import { UsersRepository } from './ports/UsersRepository';
 import { UsersController } from './UsersController';
 import { usersErrorHandler } from './usersErrorHandler';
 import { ProductionUsersRepository } from './adapters/ProductionUsersRepository';
-import { UsersService } from './UsersService';
+import { UsersService } from './services';
 import { InMemoryUsersRepository } from './adapters/InMemoryUsersRepository';
 
 export class UsersModule {

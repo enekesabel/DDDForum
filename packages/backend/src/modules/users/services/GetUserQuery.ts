@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { Request } from 'express';
-import { RequestValidator, ValidationErrorException } from '../../shared';
+import { RequestValidator, ValidationErrorException } from '../../../shared';
 
 const ResponseQuerySchema = z.object({
   email: z.string().email(),

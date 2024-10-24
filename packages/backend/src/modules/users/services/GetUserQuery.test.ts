@@ -1,6 +1,6 @@
 import { createRequest } from 'node-mocks-http';
 import { faker } from '@faker-js/faker';
-import { InvalidRequestQueryException, ValidationErrorException } from '../../shared';
+import { InvalidRequestQueryException, ValidationErrorException } from '../../../shared';
 import { GetUserQuery } from './GetUserQuery';
 
 describe('GetUserQuery', () => {

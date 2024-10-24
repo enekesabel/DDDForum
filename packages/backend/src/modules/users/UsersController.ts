@@ -5,10 +5,7 @@ import {
   UpdateUserResponseSchema,
 } from '@dddforum/shared/src/modules/users';
 import { buildAPIResponse, Controller } from '../../shared';
-import { UpdateUserCommand } from './UpdateUserCommand';
-import { UsersService } from './UsersService';
-import { CreateUserCommand } from './CreateUserCommand';
-import { GetUserQuery } from './GetUserQuery';
+import { UpdateUserCommand, CreateUserCommand, GetUserQuery, UsersService } from './services';
 
 export class UsersController extends Controller {
   constructor(
