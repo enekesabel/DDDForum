@@ -64,7 +64,7 @@ defineFeature(feature, (test) => {
     });
 
     when(/^I request the list of posts without specifying sorting$/, async () => {
-      getPostsResponse = await apiClient.posts.getPosts('');
+      getPostsResponse = await apiClient.posts.getPosts(undefined as unknown as string);
     });
 
     then(/^I should receive a client error$/, () => {

@@ -1,4 +1,5 @@
 import { PostsRepository } from './ports/PostsRepository';
+import { GetPostsQuery } from './GetPostsQuery';
 
 export class PostsService {
   private postsRepository: PostsRepository;
@@ -7,7 +8,7 @@ export class PostsService {
     this.postsRepository = postsRepository;
   }
 
-  async getPosts() {
+  async getPosts(_query: GetPostsQuery) {
     return await this.postsRepository.getPosts();
   }
 }

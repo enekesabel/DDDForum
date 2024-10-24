@@ -6,6 +6,7 @@ import { sharedTestRoot } from '@dddforum/shared/src/paths';
 import { CompositionRoot, Application } from '../../../src/core';
 import { Config } from '../../../src/shared';
 import { DatabaseFixtures } from '../../support';
+import { GetPostsQuery } from '../../../src/modules/posts';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/getPosts.feature'), {
   tagFilter: '@unit',
@@ -37,7 +38,8 @@ defineFeature(feature, (test) => {
     });
 
     when(/^I request the list of posts$/, async () => {
-      retrievedPosts = await application.posts.getPosts();
+      const query = GetPostsQuery.Create('recent');
+      retrievedPosts = await application.posts.getPosts(query);
     });
 
     then(/^I should receive the list of posts starting with the most recent$/, async () => {
