@@ -22,6 +22,7 @@ let compositionRoot: CompositionRoot;
 let application: Application;
 let addEmailToListSpy: jest.SpyInstance;
 let sendEmailSpy: jest.SpyInstance;
+let saveUserSpy: jest.SpyInstance;
 let databaseFixtures: DatabaseFixtures;
 
 beforeAll(async () => {
@@ -35,6 +36,7 @@ beforeEach(async () => {
   jest.clearAllMocks();
   addEmailToListSpy = jest.spyOn(application.marketing, 'addEmailToList');
   sendEmailSpy = jest.spyOn(application.notifications, 'sendMail');
+  saveUserSpy = jest.spyOn(compositionRoot.usersModule.getUsersRepository(), 'createUser');
 });
 
 defineFeature(feature, (test) => {
@@ -63,6 +65,7 @@ defineFeature(feature, (test) => {
 
       expect(newUser.email).toEqual(createUserInput.email);
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
+      expect(saveUserSpy).toHaveBeenCalledTimes(1);
     });
 
     and('I should expect to receive marketing emails', () => {
@@ -94,6 +97,7 @@ defineFeature(feature, (test) => {
 
       expect(newUser.email).toEqual(createUserInput.email);
       expect(sendEmailSpy).toHaveBeenCalledTimes(1);
+      expect(saveUserSpy).toHaveBeenCalledTimes(1);
     });
 
     and('I should not expect to receive marketing emails', () => {
@@ -133,6 +137,7 @@ defineFeature(feature, (test) => {
 
       expect(error).toBeInstanceOf(ValidationErrorException);
       expect(sendEmailSpy).toHaveBeenCalledTimes(0);
+      expect(saveUserSpy).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -152,6 +157,7 @@ defineFeature(feature, (test) => {
             .build();
         });
         await databaseFixtures.setupWithExistingUsers(...userInputs);
+        saveUserSpy.mockClear();
       }
     );
 
@@ -167,6 +173,7 @@ defineFeature(feature, (test) => {
 
     and('they should not have been sent access to account details', () => {
       expect(sendEmailSpy).toHaveBeenCalledTimes(0);
+      expect(saveUserSpy).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -186,6 +193,7 @@ defineFeature(feature, (test) => {
             .build();
         });
         await databaseFixtures.setupWithExistingUsers(...userInputs);
+        saveUserSpy.mockClear();
       }
     );
 
@@ -213,6 +221,7 @@ defineFeature(feature, (test) => {
 
     and('they should not have been sent access to account details', () => {
       expect(sendEmailSpy).toHaveBeenCalledTimes(0);
+      expect(saveUserSpy).toHaveBeenCalledTimes(0);
     });
   });
 });

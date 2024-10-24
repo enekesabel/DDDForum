@@ -19,15 +19,19 @@ const feature = loadFeature(path.join(sharedTestRoot, 'features/editUser.feature
 
 let application: Application;
 let databaseFixtures: DatabaseFixtures;
+let updateUserSpy: jest.SpyInstance;
+let compositionRoot: CompositionRoot;
 
 beforeAll(async () => {
-  const compositionRoot = CompositionRoot.Create(new Config('test:unit'));
+  compositionRoot = CompositionRoot.Create(new Config('test:unit'));
   application = compositionRoot.getApplication();
   databaseFixtures = new DatabaseFixtures(compositionRoot);
 });
 
 beforeEach(async () => {
   await databaseFixtures.clearDatabase();
+  jest.clearAllMocks();
+  updateUserSpy = jest.spyOn(compositionRoot.usersModule.getUsersRepository(), 'updateUser');
 });
 
 defineFeature(feature, (test) => {
@@ -58,6 +62,8 @@ defineFeature(feature, (test) => {
       expect(updatedUser.lastName).toBe(updateUserInput.lastName);
       expect(updatedUser.username).toBe(updateUserInput.username);
       expect(updatedUser.email).toBe(updateUserInput.email);
+
+      expect(updateUserSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -87,6 +93,7 @@ defineFeature(feature, (test) => {
     then('I should receive an error indicating the user was not found', () => {
       expect(updatedUser).toBeUndefined();
       expect(error).toBeInstanceOf(UserNotFoundException);
+      expect(updateUserSpy).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -122,6 +129,7 @@ defineFeature(feature, (test) => {
     then('I should receive an error indicating the email is already in use', () => {
       expect(updatedUser).toBeUndefined();
       expect(error).toBeInstanceOf(EmailAlreadyInUseException);
+      expect(updateUserSpy).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -157,6 +165,7 @@ defineFeature(feature, (test) => {
     then('I should receive an error indicating the username is already taken', () => {
       expect(updatedUser).toBeUndefined();
       expect(error).toBeInstanceOf(UsernameAlreadyTakenException);
+      expect(updateUserSpy).toHaveBeenCalledTimes(0);
     });
   });
 });
