@@ -16,6 +16,15 @@ export class InMemoryUsersRepository implements UsersRepository {
     return this.users.find((user) => user.username === username) || null;
   }
   async createUser(userData: UserCreateInput) {
+    const existingUserByEmail = await this.findUserByEmail(userData.email);
+    if (existingUserByEmail) {
+      throw new Error('Email already in use');
+    }
+
+    const existingUserByUsername = await this.findUserByUsername(userData.username);
+    if (existingUserByUsername) {
+      throw new Error('Username already taken');
+    }
     const id = this.users.length + 1;
     const user = {
       id: id,
@@ -29,16 +38,28 @@ export class InMemoryUsersRepository implements UsersRepository {
     return user;
   }
   async updateUser(id: number, userData: UserUpdateInput) {
-    const index = this.users.findIndex((user) => user.id === id);
-    if (index === -1) {
+    const existingUserIndex = this.users.findIndex((user) => user.id === id);
+    const existingUser = this.users[existingUserIndex];
+    if (!existingUser) {
       throw new Error('User not found');
     }
-    const user = {
-      ...this.users[index],
+
+    const existingUserByEmail = userData.email && (await this.findUserByEmail(userData.email));
+    if (existingUserByEmail && existingUserByEmail.id !== id) {
+      throw new Error('Email already in use');
+    }
+
+    const existingUserByUsername = userData.username && (await this.findUserByUsername(userData.username));
+    if (existingUserByUsername && existingUserByUsername.id !== id) {
+      throw new Error('Username already taken');
+    }
+
+    const updatedUser = {
+      ...existingUser,
       ...userData,
     };
-    this.users[index] = user;
-    return user;
+    this.users[existingUserIndex] = updatedUser;
+    return updatedUser;
   }
   async clear(): Promise<void> {
     this.users = [];
