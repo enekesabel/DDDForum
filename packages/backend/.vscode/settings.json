@@ -1,3 +1,4 @@
 {
-  "jest.jestCommandLine": "npm run test:dev --"
+  "jest.jestCommandLine": "npm run test:dev --",
+  "jest.runMode": "on-demand"
 }
