@@ -6,11 +6,6 @@ import { InMemoryUsersRepository } from './InMemoryUsersRepository';
 
 const database = new Database(prisma);
 const repositories: UsersRepository[] = [new ProductionUsersRepository(database), new InMemoryUsersRepository()];
-
-beforeAll(async () => {
-  await database.connect();
-});
-
 afterAll(async () => {
   await database.disconnect();
 });

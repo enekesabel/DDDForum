@@ -21,11 +21,6 @@ const repositories: {
     usersRepo: new InMemoryUsersRepository(),
   },
 ];
-
-beforeAll(async () => {
-  await database.connect();
-});
-
 afterAll(async () => {
   await database.disconnect();
 });
