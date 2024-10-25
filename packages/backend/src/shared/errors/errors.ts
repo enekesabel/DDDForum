@@ -32,11 +32,14 @@ export abstract class ApplicationException<Name extends string> extends CustomEr
   }
 }
 
-export abstract class GenericError<Name extends string> extends CustomError<Name, z.infer<typeof GenericErrors>> {}
+export abstract class GenericError<Name extends string, Code extends z.infer<typeof GenericErrors>> extends CustomError<
+  Name,
+  Code
+> {}
 
 export abstract class BaseValidationErrorException<
   Name extends z.infer<typeof ValidationErrorExceptions>,
-> extends GenericError<Name> {
+> extends GenericError<Name, typeof GenericErrors.enum.ValidationError> {
   constructor(message: string, name: Name) {
     super(message, name, GenericErrors.enum.ValidationError);
   }
@@ -74,9 +77,10 @@ export class InvalidRequestQueryException extends BaseValidationErrorException<
   }
 }
 
-export abstract class BaseClientErrorException<
-  Name extends z.infer<typeof ClientErrorExceptions>,
-> extends GenericError<Name> {
+export abstract class BaseClientErrorException<Name extends z.infer<typeof ClientErrorExceptions>> extends GenericError<
+  Name,
+  typeof GenericErrors.enum.ClientError
+> {
   constructor(message: string, name: Name) {
     super(message, name, GenericErrors.enum.ClientError);
   }
@@ -106,7 +110,10 @@ export class MissingRequestQueryException extends BaseClientErrorException<
   }
 }
 
-export class ServerErrorException extends GenericError<typeof GenericErrors.enum.ServerError> {
+export class ServerErrorException extends GenericError<
+  typeof GenericErrors.enum.ServerError,
+  typeof GenericErrors.enum.ServerError
+> {
   constructor(message: string = 'Unknown server error occurred.') {
     super(message, GenericErrors.enum.ServerError, GenericErrors.enum.ServerError);
   }
