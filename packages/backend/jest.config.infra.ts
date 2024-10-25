@@ -4,7 +4,7 @@ import defaultConfig from '../../jest.base.config';
 const unitConfig: JestConfigWithTsJest = {
   ...defaultConfig,
   displayName: 'Backend (Infra)',
-  roots: ['<rootDir>/src', '<rootDir>/tests/features'],
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
   testMatch: ['**/*.infra.test.ts'],
 };
 
