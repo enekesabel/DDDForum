@@ -23,6 +23,14 @@ export class DatabaseFixtures {
     await this.usersRepository.clear();
   }
 
+  makeUserBuilder() {
+    return new UserBuilder(this.usersRepository);
+  }
+
+  makePostBuilder() {
+    return new PostBuilder(this.postsRepository);
+  }
+
   async setupWithExistingUsers(...userInputs: UserInput[]) {
     return await Promise.all(
       userInputs.map(async (userInput) => await UserBuilder.FromUserInput(userInput, this.usersRepository).build())
