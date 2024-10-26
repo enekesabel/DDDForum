@@ -1,2 +1,2 @@
 export { MarketingModule } from './MarketingModule';
-export { MarketingService } from './MarketingService';
+export * from './services';

@@ -13,6 +13,7 @@ import {
   GetUserQuery,
 } from '../../../src/modules/users';
 import { DatabaseFixtures } from '../../support';
+import { AddToEmailListCommand } from '../../../src/modules/marketing';
 
 const feature = loadFeature(path.join(sharedTestRoot, 'features/registration.feature'), {
   tagFilter: '@infra',
@@ -43,6 +44,7 @@ defineFeature(feature, (test) => {
   test('Successful registration with marketing emails accepted', ({ given, when, then, and }) => {
     let createdUser: Awaited<ReturnType<typeof application.users.createUser>>;
     let createUserInput: UserInput;
+    let command: AddToEmailListCommand;
 
     given('I am a new user', async () => {
       createUserInput = new UserInputBuilder().withAllRandomDetails().build();
@@ -50,8 +52,9 @@ defineFeature(feature, (test) => {
 
     when('I register with valid account details accepting marketing emails', async () => {
       createdUser = await application.users.createUser(CreateUserCommand.Create(createUserInput));
+      command = AddToEmailListCommand.Create(createdUser.email);
 
-      await application.marketing.addEmailToList(createUserInput.email);
+      await application.marketing.addEmailToList(command);
     });
 
     then('I should be granted access to my account', async () => {
@@ -70,7 +73,7 @@ defineFeature(feature, (test) => {
 
     and('I should expect to receive marketing emails', () => {
       expect(addEmailToListSpy).toHaveBeenCalledTimes(1);
-      expect(addEmailToListSpy).toHaveBeenCalledWith(createUserInput.email);
+      expect(addEmailToListSpy).toHaveBeenCalledWith(command);
     });
   });
 

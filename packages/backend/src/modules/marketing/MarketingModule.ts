@@ -2,7 +2,7 @@ import { WebServer, Config } from '../../shared';
 import { Application } from '../../core';
 import { MarketingController } from './MarketingController';
 import { MockContactListAPI, ProductionContactListAPI } from './adapters';
-import { MarketingService } from './MarketingService';
+import { MarketingService } from './services';
 import { ContactListAPI } from './ports/ContactListAPI';
 
 export class MarketingModule {
