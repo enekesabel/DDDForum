@@ -33,7 +33,7 @@ export class DatabaseFixtures {
 
   async setupWithExistingUsers(...userInputs: UserInput[]) {
     return await Promise.all(
-      userInputs.map(async (userInput) => await UserBuilder.FromUserInput(userInput, this.usersRepository).build())
+      userInputs.map(async (userInput) => await new UserBuilder(this.usersRepository).fromUserInput(userInput).build())
     );
   }
 
@@ -45,7 +45,7 @@ export class DatabaseFixtures {
   setUpWithPostsByUser(userInput: UserInput) {
     return {
       withPosts: async (...posts: PostBuilder[]) => {
-        const user = await UserBuilder.FromUserInput(userInput, this.usersRepository).build();
+        const user = await new UserBuilder(this.usersRepository).fromUserInput(userInput).build();
         posts.forEach((post) => {
           if (!user.member) {
             throw new Error('User does not have a member');

@@ -10,10 +10,9 @@ export class UserBuilder {
     this.usersRepository = usersRepository;
   }
 
-  static FromUserInput(userInput: UserInput, usersRepository: UsersRepository) {
-    const builder = new UserBuilder(usersRepository);
-    builder.userInputBuilder = UserInputBuilder.FromUserInput(userInput);
-    return builder;
+  fromUserInput(userInput: UserInput) {
+    this.userInputBuilder = UserInputBuilder.FromUserInput(userInput);
+    return this;
   }
 
   private userInputBuilder = new UserInputBuilder();
