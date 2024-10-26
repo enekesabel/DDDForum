@@ -48,10 +48,10 @@ describe('postsAPI', () => {
 
       const response = await apiClient.posts.getPosts('recent');
 
-      const expectedGetUserResponse = buildMockAPIReponse().schema(schema).data(postsStub).build();
+      const expectedPostsResponse = buildMockAPIReponse().schema(schema).data(postsStub).build();
 
       expect(application.posts.getPosts).toHaveBeenCalledTimes(1);
-      expect(response).toEqual(expectedGetUserResponse);
+      expect(response).toEqual(expectedPostsResponse);
     });
 
     const errorsToCheck = [
