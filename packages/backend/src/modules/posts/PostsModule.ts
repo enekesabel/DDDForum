@@ -23,6 +23,7 @@ export class PostsModule {
     switch (this.config.script) {
       case 'test:unit':
       case 'start:dev':
+      case 'test:infra:incoming':
         return new InMemoryPostsRepository();
       default:
         return new ProductionPostsRepository(this.database);

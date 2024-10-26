@@ -20,6 +20,7 @@ export class MarketingModule {
     switch (this.config.script) {
       case 'test:unit':
       case 'start:dev':
+      case 'test:infra:incoming':
         return new MockContactListAPI();
       default:
         return new ProductionContactListAPI();

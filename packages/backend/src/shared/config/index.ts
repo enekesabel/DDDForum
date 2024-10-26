@@ -1,6 +1,6 @@
 export type Environment = 'development' | 'production' | 'staging' | 'ci';
 
-export type Script = 'test:unit' | 'test:e2e' | 'start:dev' | 'start:prod' | 'test:infra';
+export type Script = 'test:unit' | 'test:e2e' | 'start:dev' | 'start:prod' | 'test:infra' | 'test:infra:incoming';
 
 export class Config {
   env: Environment;

@@ -16,6 +16,7 @@ export class NotificationsModule {
     switch (this.config.script) {
       case 'test:unit':
       case 'start:dev':
+      case 'test:infra:incoming':
         return new MockTransactionalEmailAPI();
       default:
         return new ProductionTransactionalEmailAPI();

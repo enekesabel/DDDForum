@@ -27,6 +27,7 @@ export class UsersModule {
     switch (this.config.script) {
       case 'test:unit':
       case 'start:dev':
+      case 'test:infra:incoming':
         return new InMemoryUsersRepository();
       default:
         return new ProductionUsersRepository(this.database);
