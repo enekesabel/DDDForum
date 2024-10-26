@@ -1,6 +1,11 @@
 import { APIClient } from '@dddforum/shared/src/core';
 import { UserInputBuilder } from '@dddforum/shared/tests/support';
-import { CreateUserResponseSchema, UpdateUserResponseSchema } from '@dddforum/shared/src/modules/users';
+import {
+  CreateUserResponseSchema,
+  GetUserResponseSchema,
+  UpdateUserResponseSchema,
+} from '@dddforum/shared/src/modules/users';
+import { faker } from '@faker-js/faker';
 import { CompositionRoot } from '../../src/core';
 import { Config, WebServer } from '../../src/shared';
 import { buildMockAPIReponse, DatabaseFixtures } from '../support/fixtures';
@@ -12,7 +17,7 @@ import {
 } from './exampleErrors';
 
 describe('usersAPI', () => {
-  const config = new Config('test:infra');
+  const config = new Config('test:infra:incoming');
   const composition = CompositionRoot.Create(config);
   const application = composition.getApplication();
   const databaseFixtures = new DatabaseFixtures(composition);
@@ -116,6 +121,51 @@ describe('usersAPI', () => {
       const expectedErrorResponse = buildMockAPIReponse().schema(schema).error(error).build();
 
       const response = await apiClient.users.editUser(userId, updateUserInput);
+
+      expect(response).toEqual(expectedErrorResponse);
+    });
+  });
+
+  describe('get /users?email={email}', () => {
+    const email = faker.internet.email();
+    const schema = GetUserResponseSchema;
+
+    let getUserSpy: jest.SpyInstance;
+
+    beforeAll(() => {
+      getUserSpy = jest.spyOn(application.users, 'getUser');
+    });
+
+    afterEach(() => {
+      getUserSpy.mockClear();
+    });
+
+    it('should be able to successfully retrieve a user by email', async () => {
+      const userStub = await databaseFixtures.makeUserBuilder().withAllRandomDetails().withEmail(email).build();
+
+      getUserSpy.mockResolvedValue(userStub);
+
+      const response = await apiClient.users.getUserByEmail(email);
+
+      const expectedGetUserResponse = buildMockAPIReponse().schema(schema).data(userStub).build();
+
+      expect(application.users.getUser).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(expectedGetUserResponse);
+    });
+
+    const errorsToCheck = [
+      ...Object.entries(GENERIC_ERROR_EXCEPTIONS),
+      ...Object.entries(VALIDATION_ERROR_EXCEPTIONS),
+      ...Object.entries(CLIENT_ERROR_EXCEPTIONS),
+      ['UserNotFoundException', USERS_EXCEPTIONS.UserNotFound],
+    ] as const;
+
+    it.each(errorsToCheck)('should be able to handle %s error', async (_key, error) => {
+      getUserSpy.mockRejectedValue(error);
+
+      const expectedErrorResponse = buildMockAPIReponse().schema(schema).error(error).build();
+
+      const response = await apiClient.users.getUserByEmail(email);
 
       expect(response).toEqual(expectedErrorResponse);
     });
