@@ -22,6 +22,26 @@ export class UserBuilder {
     return this;
   }
 
+  withEmail(email: string) {
+    this.userInputBuilder.withEmail(email);
+    return this;
+  }
+
+  withFirstName(firstName: string) {
+    this.userInputBuilder.withFirstName(firstName);
+    return this;
+  }
+
+  withLastName(lastName: string) {
+    this.userInputBuilder.withLastName(lastName);
+    return this;
+  }
+
+  withUsername(username: string) {
+    this.userInputBuilder.withUsername(username);
+    return this;
+  }
+
   async build() {
     const userInput = this.userInputBuilder.build();
     return await this.usersRepository.createUser({
