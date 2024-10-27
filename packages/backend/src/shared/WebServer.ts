@@ -1,4 +1,5 @@
 import { Server } from 'http';
+import { exec } from 'child_process';
 import express, { ErrorRequestHandler, Express, RequestHandler } from 'express';
 import cors from 'cors';
 import { Controller } from './Controller';
@@ -28,8 +29,24 @@ export class WebServer {
   }
 
   async start() {
+    await this.killProcessRunningOnPort();
     this.server = this.express.listen(this.config.port);
     console.log(`Server is running on port ${this.config.port}`);
+  }
+
+  private async killProcessRunningOnPort() {
+    await new Promise<void>((resolve, reject) => {
+      const cmd = `lsof -t -i :${this.config.port} | xargs kill`;
+      exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+          return reject(error);
+        }
+        if (stderr) {
+          return reject(new Error(stderr));
+        }
+        resolve();
+      });
+    });
   }
 
   async stop() {
