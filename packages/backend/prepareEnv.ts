@@ -12,7 +12,7 @@
 
 import { execSync } from 'child_process';
 import * as path from 'path';
-import { configureEnv } from '@dddforum/shared/scripts/configureEnv';
+import { configureEnv } from '../../scripts/configureEnv';
 
 const prepareEnv = (): void => {
   const packageRoot = path.resolve(__dirname);

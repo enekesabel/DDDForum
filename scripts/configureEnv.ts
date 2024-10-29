@@ -18,7 +18,7 @@ const validateEnv = (envFile: string) => {
 export const configureEnv = () => {
   const env = process.env.NODE_ENV || 'development';
 
-  const envFilePath = path.resolve(__dirname, `../../../.env.${env}`);
+  const envFilePath = path.resolve(__dirname, `../.env.${env}`);
   const envFileExists = fs.existsSync(envFilePath);
   if (!envFileExists) {
     throw new Error(`No .env.${env} file found at ${envFilePath}`);
