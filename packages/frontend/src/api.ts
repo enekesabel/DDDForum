@@ -1,3 +1,4 @@
 import { APIClient } from '@dddforum/shared/src/core';
+import { appConfig } from './config';
 
-export const api = new APIClient('http://localhost:3000');
+export const api = new APIClient(appConfig.apiURL);
