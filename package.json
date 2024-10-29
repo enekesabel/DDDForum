@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "scripts": {
-    "prepare": "husky",
+    "prepare": "node .husky/install.mjs",
     "clean": "npm run clean --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "prettier-format": "prettier --config ./.prettierrc --write .",
