@@ -23,7 +23,7 @@ export class CompositionRoot {
 
   private constructor(config: Config) {
     this.config = config;
-    this.sharedModule = new SharedModule();
+    this.sharedModule = new SharedModule(this.config);
     const database = this.sharedModule.getDatabase();
 
     this.notificationsModule = new NotificationsModule(this.config);
