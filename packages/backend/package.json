@@ -14,7 +14,7 @@
     "start:db:dev": "docker-compose up -d",
     "start:dev": "npm run start:db:dev && npm run db:prepare:dev && ts-node prepareEnv.ts npx nodemon",
     "start:dev:no-watch": "npm run db:prepare:dev && ts-node prepareEnv.ts ts-node src/index.ts",
-    "start": "npm run db:prepare:prod && node build/backend/src/index.js",
+    "start": "npm run db:prepare:prod && ts-node prepareEnv.ts node build/backend/src/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test:unit": "jest -c jest.config.unit.ts --detectOpenHandles",
