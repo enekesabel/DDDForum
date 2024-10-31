@@ -26,6 +26,6 @@ export const configureEnv = () => {
     throw new Error(`No .env.${env} file found at ${envFilePath}`);
   }
   validateEnv(envFilePath);
-  console.log(`Preparing dev environment using ${envFilePath}`);
+  console.log(`Preparing environment using ${envFilePath}`);
   dotenv.config({ path: envFilePath });
 };
