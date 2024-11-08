@@ -15,6 +15,7 @@
     "lint:fix": "npm run lint:fix --workspaces --if-present",
     "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend",
     "test:e2e:front": "npm run test:e2e --workspace=@dddforum/backend",
+    "test:unit": "npm run test:unit --workspaces --if-present",
     "start:backend": "npm run start --workspace=@dddforum/backend",
     "start:frontend": "npm run start --workspace=@dddforum/frontend",
     "start:dev:back": "npm run start:dev --workspace=@dddforum/backend",
