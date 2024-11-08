@@ -18,6 +18,6 @@
     },
   ],
   "settings": {
-    "jest.disabledWorkspaceFolders": ["shared", "frontend", "root"],
+    "jest.disabledWorkspaceFolders": ["shared", "root"],
   },
 }

@@ -1,9 +1,9 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
 import defaultConfig from '../../jest.base.config';
 
-const backendConfig: JestConfigWithTsJest = {
+const frontendConfig: JestConfigWithTsJest = {
   ...defaultConfig,
-  displayName: 'Backend',
+  displayName: 'Frontend',
 };
 
-export default backendConfig;
+export default frontendConfig;
