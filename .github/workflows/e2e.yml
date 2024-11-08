@@ -1,0 +1,26 @@
+name: Run E2E Tests
+
+on:
+    workflow_dispatch:
+
+jobs:
+    test-e2e:
+        runs-on: ubuntu-latest
+        steps:
+
+            - name: Checkout repository 
+              uses: actions/checkout@v4
+
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                node-version: 22
+
+            - name: Start DB
+              run: npm run start:db:dev --workspace=@dddforum/backend
+
+            - name: Test
+              run: npm run test:e2e:back
+
+
+
