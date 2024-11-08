@@ -1,1 +1,1 @@
-cd ./backend npm run test && npm run prettier-format
+npx lint-staged

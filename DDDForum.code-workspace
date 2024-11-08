@@ -1,0 +1,23 @@
+{
+  "folders": [
+    {
+      "name": "root",
+      "path": ".",
+    },
+    {
+      "name": "shared",
+      "path": "packages/shared",
+    },
+    {
+      "name": "backend",
+      "path": "packages/backend",
+    },
+    {
+      "name": "frontend",
+      "path": "packages/frontend",
+    },
+  ],
+  "settings": {
+    "jest.disabledWorkspaceFolders": ["shared", "frontend", "root"],
+  },
+}
