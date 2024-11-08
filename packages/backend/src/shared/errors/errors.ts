@@ -6,7 +6,7 @@ export abstract class CustomError<Name extends string, Code extends string> exte
   readonly name: Name;
   readonly code: Code;
 
-  constructor(message: string, name: Name, code: Code) {
+  protected constructor(message: string, name: Name, code: Code) {
     // 'Error' breaks prototype chain here
     super(message);
 
@@ -27,20 +27,17 @@ export abstract class CustomError<Name extends string, Code extends string> exte
 }
 
 export abstract class ApplicationException<Name extends string> extends CustomError<Name, Name> {
-  constructor(message: string, name: Name) {
+  protected constructor(message: string, name: Name) {
     super(message, name, name);
   }
 }
 
-export abstract class GenericError<Name extends string, Code extends z.infer<typeof GenericErrors>> extends CustomError<
-  Name,
-  Code
-> {}
+export abstract class GenericError<Name extends string> extends CustomError<Name, z.infer<typeof GenericErrors>> {}
 
 export abstract class BaseValidationErrorException<
   Name extends z.infer<typeof ValidationErrorExceptions>,
-> extends GenericError<Name, typeof GenericErrors.enum.ValidationError> {
-  constructor(message: string, name: Name) {
+> extends GenericError<Name> {
+  protected constructor(message: string, name: Name) {
     super(message, name, GenericErrors.enum.ValidationError);
   }
 }
@@ -77,11 +74,10 @@ export class InvalidRequestQueryException extends BaseValidationErrorException<
   }
 }
 
-export abstract class BaseClientErrorException<Name extends z.infer<typeof ClientErrorExceptions>> extends GenericError<
-  Name,
-  typeof GenericErrors.enum.ClientError
-> {
-  constructor(message: string, name: Name) {
+export abstract class BaseClientErrorException<
+  Name extends z.infer<typeof ClientErrorExceptions>,
+> extends GenericError<Name> {
+  protected constructor(message: string, name: Name) {
     super(message, name, GenericErrors.enum.ClientError);
   }
 }
@@ -110,10 +106,7 @@ export class MissingRequestQueryException extends BaseClientErrorException<
   }
 }
 
-export class ServerErrorException extends GenericError<
-  typeof GenericErrors.enum.ServerError,
-  typeof GenericErrors.enum.ServerError
-> {
+export class ServerErrorException extends GenericError<typeof GenericErrors.enum.ServerError> {
   constructor(message: string = 'Unknown server error occurred.') {
     super(message, GenericErrors.enum.ServerError, GenericErrors.enum.ServerError);
   }

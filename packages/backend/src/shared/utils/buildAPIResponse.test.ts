@@ -157,8 +157,12 @@ describe('buildAPIResponse', () => {
     it('Should throw an error if error does not match the schema', () => {
       class InvalidError extends CustomError<'InvalidError', 'InvalidError'> {
         readonly name = 'InvalidError';
+
+        constructor(public message: string) {
+          super(message, 'InvalidError', 'InvalidError');
+        }
       }
-      const error = new InvalidError('Invalid error', 'InvalidError', 'InvalidError');
+      const error = new InvalidError('Invalid error');
 
       expect(() => buildAPIResponse(response).schema(schema).error(error).status(500).build().send()).toThrow();
     });
