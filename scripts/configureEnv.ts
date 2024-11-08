@@ -10,7 +10,7 @@ const validateEnv = (envFile: string) => {
     },
     {
       DATABASE_URL: str(),
-      NODE_ENV: str({ choices: ['development', 'test', 'production'] }),
+      NODE_ENV: str({ choices: ['development', 'test', 'production', 'staging'] }),
       PORT: str(),
       CI: str({ choices: ['true', 'false'] }),
     }
