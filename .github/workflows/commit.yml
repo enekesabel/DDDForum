@@ -3,8 +3,7 @@ name: Commit Phase
 on:
     workflow_dispatch:
     push:
-        branches:
-            - main, deployment-29-10-24
+        branches: [main, deployment-29-10-24]
 
 jobs:
     lint-test-build:
