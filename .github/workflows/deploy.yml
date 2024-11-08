@@ -1,0 +1,25 @@
+name: Deploy to Staging
+
+on:
+  workflow_run:
+    workflows: ["Commit Phase"]
+    types:
+      - completed
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Backend to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.BE_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Frontend to production
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.FE_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
