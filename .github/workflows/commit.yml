@@ -4,7 +4,7 @@ on:
     workflow_dispatch:
     push:
         branches:
-            - main
+            - main, deployment-29-10-24
 
 jobs:
     lint:
