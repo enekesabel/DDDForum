@@ -35,7 +35,8 @@
     "@types/supertest": "^6.0.2",
     "node-mocks-http": "^1.16.1",
     "nodemon": "^2.0.19",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "tsc-alias": "^1.8.10"
   },
   "dependencies": {
     "@dddforum/shared": "file:../shared",
