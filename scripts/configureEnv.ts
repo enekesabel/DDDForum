@@ -11,6 +11,8 @@ const validateEnv = (envFile: string) => {
     {
       DATABASE_URL: str(),
       NODE_ENV: str({ choices: ['development', 'test', 'production', 'staging'] }),
+      PORT: str(),
+      CI: str({ choices: ['true', 'false'] }),
     }
   );
 };
@@ -18,12 +20,12 @@ const validateEnv = (envFile: string) => {
 export const configureEnv = () => {
   const env = process.env.NODE_ENV || 'development';
 
-  const envFilePath = path.resolve(__dirname, `../../../.env.${env}`);
+  const envFilePath = path.resolve(__dirname, `../.env.${env}`);
   const envFileExists = fs.existsSync(envFilePath);
   if (!envFileExists) {
     throw new Error(`No .env.${env} file found at ${envFilePath}`);
   }
   validateEnv(envFilePath);
-  console.log(`Preparing dev environment using ${envFilePath}`);
+  console.log(`Preparing environment using ${envFilePath}`);
   dotenv.config({ path: envFilePath });
 };

@@ -3,11 +3,10 @@ name: Commit Phase
 on:
     workflow_dispatch:
     push:
-        branches:
-            - main, deployment-29-10-24
+        branches: [deployment-29-10-24]
 
 jobs:
-    lint:
+    build-test-lint:
         runs-on: ubuntu-latest
         steps:
 
@@ -21,4 +20,15 @@ jobs:
 
             - name: Install dependencies
               run: npm ci
+
+            - name: Build
+              run: npm run build
+
+            - name: Lint
+              run: npm run lint
+
+            - name: Test
+              run: npm run test:unit
+
+
 

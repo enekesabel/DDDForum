@@ -101,28 +101,32 @@ const initialPostComments: Prisma.CommentCreateInput[] = [
 ];
 
 async function seed() {
-  for (const user of initialUsers) {
-    await prisma.user.create({
-      data: user,
-    });
-  }
+  try {
+    for (const user of initialUsers) {
+      await prisma.user.create({
+        data: user,
+      });
+    }
 
-  for (const post of initialPosts) {
-    await prisma.post.create({
-      data: post,
-    });
-  }
+    for (const post of initialPosts) {
+      await prisma.post.create({
+        data: post,
+      });
+    }
 
-  for (const vote of initialPostVotes) {
-    await prisma.vote.create({
-      data: vote,
-    });
-  }
+    for (const vote of initialPostVotes) {
+      await prisma.vote.create({
+        data: vote,
+      });
+    }
 
-  for (const comment of initialPostComments) {
-    await prisma.comment.create({
-      data: comment,
-    });
+    for (const comment of initialPostComments) {
+      await prisma.comment.create({
+        data: comment,
+      });
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
 

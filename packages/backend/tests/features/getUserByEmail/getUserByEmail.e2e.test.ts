@@ -1,7 +1,7 @@
 import path from 'path';
 import { Server } from 'http';
 import { defineFeature, loadFeature } from 'jest-cucumber';
-import { sharedTestRoot } from '@dddforum/shared/src/paths';
+import { sharedTestRoot } from '@dddforum/shared/paths';
 import { GetUserResponse, UserExceptions } from '@dddforum/shared/src/modules/users';
 import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { APIClient } from '@dddforum/shared/src/core';

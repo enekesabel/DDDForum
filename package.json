@@ -5,14 +5,19 @@
     "packages/*"
   ],
   "scripts": {
-    "prepare": "husky",
+    "prepare": "node .husky/install.mjs",
     "clean": "npm run clean --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
+    "build:backend": "npm run build --workspace=@dddforum/backend",
+    "build:frontend": "npm run build --workspace=@dddforum/frontend",
     "prettier-format": "prettier --config ./.prettierrc --write .",
     "lint": "npm run lint --workspaces --if-present",
     "lint:fix": "npm run lint:fix --workspaces --if-present",
     "test:e2e:back": "npm run test:e2e --workspace=@dddforum/backend",
     "test:e2e:front": "npm run test:e2e --workspace=@dddforum/backend",
+    "test:unit": "npm run test:unit --workspaces --if-present",
+    "start:backend": "npm run start --workspace=@dddforum/backend",
+    "start:frontend": "npm run start --workspace=@dddforum/frontend",
     "start:dev:back": "npm run start:dev --workspace=@dddforum/backend",
     "start:dev:front": "npm run start:dev --workspace=@dddforum/frontend"
   },
@@ -21,6 +26,7 @@
     "@commitlint/config-conventional": "^19.5.0",
     "@commitlint/types": "^19.5.0",
     "@faker-js/faker": "^9.0.2",
+    "@types/dotenv": "^8.2.3",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.5.5",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
@@ -46,7 +52,6 @@
     "typescript": "^5.6.2"
   },
   "dependencies": {
-    "@types/dotenv": "^8.2.0",
     "zod": "^3.23.8"
   }
 }

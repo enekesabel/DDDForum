@@ -1,7 +1,7 @@
 import path from 'path';
 import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { defineFeature, loadFeature } from 'jest-cucumber';
-import { sharedTestRoot } from '@dddforum/shared/src/paths';
+import { sharedTestRoot } from '@dddforum/shared/paths';
 import { CompositionRoot, Application } from '../../../src/core';
 import { Config } from '../../../src/shared';
 import { DatabaseFixtures } from '../../support';

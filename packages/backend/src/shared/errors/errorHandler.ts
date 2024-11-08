@@ -14,7 +14,6 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
         case GenericErrors.Enum.ValidationError:
           return responseBuilder.status(StatusCodes.BAD_REQUEST).build();
         case GenericErrors.Enum.ServerError:
-        default:
           return responseBuilder.status(StatusCodes.INTERNAL_SERVER_ERROR).build();
       }
     }

@@ -47,7 +47,7 @@ export const RegisterPage = () => {
     // If the form is invalid
     if (!validationResult.success) {
       // Show an error toast (for invalid input)
-      return showFailureToast(validationResult.errorMessage);
+      return showFailureToast(validationResult.errorMessage || 'Invalid input');
     }
 
     // If the form is valid
