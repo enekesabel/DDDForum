@@ -11,7 +11,7 @@
     "db:reset": "ts-node prepareEnv.ts prisma migrate reset",
     "db:prepare:dev": "npm run migrate && npm run generate && npm run db:seed",
     "db:prepare:prod": "npm run migrate && npm run db:seed",
-    "start:db:dev": "docker-compose up -d",
+    "start:db:dev": "docker compose up -d",
     "start:dev": "npm run start:db:dev && npm run db:prepare:dev && ts-node prepareEnv.ts npx nodemon",
     "start:dev:no-watch": "npm run db:prepare:dev && ts-node prepareEnv.ts ts-node src/index.ts",
     "start": "npm run db:prepare:prod && ts-node prepareEnv.ts node build/backend/src/index.js",
