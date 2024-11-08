@@ -18,6 +18,9 @@
     },
   ],
   "settings": {
-    "jest.disabledWorkspaceFolders": ["shared", "root"],
+    "jest.disabledWorkspaceFolders": [
+      "shared",
+      "root"
+    ],
   },
 }

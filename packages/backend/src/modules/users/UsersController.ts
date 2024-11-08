@@ -4,14 +4,13 @@ import {
   GetUserResponseSchema,
   UpdateUserResponseSchema,
 } from '@dddforum/shared/src/modules/users';
-import { buildAPIResponse, ClientError, Controller, createCommand } from '../../shared';
-import { CreateUserCommandSchema } from './CreateUserCommand';
-import { UpdateUserCommandSchema } from './UpdateUserCommand';
-import { UsersService } from './UsersService';
+import { buildAPIResponse, Controller } from '../../shared';
+import { Application } from '../../core';
+import { UpdateUserCommand, CreateUserCommand, GetUserQuery } from './services';
 
 export class UsersController extends Controller {
   constructor(
-    private usersService: UsersService,
+    private app: Application,
     private errorHandler: ErrorRequestHandler
   ) {
     super();
@@ -26,9 +25,9 @@ export class UsersController extends Controller {
 
   private async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const createUserCommand = createCommand(CreateUserCommandSchema, req.body);
+      const createUserCommand = CreateUserCommand.FromRequest(req);
 
-      const user = await this.usersService.createUser(createUserCommand);
+      const user = await this.app.users.createUser(createUserCommand);
 
       return buildAPIResponse(res).schema(CreateUserResponseSchema).data(user).status(201).build();
     } catch (error) {
@@ -38,10 +37,9 @@ export class UsersController extends Controller {
 
   private async updateUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = Number(req.params.userId);
-      const updateUserCommand = createCommand(UpdateUserCommandSchema, req.body);
+      const updateUserCommand = UpdateUserCommand.FromRequest(req);
 
-      const updatedUser = await this.usersService.updateUser(userId, updateUserCommand);
+      const updatedUser = await this.app.users.updateUser(updateUserCommand);
 
       return buildAPIResponse(res).schema(UpdateUserResponseSchema).data(updatedUser).status(200).build();
     } catch (error) {
@@ -51,13 +49,9 @@ export class UsersController extends Controller {
 
   private async getUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email } = req.query;
+      const getUserQuery = GetUserQuery.FromRequest(req);
 
-      if (!email) {
-        return next(new ClientError());
-      }
-
-      const foundUser = await this.usersService.getUserByEmail(String(email));
+      const foundUser = await this.app.users.getUser(getUserQuery);
 
       return buildAPIResponse(res).schema(GetUserResponseSchema).data(foundUser).status(200).build();
     } catch (error) {

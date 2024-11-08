@@ -1,58 +1,63 @@
 import { UserInput } from '@dddforum/shared/src/modules/users';
-import { prisma } from '../../../src/shared';
+import { CompositionRoot } from '../../../src/core';
 import { UserBuilder } from './UserBuilder';
 import { PostBuilder } from './PostBuilder';
 
 export class DatabaseFixtures {
-  static async ClearDatabase() {
-    const deleteAllUser = prisma.user.deleteMany();
-    const deleteAllMember = prisma.member.deleteMany();
-    const deleteAllPost = prisma.post.deleteMany();
-    const deleteAllPostVote = prisma.vote.deleteMany();
-    const deleteAllPostComment = prisma.comment.deleteMany();
+  private compositionRoot: CompositionRoot;
 
-    try {
-      await prisma.$transaction([
-        deleteAllPostVote,
-        deleteAllPostComment,
-        deleteAllPost,
-        deleteAllMember,
-        deleteAllUser,
-      ]);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      await prisma.$disconnect();
-    }
+  constructor(compositionRoot: CompositionRoot) {
+    this.compositionRoot = compositionRoot;
   }
 
-  static async SetupWithExistingUsers(...userInputs: UserInput[]) {
-    return await prisma.$transaction(userInputs.map((userInput) => UserBuilder.FromUserInput(userInput).build()));
+  private get usersRepository() {
+    return this.compositionRoot.usersModule.getUsersRepository();
   }
 
-  static async SetUpWithRandomPostsByUser(userInput: UserInput, postCount: number) {
-    const postBuilders = new Array(postCount).fill(0).map(() => new PostBuilder().withRandomData());
-    return this.SetUpWithPostsByUser(userInput).withPosts(...postBuilders);
+  private get postsRepository() {
+    return this.compositionRoot.postsModule.getPostsRepository();
   }
 
-  static SetUpWithPostsByUser(userInput: UserInput) {
+  async clearDatabase() {
+    await this.postsRepository.clear();
+    await this.usersRepository.clear();
+  }
+
+  makeUserBuilder() {
+    return new UserBuilder(this.usersRepository);
+  }
+
+  makePostBuilder() {
+    return new PostBuilder(this.postsRepository);
+  }
+
+  async setupWithExistingUsers(...userInputs: UserInput[]) {
+    return await Promise.all(
+      userInputs.map(async (userInput) => await new UserBuilder(this.usersRepository).fromUserInput(userInput).build())
+    );
+  }
+
+  async setUpWithRandomPostsByUser(userInput: UserInput, postCount: number) {
+    const postBuilders = new Array(postCount).fill(0).map(() => PostBuilder.withRandomData(this.postsRepository));
+    return this.setUpWithPostsByUser(userInput).withPosts(...postBuilders);
+  }
+
+  setUpWithPostsByUser(userInput: UserInput) {
     return {
       withPosts: async (...posts: PostBuilder[]) => {
-        const user = await UserBuilder.FromUserInput(userInput).build();
+        const user = await new UserBuilder(this.usersRepository).fromUserInput(userInput).build();
         posts.forEach((post) => {
           if (!user.member) {
             throw new Error('User does not have a member');
           }
-
           post.fromMember(user.member.id);
         });
-
-        return this.SetUpWithPosts(...posts);
+        return this.setUpWithPosts(...posts);
       },
     };
   }
 
-  static SetUpWithPosts(...posts: PostBuilder[]) {
-    return prisma.$transaction(posts.map((post) => post.build()));
+  async setUpWithPosts(...posts: PostBuilder[]) {
+    return await Promise.all(posts.map(async (post) => await post.build()));
   }
 }

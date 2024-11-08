@@ -1,17 +1,23 @@
 import { z } from 'zod';
-import { UserExceptions } from '@dddforum/shared/src/modules/users/usersTypes';
-import { BaseException } from '../../shared';
+import { UserExceptions } from '@dddforum/shared/src/modules/users';
+import { ApplicationException } from '../../shared';
 
-export abstract class UsersException extends BaseException<z.infer<typeof UserExceptions>> {}
+export abstract class UsersException<T extends z.infer<typeof UserExceptions>> extends ApplicationException<T> {}
 
-export class UsernameAlreadyTakenException extends UsersException {
-  readonly name = UserExceptions.enum.UsernameAlreadyTaken;
+export class UsernameAlreadyTakenException extends UsersException<typeof UserExceptions.enum.UsernameAlreadyTaken> {
+  constructor() {
+    super('Username already taken.', UserExceptions.enum.UsernameAlreadyTaken);
+  }
 }
 
-export class EmailAlreadyInUseException extends UsersException {
-  readonly name = UserExceptions.enum.EmailAlreadyInUse;
+export class EmailAlreadyInUseException extends UsersException<typeof UserExceptions.enum.EmailAlreadyInUse> {
+  constructor() {
+    super('Email already in use.', UserExceptions.enum.EmailAlreadyInUse);
+  }
 }
 
-export class UserNotFoundException extends UsersException {
-  readonly name = UserExceptions.enum.UserNotFound;
+export class UserNotFoundException extends UsersException<typeof UserExceptions.enum.UserNotFound> {
+  constructor() {
+    super('User not found.', UserExceptions.enum.UserNotFound);
+  }
 }

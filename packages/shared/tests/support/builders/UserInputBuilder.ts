@@ -1,10 +1,15 @@
 import { faker } from '@faker-js/faker';
-import { UserInput } from '../../../src/modules/users/usersTypes';
+import { UserInput } from '../../../src/modules/users';
 
 export class UserInputBuilder {
   static FromUserInput(userInput: UserInput) {
     const builder = new UserInputBuilder();
-    builder.props = userInput;
+    builder.props = {
+      firstName: userInput.firstName,
+      lastName: userInput.lastName,
+      email: userInput.email,
+      username: userInput.username,
+    };
     return builder;
   }
 

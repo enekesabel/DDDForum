@@ -1,13 +1,18 @@
 import { UserInput } from '@dddforum/shared/src/modules/users';
-import { UserInputBuilder } from '@dddforum/shared/tests/support/builders/UserInputBuilder';
+import { UserInputBuilder } from '@dddforum/shared/tests/support';
 import { faker } from '@faker-js/faker';
-import { prisma } from '../../../src/shared';
+import { UsersRepository } from '../../../src/modules/users';
 
 export class UserBuilder {
-  static FromUserInput(userInput: UserInput) {
-    const builder = new UserBuilder();
-    builder.userInputBuilder = UserInputBuilder.FromUserInput(userInput);
-    return builder;
+  private usersRepository: UsersRepository;
+
+  constructor(usersRepository: UsersRepository) {
+    this.usersRepository = usersRepository;
+  }
+
+  fromUserInput(userInput: UserInput) {
+    this.userInputBuilder = UserInputBuilder.FromUserInput(userInput);
+    return this;
   }
 
   private userInputBuilder = new UserInputBuilder();
@@ -17,19 +22,31 @@ export class UserBuilder {
     return this;
   }
 
-  build() {
+  withEmail(email: string) {
+    this.userInputBuilder.withEmail(email);
+    return this;
+  }
+
+  withFirstName(firstName: string) {
+    this.userInputBuilder.withFirstName(firstName);
+    return this;
+  }
+
+  withLastName(lastName: string) {
+    this.userInputBuilder.withLastName(lastName);
+    return this;
+  }
+
+  withUsername(username: string) {
+    this.userInputBuilder.withUsername(username);
+    return this;
+  }
+
+  async build() {
     const userInput = this.userInputBuilder.build();
-    return prisma.user.create({
-      data: {
-        ...userInput,
-        member: {
-          create: {},
-        },
-        password: faker.internet.password(),
-      },
-      include: {
-        member: true,
-      },
+    return await this.usersRepository.createUser({
+      ...userInput,
+      password: faker.internet.password(),
     });
   }
 }

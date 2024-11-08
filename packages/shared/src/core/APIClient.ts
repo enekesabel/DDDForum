@@ -18,9 +18,13 @@ export class APIClient {
     const baseUrl = `http://localhost:${address.port}`;
     return new APIClient(baseUrl);
   }
-  constructor(private baseUrl: string) {}
 
-  readonly users = new UsersAPIClient(this.baseUrl);
-  readonly posts = new PostsAPIClient(this.baseUrl);
-  readonly marketing = new MarketingAPIClient(this.baseUrl);
+  readonly users: UsersAPIClient;
+  readonly posts: PostsAPIClient;
+  readonly marketing: MarketingAPIClient;
+  constructor(private baseUrl: string) {
+    this.users = new UsersAPIClient(this.baseUrl);
+    this.posts = new PostsAPIClient(this.baseUrl);
+    this.marketing = new MarketingAPIClient(this.baseUrl);
+  }
 }

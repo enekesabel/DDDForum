@@ -4,6 +4,7 @@ import defaultConfig from '../../jest.base.config';
 const frontendConfig: JestConfigWithTsJest = {
   ...defaultConfig,
   displayName: 'Frontend',
+  roots: ['<rootDir>'],
 };
 
 export default frontendConfig;
